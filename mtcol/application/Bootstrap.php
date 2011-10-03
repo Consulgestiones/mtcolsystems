@@ -11,15 +11,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
     protected function _initAutoloader() {
         $autoloader = Zend_Loader_Autoloader::getInstance();
-        $autoloader->registerNamespace('App_')->setFallbackAutoloader(true);
+//        $autoloader->registerNamespace('')->setFallbackAutoloader(true);
  
         $resourceAutoloader = new Zend_Loader_Autoloader_Resource(
         array(
                 'basePath' => APPLICATION_PATH,
-                'namespace' => 'App',
+                'namespace' => '',
                 'resourceTypes' => array(
                   'form' => array('path' => 'forms/', 'namespace' => 'Form'),
-                  'model' => array('path' => 'models/', 'namespace' => 'Model')
+                  'model' => array('path' => 'models/', 'namespace' => 'Model'),
+                  'mtcol' => array('path' => '../library/Mtcol/', 'namespace' => 'Mtcol')
                 )
            )
         );
@@ -31,6 +32,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');        
         $view->addHelperPath('My/View/Helper','My_View_Helper');
     }
-
+    protected function _initMyDb() {
+        $this->bootstrap('db');
+        $resource = $this->getPluginResource('db');
+        $db = $resource->getDbAdapter();
+        $db->query('SET CHARACTER SET \'UTF8\'');
+        Zend_Registry::set('db', $db);
+    }
 }
 
