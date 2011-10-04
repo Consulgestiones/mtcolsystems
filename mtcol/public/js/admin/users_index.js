@@ -66,7 +66,7 @@ var usersGrid = new Ext.grid.GridPanel({
     },
     {
         header: 'Apellido',
-        dataIndex: 'firstname',
+        dataIndex: 'lastname',
         width: 100
     },
     {
@@ -113,6 +113,18 @@ var usersGrid = new Ext.grid.GridPanel({
         header: 'Activo',
         dataIndex: 'active',
         width: 40
+    },
+    {
+        xtype: 'actioncolumn',
+        width: 30,
+        items: [
+            {
+                icon: '/images/edit.png',
+                handler: function(grid, rowIndex, colIndex){
+                    alert('editar');
+                }
+            }
+        ]
     }
 ],
     enableColLock: false,

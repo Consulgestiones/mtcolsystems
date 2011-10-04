@@ -7,6 +7,7 @@ login = new Ext.form.Panel({
    anchor: 'absolute',
    url: '/index/login',
    waitTitle: 'Validando',
+   collapsible: true,
    items: [       
        {
            fieldLabel: 'Usuario',
