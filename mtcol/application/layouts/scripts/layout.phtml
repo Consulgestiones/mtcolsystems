@@ -2,10 +2,19 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
+    <?php
+        $module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();        
+        $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();                
+        $view = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+        $validator = $module.'_'.$controller."_".$view;
+    ?>
     <?php echo $this->headLink()->appendStylesheet('/css/layout.css') ?>
     <?php echo $this->extjs() ?>
     <?php echo $this->functions() ?>
-    <?php echo $this->menu() ?>
+    <?php 
+    if($validator != 'default_index_index')
+        echo $this->menu() 
+    ?>
     <?php echo $this->dynamicResources() ?>    
     <?php echo $this->headTitle() ?>
     <?php echo $this->headScript() ?>
@@ -15,11 +24,8 @@
     <?php echo $this->basicinfo() ?>
     <div id="layout">
     <?php
-        $module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();        
-        $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();                
-        $view = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
-        $noheader = $module.'_'.$controller."_".$view;
-        if($noheader != 'default_index_index'){
+        
+        if($validator != 'default_index_index'){
     ?>
     <div id="layout-header">
         <img src="/images/header.jpg" />

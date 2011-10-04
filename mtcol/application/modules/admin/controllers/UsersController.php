@@ -13,6 +13,32 @@ class Admin_UsersController extends Zend_Controller_Action
         // action body
     }
 
+    public function getusersAction()
+    {
+        $start = $this->getRequest()->getParam('start');
+        $limit = $this->getRequest()->getParam('limit');
+        
+        $model = new Model_User();
+                     
+        $query = $model->fetchRow($model->select()
+                ->from('user', array())
+                ->columns(array('total' => new Zend_Db_Expr("COUNT(iduser)"))));
+        $total = $query['total'];
+        
+        $stmt = $model->fetchAll($model->select()->limit($limit, $start));
+        $users = $stmt->toArray();
+        
+        
+        $response = array(
+            'total' => $total,
+            'data' => $users
+        );
+        
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
