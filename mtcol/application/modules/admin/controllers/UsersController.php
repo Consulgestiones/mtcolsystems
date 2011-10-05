@@ -25,7 +25,7 @@ class Admin_UsersController extends Zend_Controller_Action
                 ->columns(array('total' => new Zend_Db_Expr("COUNT(iduser)"))));
         $total = $query['total'];
         
-        $stmt = $model->fetchAll($model->select()->limit($limit, $start));
+        $stmt = $model->fetchAll($model->select()->order(array('lastname', 'firstname'))->limit($limit, $start));
         $users = $stmt->toArray();
         
         

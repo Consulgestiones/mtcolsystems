@@ -31,6 +31,12 @@ var usersDataStore = new Ext.data.Store({
         type: 'ajax',
         url: '/admin/users/getusers',
         method: 'POST',
+        api: {
+            read: '/admin/users/getusers',
+            create: '/admin/users/create',
+            update: '/admin/users/update',
+            destroy: '/admin/users/remove'
+        },
         reader: {
             type: 'json',
             totalProperty: 'total',
@@ -47,10 +53,27 @@ var categoriesPagingBar = new Ext.PagingToolbar({
     displayInfo: true  
 });
 
+var buttonsBar = [
+    {
+        text: 'Nuevo',
+        iconCls: 'add',
+        handler: showNewUserPanel
+    },
+    {
+        text: 'Editar',
+        iconCls: 'edit'
+    },
+    {
+        text: 'Eliminar',
+        iconCls: 'delete'
+    }
+];
+
 var usersGrid = new Ext.grid.GridPanel({
     id: 'usersGrid',
     store: usersDataStore,
     bbar: categoriesPagingBar,
+    tbar: buttonsBar,
     columns: [
         Ext.create('Ext.grid.RowNumberer'),
     {
@@ -113,21 +136,75 @@ var usersGrid = new Ext.grid.GridPanel({
         header: 'Activo',
         dataIndex: 'active',
         width: 40
-    },
-    {
-        xtype: 'actioncolumn',
-        width: 30,
-        items: [
-            {
-                icon: '/images/edit.png',
-                handler: function(grid, rowIndex, colIndex){
-                    alert('editar');
-                }
-            }
-        ]
     }
 ],
     enableColLock: false,
-    height: 250,
-    renderTo: Ext.get('slot1')
+    height: 250
 });
+
+Ext.create('Ext.window.Window', {
+    title: 'Usuarios',
+    width: '100%',
+    closable: false,
+    draggable: false,
+    items: usersGrid,
+    layout: 'fit',
+    autoShow: true,
+    constrain: true,
+    floating: false,
+    renderTo: Ext.get('slot2')
+});
+
+function showNewUserPanel(){
+    var panel = Ext.create('Ext.form.Panel', {        
+        defaultType: 'textfield',
+        width: 530,
+        layout: {
+            type: 'table',
+            columns: 2,
+            itemCls: 'left-space'
+        },
+        defaults: {
+            // applied to each contained panel
+            bodyStyle:'padding:20px'
+        },
+        items: [
+            {
+                fieldLabel: 'Nombre',
+                allowBlank: false
+            },
+            {
+                fieldLabel: 'Apellido',
+                allowBlank: false
+            },
+            {
+                fieldLabel: 'Usuario',
+                allowBlank: false
+            },
+            {
+                fieldLabel: 'Email',
+                vtype: 'email',
+                allowBlank: false
+            },
+            {
+                fieldLabel: 'Teléfono Hogar'
+            },
+            {
+                fieldLabel: 'Teléfono Trabajo'
+            },
+            {
+                fieldLabel: 'Extension'
+            },
+            {
+                fieldLabel: 'Teléfono Movil'
+            }
+        ]
+    });
+    Ext.create('Ext.window.Window', {
+        title: 'Nuevo Usuario',
+        layout: 'fit',
+        items: panel,
+        modal: true,
+        bodyStyle: 'padding: 10px'
+    }).show();
+}

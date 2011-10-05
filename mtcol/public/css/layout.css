@@ -2,3 +2,9 @@
     width: 973px;
     margin: auto;
 }
+#slot2 {
+    padding-top: 5px;
+}
+.left-space {
+    padding-left: 15px;
+}
