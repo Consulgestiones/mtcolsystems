@@ -44,6 +44,8 @@ login = new Ext.form.Panel({
                form.submit({
                    success:function(form, request){
                        var usr = Ext.decode(request.response.responseText).user;
+                       console.log(Ext.encode(usr));
+                       setGlobal('user', usr);
                        if(usr.applications.length == 1){
                            var app = usr.applications[0];
                            window.location = window.location + app.module + '/' + app.controller + '/' + app.action

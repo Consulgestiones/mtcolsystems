@@ -19,7 +19,10 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+        /**
+         * Se cambia el layout por el del index
+         */
+        $this->_helper->layout()->setLayout('index-layout');
     }
 
     public function loginAction()
