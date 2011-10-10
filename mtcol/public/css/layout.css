@@ -1,10 +1,41 @@
 #layout {
-    width: 973px;
-    margin: auto;
+    /*width: 973px;
+    margin: auto;*/
 }
 #slot2 {
     padding-top: 5px;
 }
 .left-space {
-    padding-left: 15px;
+    margin-left: 5px;  
+}
+#layout-menu {
+    height: 30px;
+    min-height: 30px;
+}
+.split-item {
+    padding: 15px;
+}
+.add {
+   background-image:url(/images/icons/add.png) !important;
+}
+.delete {
+   background-image:url(/images/icons/delete.png) !important;
+}
+.edit {
+   background-image:url(/images/icons/pencil.png) !important;
+}
+.users-admin{
+    background-image:url(/images/icons/group.png) !important;
+}
+.user-profile {
+    background-image:url(/images/icons/user.png) !important;
+}
+.btn-save {
+    background-image:url(/images/icons/bullet_disk.png) !important;
+}
+.btn-cancel {
+    background-image:url(/images/icons/cancel.png) !important;
+}
+.align-right {
+    text-align: right;    
 }

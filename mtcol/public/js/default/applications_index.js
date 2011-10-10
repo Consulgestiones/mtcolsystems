@@ -4,31 +4,34 @@ if(usr != null){
     var items = new Array();
     var apps = usr.applications;
     
+    var w = (100/apps.length)/100;
+    
     
     for(var i = 0; i < apps.length; i++){        
         items.push({
             id: 'app_' + apps[i].idapplication,
             xtype: 'panel',
-            title: apps[i].application,
             tag: 'div',
-            html: '<img src="' + apps[i].img + '" />',
-            autoHeigth: true,
-            width: 105
+            html: '<center><a href="/' + apps[i].module + '/' + apps[i].controller + '/' + apps[i].action + '" ><img src="' + apps[i].img + '" /></a><br /><span class="item-label-inner">' + apps[i].application + '</span></center>',
+            autoHeight: true,
+            width: config.appsWidthItem
         });
     }
     
-    Ext.create('Ext.window.Window', {
+    var h = Math.ceil((items.length/config.appsColumns)) * 190;
+    
+    Ext.create('Ext.panel.Panel', {
         title: 'Módulos',
         draggable: false,
-        floating: false,
-        autoShow: true,
-        closable: false,
+        height: h,
+        width: '100%',
+        items: items,
         layout: {
             type: 'table',
-            columns: 3
+            columns: config.appsColumns,
+            itemCls: 'split-item'
         },
-        bodyPadding: 30,
-        items: items,
-        renderTo: Ext.get('slot2')
+        renderTo: Ext.get('slot1')
     });
+
 }

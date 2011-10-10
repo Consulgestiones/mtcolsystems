@@ -57,6 +57,16 @@
             <controllerFile controllerName="Index">
               <actionMethod actionName="index"/>
             </controllerFile>
+            <controllerFile controllerName="Profiles">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="getprofiles"/>
+            </controllerFile>
+            <controllerFile controllerName="Providers">
+              <actionMethod actionName="index"/>
+            </controllerFile>
+            <controllerFile controllerName="Products">
+              <actionMethod actionName="index"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -71,6 +81,18 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Users">
                 <viewScriptFile forActionName="getusers"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Profiles">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Providers">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Products">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Profiles">
+                <viewScriptFile forActionName="getprofiles"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

@@ -85,7 +85,9 @@ class IndexController extends Zend_Controller_Action
             $select
                 ->from(array('a' => 'application'), array('a.idapplication', 'a.application', 'a.module', 'a.controller', 'a.action', 'a.img'))
                 ->join(array('u' => 'user_application'), 'a.idapplication = u.idapplication', array())
-                ->where('u.iduser = ?', $user->iduser);                
+                ->where('u.iduser = ?', $user->iduser)
+                ->order('order');                
+            
             
             $stmt = $db->query($select);
             $apps = $stmt->fetchAll();

@@ -4,8 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
     <?php echo $this->headLink()->appendStylesheet('/css/layout.css') ?>
     <?php echo $this->extjs() ?>
+    <?php echo $this->jQuery() ?>
     <?php echo $this->functions() ?>
+    <?php echo $this->bootstrap() ?>
     <?php echo $this->menu() ?>
+    <?php //echo $this->viewport() ?>
     <?php echo $this->dynamicResources() ?>    
     <?php echo $this->headTitle() ?>
     <?php echo $this->headScript() ?>
@@ -15,11 +18,12 @@
     <?php echo $this->basicinfo() ?>
     <div id="layout">    
         <div id="layout-header">
-            <img src="/images/header.jpg" />
-        </div>
-        <div id="layout-menu"></div>        
-        <div id="slot1"></div>
-        <div id="slot2">
+            <div>
+                <img src="/images/header.jpg" />
+            </div>            
+            <div id="layout-menu"></div> 
+        </div>                       
+        <div id="slot1">
             <?php
             echo $this->layout()->content;        
             ?>
