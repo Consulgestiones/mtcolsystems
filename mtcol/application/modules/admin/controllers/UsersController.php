@@ -37,8 +37,19 @@ class Admin_UsersController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
+    public function saveAction()
+    {
+        $data = array(
+            'failure' => true,
+            'msg' => 'Error al crear el usuario'
+        );
+        $this->_helper->json->sendJson($data);
+    }
+
 
 }
+
+
 
 
 
