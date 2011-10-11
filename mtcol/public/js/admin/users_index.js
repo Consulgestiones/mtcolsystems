@@ -63,7 +63,7 @@ var buttonsBar = [
         text: 'Nuevo',
         iconCls: 'add',
         handler: function(){
-            userWin.show();
+            newUser();
         }
     },
     {
@@ -188,139 +188,201 @@ var usersGrid = new Ext.grid.GridPanel({
     autoSizeColumns: true
 });
 
-var userForm = Ext.create('Ext.form.FormPanel', {    
-    defautType: 'textfield',
-    frame: true,
-    items: [
-        {
-            xtype: 'fieldset',
-            collapsible: false,
-            title: 'Información Personal',
-            defaultType: 'textfield',
-            defaults: {anchor: '100%'},
-            itemCls: 'left-space',
-            viewConfig: {
-                forceFit: true
-            },
-            layout: {
-                type: 'table',
-                columns: 2
-            },
-            items: [
-                {
-                    fieldLabel: 'Nombre',
-                    name: 'firstname',
-                    allowBlank: false
-                },
-                {
-                    fieldLabel: 'Apellido',
-                    name: 'lastname',
-                    allowBlank: false
-                },
-                {
-                    fieldLabel: 'usuario',
-                    name: 'username',
-                    allowBlank: false
-                },
-                {
-                    fieldLabel: 'E-mail',
-                    name: 'useremail',
-                    allowBlank: false
-                },
-                {
-                    fieldLabel: 'Teléfono Hogar',
-                    name: 'userphonehome',
-                    allowBlank: false
-                }
-                
-            ]
-        },
-        {
-            xtype: 'fieldset',
-            collapsible: false,
-            title: 'Información Laboral',
-            defaultType: 'textfield',
-            defaults: {anchor: '100%'},
-            itemCls: 'left-space',
-            viewConfig: {
-                forceFit: true
-            },
-            layout: {
-                type: 'table',
-                columns: 2
-            },
-            items: [
-                {
-                    fieldLabel: 'Teléfono Trabajo',
-                    name: 'userphonework',
-                    allowBlank: false
-                },
-                {
-                    fieldLabel: 'Extensión',
-                    name: 'userphoneworkext',
-                    allowBlank: true
-                },
-                {
-                    fieldLabel: 'E-mail Laboral',
-                    name: 'userworkemail',
-                    allowBlank: true
-                },
-                {
-                    fieldLabel: 'E-mail Laboral',
-                    name: 'userworkemail',
-                    allowBlank: true
-                },
-                {
-                    fieldLabel: 'Jefe directo',
-                    name: 'boss',
-                    allowBlank: true
-                },
-                {
-                    fieldLabel: 'Cargo',
-                    name: 'position',
-                    allowBlank: true
-                },
-                {
-                    fieldLabel: 'Oficina',
-                    name: 'office',
-                    allowBlank: true
-                }
-            ]
-        }
-    ],
-    buttons: [
-        {
-            text: 'Cancelar',
-            id: 'btn-cancel',
-            iconCls: 'btn-cancel',
-            handler: function(){
-                this.up().hide();
-            }
-        },
-        {
-            text: 'Guardar',
-            iconCls: 'btn-save'
-        }
+/**
+ * Datastore para el combo de tipo de identificacion
+ */
+Ext.define('Typeid', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'idtypeid', type: 'int'},
+        {name: 'typeid', type: 'string'}
     ]
-//    bbar: {
-//        items: [
-//            '->',
-//            {
-//                text: 'Guardar',
-//                border: 1,
-//                iconCls: 'btn-save'
-//            },
-//            {
-//                text: 'Cancelar',
-//                border: 1
-//            }
-//        ]
-//    }
 });
-var userWin = Ext.create('Ext.window.Window', {
-    title: 'Usuario',
-    iconCls: 'user-profile',
-    items: userForm,
-    modal: true,
-    width: 600
+var idtypeDataStore = Ext.data.Store({    
+    model: 'Typeid',
+    id: 'typeidDS',
+    proxy: {
+        type: 'ajax',
+        url: '/typesid/gettypes',
+        method: 'POST',
+        reader: new Ext.data.JsonReader({
+            fields: [
+                'idtypeid',
+                'typeid'
+            ],
+            root: 'data'
+        })
+    }
 });
+
+function newUser(){
+    
+    var userForm = Ext.create('Ext.form.FormPanel', {  
+        id: 'user-form',
+        defautType: 'textfield',
+        url: '/admin/users/save',
+        frame: true,
+        items: [
+            {
+                xtype: 'fieldset',
+                collapsible: false,
+                title: 'Información Personal',
+                defaultType: 'textfield',
+                defaults: {anchor: '100%'},
+                itemCls: 'left-space',
+                viewConfig: {
+                    forceFit: true
+                },
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                items: [
+                    {
+                        fieldLabel: 'Nombre',
+                        name: 'firstname',
+                        allowBlank: false
+                    },
+                    {
+                        fieldLabel: 'Apellido',
+                        name: 'lastname',
+                        allowBlank: false
+                    },
+                    {
+                        fieldLabel: 'usuario',
+                        name: 'username',
+                        allowBlank: false
+                    },
+                    {
+                        fieldLabel: 'E-mail',
+                        name: 'useremail',
+                        allowBlank: false,
+                        vtype: 'email'
+                    },
+                    {
+                        xtype: 'combo',
+                        name: 'typeid',
+                        fieldLabel: 'Tipo Ident',
+                        store: idtypeDataStore,
+                        mode: 'remote',
+                        displayField: 'typeid',
+                        valueField: 'idtypeid'
+                    },
+                    {
+                        fieldLabel: 'Nun Ident',
+                        name: 'numid'
+                    },
+                    {
+                        fieldLabel: 'Teléfono Hogar',
+                        name: 'userphonehome',
+                        allowBlank: false
+                    }
+
+                ]
+            },
+            {
+                xtype: 'fieldset',
+                collapsible: false,
+                title: 'Información Laboral',
+                defaultType: 'textfield',
+                defaults: {anchor: '100%'},
+                itemCls: 'left-space',
+                viewConfig: {
+                    forceFit: true
+                },
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                items: [
+                    {
+                        fieldLabel: 'Teléfono Trabajo',
+                        name: 'userphonework',
+                        allowBlank: false
+                    },
+                    {
+                        fieldLabel: 'Extensión',
+                        name: 'userphoneworkext',
+                        allowBlank: true
+                    },
+                    {
+                        fieldLabel: 'E-mail Laboral',
+                        name: 'userworkemail',
+                        allowBlank: true
+                    },
+                    {
+                        fieldLabel: 'E-mail Laboral',
+                        name: 'userworkemail',
+                        allowBlank: true,
+                        vtype: 'email'
+                    },
+                    {
+                        fieldLabel: 'Jefe directo',
+                        name: 'boss',
+                        allowBlank: true
+                    },
+                    {
+                        fieldLabel: 'Cargo',
+                        name: 'position',
+                        allowBlank: true
+                    },
+                    {
+                        fieldLabel: 'Oficina',
+                        name: 'office',
+                        allowBlank: true
+                    }
+                ]
+            }
+        ],
+        buttons: [
+            {
+                text: 'Cancelar',
+                id: 'btn-cancel',
+                iconCls: 'btn-cancel',
+                handler: function(){
+                    Ext.getCmp('newuser-win').close();
+                }
+            },
+            {
+                text: 'Guardar',
+                iconCls: 'btn-save',
+                handler: function(){                    
+                    var frm = Ext.getCmp('user-form').getForm();
+                    if(!frm.isValid())
+                        return;
+                    
+                    frm.submit({
+                        success: function(frm, request){
+                            usersDataStore.load();
+                            Ext.getCmp('newuser-win').close();
+                        },
+                        failure: function(frm, request){
+                            var resp = request.response.responseText;
+                            var obj = Ext.decode(resp);                            
+                            Ext.Msg.show({
+                                title: 'Error!!!',
+                                msg: obj.msg,
+                                buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+                }
+            }
+        ]
+
+    });
+    
+    
+    
+    
+    var userWind = Ext.create('Ext.window.Window', {
+        id: 'newuser-win',
+        title: 'Usuario',
+        iconCls: 'user-profile',
+        items: userForm,
+        modal: true,
+        width: 600,
+        autoHeight: true,
+        autoShow: true
+    });
+}

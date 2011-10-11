@@ -20,6 +20,10 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="getmenu"/>
         </controllerFile>
+        <controllerFile controllerName="Typesid">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="gettypes"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
@@ -53,6 +57,7 @@
             <controllerFile controllerName="Users">
               <actionMethod actionName="index"/>
               <actionMethod actionName="getusers"/>
+              <actionMethod actionName="save"/>
             </controllerFile>
             <controllerFile controllerName="Index">
               <actionMethod actionName="index"/>
@@ -93,6 +98,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Profiles">
                 <viewScriptFile forActionName="getprofiles"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Users">
+                <viewScriptFile forActionName="save"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
@@ -140,6 +148,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Menu">
             <viewScriptFile forActionName="getmenu"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Typesid">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Typesid">
+            <viewScriptFile forActionName="gettypes"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
