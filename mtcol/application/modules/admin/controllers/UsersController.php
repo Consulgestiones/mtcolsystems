@@ -45,9 +45,9 @@ class Admin_UsersController extends Zend_Controller_Action
         );
         $this->_helper->json->sendJson($data);
     }
-
-
 }
+
+
 
 
 

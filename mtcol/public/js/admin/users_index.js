@@ -251,7 +251,8 @@ function newUser(){
                     {
                         fieldLabel: 'usuario',
                         name: 'username',
-                        allowBlank: false
+                        allowBlank: false,
+                        vtype: 'uniqueusername'
                     },
                     {
                         fieldLabel: 'E-mail',
