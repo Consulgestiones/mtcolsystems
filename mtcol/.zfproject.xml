@@ -139,7 +139,10 @@
             <controllerFile controllerName="Users">
               <actionMethod actionName="index"/>
               <actionMethod actionName="usernameunique"/>
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="uniqueusername"/>
             </controllerFile>
+            <controllerFile controllerName="Users"/>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -151,6 +154,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Users">
                 <viewScriptFile forActionName="usernameunique"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Users">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Users">
+                <viewScriptFile forActionName="uniqueusername"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

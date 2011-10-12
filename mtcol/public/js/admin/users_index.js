@@ -221,6 +221,7 @@ function newUser(){
         id: 'user-form',
         defautType: 'textfield',
         url: '/admin/users/save',
+        method: 'POST',
         frame: true,
         items: [
             {
@@ -251,8 +252,7 @@ function newUser(){
                     {
                         fieldLabel: 'usuario',
                         name: 'username',
-                        allowBlank: false,
-                        vtype: 'uniqueusername'
+                        allowBlank: false
                     },
                     {
                         fieldLabel: 'E-mail',
@@ -262,7 +262,7 @@ function newUser(){
                     },
                     {
                         xtype: 'combo',
-                        name: 'typeid',
+                        name: 'idtypeid',
                         fieldLabel: 'Tipo Ident',
                         store: idtypeDataStore,
                         mode: 'remote',
@@ -271,7 +271,9 @@ function newUser(){
                     },
                     {
                         fieldLabel: 'Nun Ident',
-                        name: 'numid'
+                        name: 'usernumid',
+                        vtype: 'numeric',
+                        allowBlank: false
                     },
                     {
                         fieldLabel: 'Teléfono Hogar',
@@ -304,12 +306,8 @@ function newUser(){
                     {
                         fieldLabel: 'Extensión',
                         name: 'userphoneworkext',
-                        allowBlank: true
-                    },
-                    {
-                        fieldLabel: 'E-mail Laboral',
-                        name: 'userworkemail',
-                        allowBlank: true
+                        allowBlank: true,
+                        vtype: 'numeric'
                     },
                     {
                         fieldLabel: 'E-mail Laboral',

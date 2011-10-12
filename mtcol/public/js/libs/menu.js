@@ -111,3 +111,29 @@ function setSection(params){
         
     head[0].appendChild(scriptfunc);       
 }
+
+Ext.apply(Ext.form.field.VTypes, {
+    numeric: function(val, field){
+        var pattern = /(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/;
+        return function(val){return pattern.test(val)}
+    }(),
+    numericText: 'Solo números',
+    numericMask: /[.0-9]/
+});
+Ext.apply(Ext.form.field.VTypes, {
+    uniqueusername: function(val, field){
+        Ext.Ajax.request({
+            url: '/util/users/uniqueusername',
+            method: 'POST',
+            params: {
+                username: val
+            },
+            success: function(resp){
+                var obj = Ext.decode(resp.responseText);
+                var unique = obj.unique;
+                return function(unique){return unique}
+            }
+        });
+    },
+    uniqueusernameText: 'Nombre usuario no disponible'
+});
