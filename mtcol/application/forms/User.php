@@ -2,12 +2,10 @@
 class Form_User extends Zend_Form {
     public function init(){
         $this->addElement('text', 'firstname', array(
-            'required' => true,
-            'validators' => array('Alnum')
+            'required' => true
         ));
         $this->addElement('text', 'lastname', array(
-            'required' => true,
-            'validators' => array('Alnum')
+            'required' => true
         ));
         $this->addElement('text', 'username', array(
             'required' => true,
@@ -32,28 +30,29 @@ class Form_User extends Zend_Form {
             'validators' => array('Digits')
         ));
         $this->addElement('text', 'userphonehome', array(
-            'required' => true,
-            'validators' => array('Alnum')
+            'required' => true
         ));
         $this->addElement('text', 'userphonework', array(
-            'required' => true,
-            'validators' => array('Alnum')
+            'required' => true
         ));
         $this->addElement('text', 'userphoneworkext', array(
-            'required' => false,
-            'validators' => array('Alnum')
+            'required' => false
+        ));
+        $this->addElement('text', 'userphonemobile', array(
+            'required' => false
+        ));
+        $this->addElement('text', 'useraddress', array(
+            'required' => false
         ));
         $this->addElement('text', 'userworkemail', array(
             'required' => false,
             'validators' => array('EmailAddress')
         ));
         $this->addElement('text', 'boss', array(
-            'required' => false,
-            'validators' => array('Alnum')
+            'required' => false
         ));
         $this->addElement('text', 'position', array(
-            'required' => false,
-            'validators' => array('Alnum')
+            'required' => false
         ));
         $this->addElement('text', 'office', array(
             'required' => false

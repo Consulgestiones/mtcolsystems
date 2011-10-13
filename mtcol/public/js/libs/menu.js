@@ -49,8 +49,9 @@ Ext.onReady(function(){
                         func: smenu.func,
                         myParams: smenu.params,
                         handler: function(){
-                            if(typeof window[this.func] !=  'undefined')
+                            if(typeof window[this.func] !=  'undefined'){
                                 eval(this.func + '(' + this.myParams + ')');
+                            }
                         }
                     });
                 }
@@ -69,8 +70,10 @@ Ext.onReady(function(){
                 myParams: mnu.params,
                 func: mnu.func,
                 handler: function(){                            
-                    if(typeof window[this.func] == 'function')
+                    if(typeof window[this.func] == 'function'){
                         eval(this.func + '(' + this.myParams + ')');
+                    }
+                        
                 },
                 menu: submenu
             });

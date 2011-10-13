@@ -25,9 +25,17 @@ class Admin_UsersController extends Zend_Controller_Action
                 ->columns(array('total' => new Zend_Db_Expr("COUNT(iduser)"))));
         $total = $query['total'];
         
-        $stmt = $model->fetchAll($model->select()->order(array('lastname', 'firstname'))->limit($limit, $start));
-        $users = $stmt->toArray();
+        $db = Zend_Registry::get('db');
         
+        $select = $db->select()
+                ->from(array('u' => 'user'))
+                ->columns(array('isactive' => new Zend_Db_Expr("CASE u.active WHEN 1 THEN 'Si' ELSE 'No' END")))
+                ->join(array('t' => 'typeid'), 't.idtypeid = u.idtypeid', array('typeid'))
+                ->order(array('lastname', 'firstname'))
+                ->limit($limit, $start);        
+        
+        $stmt = $db->query($select);
+        $users = $stmt->fetchAll();        
         
         $response = array(
             'total' => $total,
@@ -55,6 +63,7 @@ class Admin_UsersController extends Zend_Controller_Action
                 $data['iduser'] = null;
                 $data['idprofile'] = 1;
                 $data['password'] = md5($data['numid']);
+                $data['creationdate'] = date('Y-m-d G:i:s');
                 
                 $model = new Model_User();
                 if($model->insert($data)){

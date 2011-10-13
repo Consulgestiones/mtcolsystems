@@ -1,3 +1,4 @@
+Ext.QuickTips.init();
 /**
  * Definicion del modelo
  */
@@ -9,6 +10,8 @@ Ext.define('User', {
        {name: 'firstname', type: 'string'}, 
        {name: 'lastname', type: 'string'}, 
        {name: 'username', type: 'string'},
+       {name: 'typeid', type: 'string'},
+       {name: 'usernumid', type: 'int'},
        {name: 'useremail', type: 'string'},
        {name: 'userphonehome', type: 'string'},
        {name: 'userphonework', type: 'string'},
@@ -16,11 +19,11 @@ Ext.define('User', {
        {name: 'userphoneworkext', type: 'string'},
        {name: 'useraddress', type: 'string'},
        {name: 'creationdate', type: 'date', dateFormat: 'Y-m-d H:i:s'},
-       {name: 'active', type: 'int'},
+       {name: 'isactive', type: 'string'},
        {name: 'userworkemail', type: 'string', vtype: 'email'},
        {name: 'position', type: 'string'},
        {name: 'boss', type: 'string'},
-       {name: 'officenumber', type: 'string'}
+       {name: 'office', type: 'string'}
     ]
 });
 
@@ -75,7 +78,11 @@ var buttonsBar = [
                 return;
             }else{
                 var sel = rows[0];
-                alert(sel.data.iduser);
+                idtypeDataStore.load();
+                var idtypid = sel.data.idtypeid;
+                Ext.getCmp('idtypeid').setValue(idtypid);
+                userForm.loadRecord(sel);
+                userWind.show();
             }
         }
     },
@@ -118,6 +125,16 @@ var usersGrid = new Ext.grid.GridPanel({
         header: 'Usuario',
         dataIndex: 'username',
         width: 120
+    },
+    {
+        header: 'Tipo ID',
+        dataIndex: 'typeid',
+        width: 40
+    },
+    {
+        header: 'Num ID',
+        dataIndex: 'usernumid',
+        width: 110
     },
     {
         header: 'E-mail',
@@ -172,12 +189,12 @@ var usersGrid = new Ext.grid.GridPanel({
     },
     {
         header: 'Oficina',
-        dataIndex: 'officenumber',
+        dataIndex: 'office',
         width: 70
     },
     {
         header: 'Activo',
-        dataIndex: 'active',
+        dataIndex: 'isactive',
         width: 40
     }
 ],
@@ -215,9 +232,11 @@ var idtypeDataStore = Ext.data.Store({
     }
 });
 
-function newUser(){
-    
-    var userForm = Ext.create('Ext.form.FormPanel', {  
+
+/**
+ * Formulario para creación y edicion de usuarios
+ */
+var userForm = Ext.create('Ext.form.FormPanel', {  
         id: 'user-form',
         defautType: 'textfield',
         url: '/admin/users/save',
@@ -238,30 +257,35 @@ function newUser(){
                     type: 'table',
                     columns: 2
                 },
-                items: [
+                items: [                    
                     {
                         fieldLabel: 'Nombre',
                         name: 'firstname',
+                        id: 'firstname',
                         allowBlank: false
                     },
                     {
                         fieldLabel: 'Apellido',
                         name: 'lastname',
+                        id: 'lastname',
                         allowBlank: false
                     },
                     {
                         fieldLabel: 'usuario',
                         name: 'username',
+                        id: 'username',
                         allowBlank: false
                     },
                     {
                         fieldLabel: 'E-mail',
+                        id: 'useremail',
                         name: 'useremail',
                         allowBlank: false,
                         vtype: 'email'
                     },
                     {
                         xtype: 'combo',
+                        id: 'idtypeid',
                         name: 'idtypeid',
                         fieldLabel: 'Tipo Ident',
                         store: idtypeDataStore,
@@ -271,14 +295,28 @@ function newUser(){
                     },
                     {
                         fieldLabel: 'Nun Ident',
+                        id: 'usernumid',
                         name: 'usernumid',
                         vtype: 'numeric',
                         allowBlank: false
                     },
                     {
                         fieldLabel: 'Teléfono Hogar',
+                        id: 'userphonehome',
                         name: 'userphonehome',
                         allowBlank: false
+                    },
+                    {
+                        fieldLabel: 'Teléfono Movil',
+                        id: 'userphonemobile',
+                        name: 'userphonemobile',
+                        allowBlank: true
+                    },
+                    {
+                        fieldLabel: 'Dirección',
+                        id: 'useraddress',
+                        name: 'useraddress',
+                        allowBlank: true
                     }
 
                 ]
@@ -300,37 +338,49 @@ function newUser(){
                 items: [
                     {
                         fieldLabel: 'Teléfono Trabajo',
+                        id: 'userphonework',
                         name: 'userphonework',
                         allowBlank: false
                     },
                     {
                         fieldLabel: 'Extensión',
+                        id: 'userphoneworkext',
                         name: 'userphoneworkext',
                         allowBlank: true,
                         vtype: 'numeric'
                     },
                     {
                         fieldLabel: 'E-mail Laboral',
+                        id: 'userworkemail',
                         name: 'userworkemail',
                         allowBlank: true,
                         vtype: 'email'
                     },
                     {
                         fieldLabel: 'Jefe directo',
+                        id: 'boss',
                         name: 'boss',
                         allowBlank: true
                     },
                     {
                         fieldLabel: 'Cargo',
+                        id: 'position',
                         name: 'position',
                         allowBlank: true
                     },
                     {
                         fieldLabel: 'Oficina',
+                        id: 'office',
                         name: 'office',
                         allowBlank: true
                     }
                 ]
+            },
+            {
+                xtype: 'hidden',
+                id: 'iduser',
+                name: 'iduser',
+                value: 0
             }
         ],
         buttons: [
@@ -339,7 +389,7 @@ function newUser(){
                 id: 'btn-cancel',
                 iconCls: 'btn-cancel',
                 handler: function(){
-                    Ext.getCmp('newuser-win').close();
+                    Ext.getCmp('user-win').hide();
                 }
             },
             {
@@ -347,20 +397,21 @@ function newUser(){
                 iconCls: 'btn-save',
                 handler: function(){                    
                     var frm = Ext.getCmp('user-form').getForm();
+                    Ext.getCmp('iduser').setValue(666);
                     if(!frm.isValid())
                         return;
                     
                     frm.submit({
                         success: function(frm, request){
                             usersDataStore.load();
-                            Ext.getCmp('newuser-win').close();
+                            Ext.getCmp('user-win').hide();
                         },
                         failure: function(frm, request){
-                            var resp = request.response.responseText;
-                            var obj = Ext.decode(resp);                            
+//                            var resp = request.response.responseText;
+//                            var obj = Ext.decode(resp);                            
                             Ext.Msg.show({
                                 title: 'Error!!!',
-                                msg: obj.msg,
+                                msg: 'Error al crear el usuario.\nPor favor intente de nuevo mas tarde',
                                 buttons: Ext.Msg.OK
                             });
                         }
@@ -375,13 +426,21 @@ function newUser(){
     
     
     var userWind = Ext.create('Ext.window.Window', {
-        id: 'newuser-win',
+        id: 'user-win',
         title: 'Usuario',
         iconCls: 'user-profile',
+        closeAction: 'hide',
         items: userForm,
         modal: true,
         width: 600,
-        autoHeight: true,
-        autoShow: true
+        autoHeight: true
     });
+/**
+ * Fin formulario
+ */
+
+
+function newUser(){
+    userForm.getForm().reset();
+    userWind.show();    
 }
