@@ -10,6 +10,7 @@ Ext.define('User', {
        {name: 'firstname', type: 'string'}, 
        {name: 'lastname', type: 'string'}, 
        {name: 'username', type: 'string'},
+       {name: 'idtypeid', type: 'int'},
        {name: 'typeid', type: 'string'},
        {name: 'usernumid', type: 'int'},
        {name: 'useremail', type: 'string'},
@@ -20,6 +21,7 @@ Ext.define('User', {
        {name: 'useraddress', type: 'string'},
        {name: 'creationdate', type: 'date', dateFormat: 'Y-m-d H:i:s'},
        {name: 'isactive', type: 'string'},
+       {name: 'active', type: 'int'},
        {name: 'userworkemail', type: 'string', vtype: 'email'},
        {name: 'position', type: 'string'},
        {name: 'boss', type: 'string'},
@@ -51,12 +53,12 @@ var usersDataStore = new Ext.data.Store({
         },
         writer: new Ext.data.JsonWriter()
     },
-    pageSize: config.gridPageSize,
+    pageSize: Mtc.config.gridPageSize,
     autoLoad: true
 });
 
 var usersPagingBar = new Ext.PagingToolbar({  
-    pageSize: config.gridPageSize,  
+    pageSize: Mtc.config.gridPageSize,  
     store: usersDataStore,  
     displayInfo: true  
 });
@@ -73,23 +75,13 @@ var buttonsBar = [
         text: 'Editar',
         iconCls: 'edit',
         handler: function(){
-            var rows = usersGrid.getSelectionModel().getSelection();
-            if(rows.length === 0){
-                return;
-            }else{
-                var sel = rows[0];
-                idtypeDataStore.load();
-                var idtypid = sel.data.idtypeid;
-                Ext.getCmp('idtypeid').setValue(idtypid);
-                userForm.loadRecord(sel);
-                userWind.show();
-            }
+            editUser();
         }
-    },
+    }/*,
     {
         text: 'Eliminar',
         iconCls: 'delete'
-    }
+    }*/
 ];
 
 
@@ -200,7 +192,7 @@ var usersGrid = new Ext.grid.GridPanel({
 ],
     enableColLock: false,
     stripeRows: true,
-    height: config.gridHeight,
+    height: Mtc.config.gridHeight,
     renderTo: Ext.get('slot1'),
     autoSizeColumns: true
 });
@@ -229,7 +221,8 @@ var idtypeDataStore = Ext.data.Store({
             ],
             root: 'data'
         })
-    }
+    },
+    autoLoad: true
 });
 
 
@@ -317,6 +310,23 @@ var userForm = Ext.create('Ext.form.FormPanel', {
                         id: 'useraddress',
                         name: 'useraddress',
                         allowBlank: true
+                    },
+                    {
+                        xtype: 'combo',
+                        fieldLabel: 'Estado',
+                        name: 'active',
+                        mode: 'local',
+                        displayField: 'item',
+                        valueField: 'active',
+                        store: new Ext.data.SimpleStore({
+                            id: 0,
+                            fields: ['active', 'item'],
+                            data: [
+                                [1, 'Activo'],
+                                [0, 'Inactivo']
+                            ],
+                            autoLoad: true
+                        })
                     }
 
                 ]
@@ -395,15 +405,25 @@ var userForm = Ext.create('Ext.form.FormPanel', {
             {
                 text: 'Guardar',
                 iconCls: 'btn-save',
-                handler: function(){                    
-                    var frm = Ext.getCmp('user-form').getForm();
-                    Ext.getCmp('iduser').setValue(666);
+                handler: function(btn){
+                    var win = btn.up('window');
+                    var form = win.down('form');
+                    var record = form.getRecord();
+                    var values = form.getValues();
+                    var frm = form.getForm();
+
                     if(!frm.isValid())
                         return;
                     
                     frm.submit({
-                        success: function(frm, request){
-                            usersDataStore.load();
+                        success: function(frm, request){                            
+                            if(formAction == 'create')
+                                usersDataStore.load();
+                            else{
+                                tblrecord.set(record);
+                                usersGrid.doLayout();
+                            }
+                                
                             Ext.getCmp('user-win').hide();
                         },
                         failure: function(frm, request){
@@ -441,6 +461,22 @@ var userForm = Ext.create('Ext.form.FormPanel', {
 
 
 function newUser(){
+    formAction = 'create';
     userForm.getForm().reset();
+    userWind.setTitle('Crear Usuario');
     userWind.show();    
+}
+function editUser(){
+    formAction = 'edit';
+    var rows = usersGrid.getSelectionModel().getSelection();
+    if(rows.length === 0){
+        return;
+    }else{
+        tblrecord = rows[0];                
+        var idtypid = tblrecord.data.idtypeid;
+        Ext.getCmp('idtypeid').setValue(idtypid);
+        userForm.loadRecord(tblrecord);
+        userWind.setTitle('Editar Usuario');
+        userWind.show();
+    }
 }

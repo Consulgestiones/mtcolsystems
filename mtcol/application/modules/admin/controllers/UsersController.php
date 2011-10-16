@@ -50,55 +50,70 @@ class Admin_UsersController extends Zend_Controller_Action
         $data = $this->getRequest()->getPost();
         $form = new Form_User();
         
-        if($form->isValid($data)){
-            
-            $db = Zend_Registry::get('db');
-            $select = $db->select()
-                    ->from(array('u' => 'user'), array('x' => new Zend_Db_Expr('COUNT(u.iduser)')))
-                    ->where('u.username = ?', $data['username']);
-            $stmt = $db->query($select);
-            $count = $stmt->fetchColumn();
-            
-            if($count == 0){
-                $data['iduser'] = null;
-                $data['idprofile'] = 1;
-                $data['password'] = md5($data['numid']);
-                $data['creationdate'] = date('Y-m-d G:i:s');
-                
+        try{
+            if($form->isValid($data)){  
                 $model = new Model_User();
-                if($model->insert($data)){
-                    $resp = array(
-                        'success' => true
-                    );
-                }else{
-                    $resp = array(
-                        'success' => false,
-                        'msgs' => array(
-                            'Usuario' => array(
-                                'formulario' => 'Error al crear el usuario'
+                $iduser = $data['iduser'];
+                if($iduser == 0){                    
+                    $db = Zend_Registry::get('db');
+                    $select = $db->select()
+                            ->from(array('u' => 'user'), array('x' => new Zend_Db_Expr('COUNT(u.iduser)')))
+                            ->where('u.username = ?', $data['username']);
+                    $stmt = $db->query($select);
+                    $count = $stmt->fetchColumn();
+
+                    if($count == 0){
+                        $data['iduser'] = null;
+                        $data['idprofile'] = 1;
+                        $data['password'] = md5($data['numid']);
+                        $data['creationdate'] = date('Y-m-d G:i:s');
+
+
+                        if($model->insert($data)){
+                            $success = true;                            
+                            $msg = array();
+                        }else{
+                            $success = false;
+                            $msg = array(
+                                    'Usuario' => array(
+                                        'formulario' => 'Error al crear el usuario'
+                                    ));                            
+                        }
+
+                    }else{
+                        $success = false;
+                        $msg = array(
+                            'username' => array(
+                                'uniqueusername' => 'El usuario esta duplicado'
                             )
-                        )
-                    );
+                        );                                                
+                    }
+                }else{//es editar
+                    if($model->update($data, 'iduser = '.$iduser)){
+                        $success = true;
+                    }else{
+                        $success = false;
+                    }
                 }
-                
-            }else{
-                $msgs = array(
-                    'username' => array(
-                        'uniqueusername' => 'El usuario esta duplicado'
-                    )
-                );
-                $resp = array(
-                    'success' => false,
-                    'msgs' => $msgs
-                );
+
+            }else{     
+                $success = false;
+                $msg = $form->getMessages();                
             }
-            
-        }else{
-            $resp = array(
-                'success' => false,
-                'msgs' => $form->getMessages()
+        }catch(Exception $ex){
+            $success = false;
+            $msg = array(
+                'execution' => array(
+                    'exception' => $ex.getMessage()
+                )
             );
         }
+        $resp = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        
+        
                 
         $this->_helper->json->sendJson($resp);
     }
