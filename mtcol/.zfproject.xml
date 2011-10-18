@@ -78,6 +78,7 @@
             <controllerFile controllerName="Providers">
               <actionMethod actionName="index"/>
               <actionMethod actionName="read"/>
+              <actionMethod actionName="save"/>
             </controllerFile>
             <controllerFile controllerName="Products">
               <actionMethod actionName="index"/>
@@ -117,6 +118,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Providers">
                 <viewScriptFile forActionName="read"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Providers">
+                <viewScriptFile forActionName="save"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

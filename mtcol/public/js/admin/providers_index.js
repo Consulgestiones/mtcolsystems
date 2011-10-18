@@ -178,6 +178,7 @@ var providersGrid = new Ext.grid.Panel({
 var providerForm = Ext.create('Ext.form.Panel', {
     id: 'providerForm',
     defaultType: 'fieldset',
+    url: '/admin/providers/save',
     frame: true,
     items: [
         {
@@ -215,30 +216,6 @@ var providerForm = Ext.create('Ext.form.Panel', {
                     name: 'provideraddress'
                 },
                 {
-                    fieldLabel: 'Saludo Contacto',
-                    name: 'contacttitle'
-                },
-                {
-                    fieldLabel: 'Contacto',
-                    name: 'contact'
-                },
-                {
-                    fieldLabel: 'Tel hogar Contacto',
-                    name: 'contactphonehome'
-                },
-                {
-                    fieldLabel: 'Tel trabajo Contacto',
-                    name: 'contactphonework'
-                },
-                {
-                    fieldLabel: 'Extensión',
-                    name: 'contactphonework'
-                },
-                {
-                    fieldLabel: 'Cel Contacto',
-                    name: 'contactphonemobile'
-                },
-                {
                     xtype: 'country',
                     id: 'cbocountry',
                     name: 'idcountry',
@@ -261,6 +238,47 @@ var providerForm = Ext.create('Ext.form.Panel', {
                     disabled: true
                 }
             ]
+        },
+        {
+            title: 'Información Contacto',
+            defaultType: 'textfield',
+            layout: {
+                type: 'table',
+                columns: 2
+            },
+            itemCls: 'left-space',
+            items: [
+                {
+                    fieldLabel: 'Saludo',
+                    name: 'contacttitle'
+                },
+                {
+                    fieldLabel: 'Contacto',
+                    name: 'contact'
+                },
+                {
+                    fieldLabel: 'Tel hogar',
+                    name: 'contactphonehome'
+                },
+                {
+                    fieldLabel: 'Tel trabajo',
+                    name: 'contactphonework'
+                },
+                {
+                    fieldLabel: 'Extensión',
+                    name: 'contactphonework'
+                },
+                {
+                    fieldLabel: 'Celular',
+                    name: 'contactphonemobile'
+                }
+            ]
+        },
+        {
+            xtype: 'hidden',
+            name: 'idprovider',
+            id: 'hdnidprovider',
+            value: 0
         }
     ],
     buttons: [
@@ -276,7 +294,47 @@ var providerForm = Ext.create('Ext.form.Panel', {
         {
             text: 'Guardar',
             id: 'btnsave',
-            iconCls: 'btn-save'
+            iconCls: 'btn-save',
+            handler: function(btn){
+                var extform = btn.up('form');
+                var form = extform.getForm();
+                if(!form.isValid())
+                    return false
+                
+                form.submit({
+                    success: function(form, request){
+                        var obj = Ext.decode(request.response.responseText);                            
+                        if(typeof obj != 'undefined'){
+                            var store = providersGrid.getStore();
+                            var row = {
+                                idprovider: obj.data.idprovider,
+                                idtypeid: obj.data.idtypeid,
+                                providertypeid: obj.data.providertypeid,
+                                idcity: obj.data.idcity,
+                                city: obj.data.city,
+                                idcountry: obj.data.idcountry,
+                                country: obj.data.country,
+                                provider: obj.data.provider,
+                                typeid: obj.data.typeid,
+                                providernumid: obj.data.providernumid,
+                                providerphone: obj.data.providerphone,
+                                provideremail: obj.data.provideremail,
+                                provideraddress: obj.data.provideraddress,
+                                contact: obj.data.contact,
+                                contacttitle: obj.data.contacttitle,
+                                contactphonehome: obj.data.contactphonehome,
+                                contactphonework: obj.data.contactphonework,
+                                contactphonemobile: obj.data.contactphonemobile,
+                                contactphoneworkext: obj.data.contactphoneworkext
+                            };
+                            providersGrid.getStore().insert(0, row);                            
+                        }
+                    },
+                    failure: function(form, resp){
+                        
+                    }
+                });                              
+            }
         }
     ]
 });
@@ -284,7 +342,8 @@ var providerForm = Ext.create('Ext.form.Panel', {
 var providerFormWindow = Ext.create('Ext.window.Window', {
     items: providerForm,
     closeAction: 'hide',
-    iconCls: 'user-profile'
+    iconCls: 'user-profile',
+    modal: true
 });
 
 function newProvider(){    
