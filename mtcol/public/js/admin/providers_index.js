@@ -251,9 +251,6 @@ var providerForm = Ext.create('Ext.form.Panel', {
                             cbocity.store.load({
                                 params: {
                                     idcountry: this.getValue()
-                                },
-                                callback: function(cbocity){
-                                    cbocity.doLayout();
                                 }
                             });
                         }
