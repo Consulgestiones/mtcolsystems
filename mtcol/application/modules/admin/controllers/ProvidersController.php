@@ -57,8 +57,49 @@ class Admin_ProvidersController extends Zend_Controller_Action
         
     }
 
+    public function saveAction()
+    {
+        $form = new Form_Provider();
+        $data = $this->getRequest()->getPost();
+        $model = new Model_Provider();
+        $msg = '';
+        try{
+            if($form->isValid($data)){
+                if($data['idprovider'] == 0){//Crear
+                    $data['idprovider'] = null;
+                    $idprovider = $model->insert($data);
+                    if($idprovider){
+                        $data['idprovider'] = $idprovider;
+                    }else{
+                        throw new Exception(json_encode(array('Error al crear el proveedor')));
+                    }
+                }else{//Actualizar
+                    $idprovider = $data['idprovider'];
+                    if(!$model->update($data, 'idprovider = '. $idprovider)){
+                        throw new Exception('Error al actualizar el empleador');
+                    }
+                }
+            }else{
+                throw new Exception(json_encode($form->getErrorMessages()));
+            }
+        }catch(Exception $e){
+            $data = null;
+            $msg = $e->getMessage();
+        }
+        $resp = array(
+            'success' => ($data != null),
+            'data' => $data,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($resp);
+        
+    }
+
 
 }
+
+
 
 
 
