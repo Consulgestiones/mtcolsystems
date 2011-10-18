@@ -207,23 +207,7 @@ Ext.define('Typeid', {
         {name: 'typeid', type: 'string'}
     ]
 });
-var idtypeDataStore = Ext.data.Store({    
-    model: 'Typeid',
-    id: 'typeidDS',
-    proxy: {
-        type: 'ajax',
-        url: '/typesid/gettypes',
-        method: 'POST',
-        reader: new Ext.data.JsonReader({
-            fields: [
-                'idtypeid',
-                'typeid'
-            ],
-            root: 'data'
-        })
-    },
-    autoLoad: true
-});
+
 
 
 /**
@@ -277,14 +261,7 @@ var userForm = Ext.create('Ext.form.FormPanel', {
                         vtype: 'email'
                     },
                     {
-                        xtype: 'combo',
-                        id: 'idtypeid',
-                        name: 'idtypeid',
-                        fieldLabel: 'Tipo Ident',
-                        store: idtypeDataStore,
-                        mode: 'remote',
-                        displayField: 'typeid',
-                        valueField: 'idtypeid'
+                        xtype: 'typeid'
                     },
                     {
                         fieldLabel: 'Nun Ident',
@@ -316,6 +293,7 @@ var userForm = Ext.create('Ext.form.FormPanel', {
                         fieldLabel: 'Estado',
                         name: 'active',
                         mode: 'local',
+                        queryMode: 'local',
                         displayField: 'item',
                         valueField: 'active',
                         store: new Ext.data.SimpleStore({

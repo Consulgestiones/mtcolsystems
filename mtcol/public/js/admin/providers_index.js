@@ -22,6 +22,15 @@ Ext.define('Provider', {
         {name: 'contacphoneworkext', type: 'string'},
     ]
 });
+
+Ext.define('Typeid', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'idtypeid', type: 'int'},
+        {name: 'typeid', type: 'string'}
+    ]
+});
+
 var providerProxy = new Ext.data.proxy.Ajax({
     id: 'ProvidersProxy',
     method: 'POST',
@@ -165,12 +174,10 @@ var providersGrid = new Ext.grid.Panel({
     renderTo: Ext.get('slot1'),
     autoSizeColumns: true
 });
-Ext.define('Mtc.form.Provider', {
-    extend: 'Ext.form.Panel',
+
+var providerForm = Ext.create('Ext.form.Panel', {
     id: 'providerForm',
-    alias: 'widget.providerform',
     defaultType: 'fieldset',
-    layout: 'vbox', 
     frame: true,
     items: [
         {
@@ -180,42 +187,114 @@ Ext.define('Mtc.form.Provider', {
                 type: 'table',
                 columns: 2
             },
+            itemCls: 'left-space',
             items: [
                 {
                     fieldLabel: 'Razón Social',
                     name: 'provider',
                     allowBlank: false
+                },
+                {
+                    xtype: 'typeid'                    
+                },
+                {
+                    fieldLabel: 'Num ID',
+                    name: 'providernumid',
+                    allowBlank: false
+                },
+                {
+                    fieldLabel: 'E-mail',
+                    name: 'provideremail'
+                },
+                {
+                    fieldLabel: 'Teléfono',
+                    name: 'providerphone'
+                },
+                {
+                    fieldLabel: 'Dirección',
+                    name: 'provideraddress'
+                },
+                {
+                    fieldLabel: 'Saludo Contacto',
+                    name: 'contacttitle'
+                },
+                {
+                    fieldLabel: 'Contacto',
+                    name: 'contact'
+                },
+                {
+                    fieldLabel: 'Tel hogar Contacto',
+                    name: 'contactphonehome'
+                },
+                {
+                    fieldLabel: 'Tel trabajo Contacto',
+                    name: 'contactphonework'
+                },
+                {
+                    fieldLabel: 'Extensión',
+                    name: 'contactphonework'
+                },
+                {
+                    fieldLabel: 'Cel Contacto',
+                    name: 'contactphonemobile'
+                },
+                {
+                    xtype: 'country',
+                    id: 'cbocountry',
+                    name: 'idcountry',
+                    fieldLabel: 'Pais',
+                    listeners: {
+                        select: function(cmb, record, index){
+                            var cbocity = Ext.getCmp('cbocity');
+                            cbocity.enable();
+                            cbocity.clearValue();
+                            cbocity.store.load({
+                                params: {
+                                    idcountry: this.getValue()
+                                },
+                                callback: function(cbocity){
+                                    cbocity.doLayout();
+                                }
+                            });
+                        }
+                    }
+                },
+                {
+                    xtype: 'city',
+                    disabled: true
                 }
             ]
         }
-    ]/*,
+    ],
     buttons: [
-        {
-            text: 'Cancelar'
+        { 
+            text: 'Cancelar',
+            id: 'btncancel',
+            iconCls: 'btn-cancel',
+            handler: function(){
+                var w = this.up('form').up('window');
+                w.hide();
+            }
         },
         {
-            text: 'Guardar'
+            text: 'Guardar',
+            id: 'btnsave',
+            iconCls: 'btn-save'
         }
-    ]    */
+    ]
 });
-Ext.define('Mtc.window.Provider', {
-    extend: 'Ext.window.Window',
-    title: 'Nuevo Proveedor',
-    width: 300,
-    height: 200,  
-    items: {
-        xtype: 'providerform'
-    }
-})
+
+var providerFormWindow = Ext.create('Ext.window.Window', {
+    items: providerForm,
+    closeAction: 'hide',
+    iconCls: 'user-profile'
+});
+
 function newProvider(){    
-    var win = Ext.create('Mtc.window.Provider', {
-        
-    });
-    
-    var form = win.down('form');
-    var frm = form.getForm();
-    
-    win.show();
+    providerFormWindow.setTitle('Crear Proveedor');
+    var frm = providerFormWindow.down('form').getForm();
+    frm.reset();
+    providerFormWindow.show();
 }
 function editProvider(){
     alert('Editar proveedor');

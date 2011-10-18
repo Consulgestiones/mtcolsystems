@@ -24,6 +24,14 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="gettypes"/>
         </controllerFile>
+        <controllerFile controllerName="Countries">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="read"/>
+        </controllerFile>
+        <controllerFile controllerName="Cities">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="read"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
@@ -196,6 +204,18 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Typesid">
             <viewScriptFile forActionName="gettypes"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Countries">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Countries">
+            <viewScriptFile forActionName="read"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Cities">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Cities">
+            <viewScriptFile forActionName="read"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
