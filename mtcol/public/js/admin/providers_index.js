@@ -16,10 +16,10 @@ Ext.define('Provider', {
         {name: 'provideraddress', type: 'string'},
         {name: 'contact', type: 'string'},
         {name: 'contacttitle', type: 'string'},
-        {name: 'contacphonehome', type: 'string'},
-        {name: 'contacphonework', type: 'string'},
-        {name: 'contacphonemobile', type: 'string'},
-        {name: 'contacphoneworkext', type: 'string'},
+        {name: 'contactphonehome', type: 'string'},
+        {name: 'contactphonework', type: 'string'},
+        {name: 'contactphonemobile', type: 'string'},
+        {name: 'contactphoneworkext', type: 'string'},
     ]
 });
 
@@ -118,11 +118,6 @@ var providersGrid = new Ext.grid.Panel({
             width: 80
         },
         {
-            header: 'Pais', 
-            dataIndex: 'country',
-            width: 80
-        },
-        {
             header: 'Teléfono', 
             dataIndex: 'providerphone',
             width: 70
@@ -144,7 +139,7 @@ var providersGrid = new Ext.grid.Panel({
         },
         {
             header: 'Saludo', 
-            dataIndex: 'title',
+            dataIndex: 'contacttitle',
             width: 50
         },
         {
@@ -154,7 +149,7 @@ var providersGrid = new Ext.grid.Panel({
         },
         {
             header: 'Tel Trabajo Contacto', 
-            dataIndex: 'contactphonehome',
+            dataIndex: 'contactphonework',
             width: 50
         },
         {
@@ -164,7 +159,7 @@ var providersGrid = new Ext.grid.Panel({
         },
         {
             header: 'Movil Contacto', 
-            dataIndex: 'contactphonehome',
+            dataIndex: 'contactphonemobile',
             width: 50
         }        
     ],
@@ -266,7 +261,7 @@ var providerForm = Ext.create('Ext.form.Panel', {
                 },
                 {
                     fieldLabel: 'Extensión',
-                    name: 'contactphonework'
+                    name: 'contactphoneworkext'
                 },
                 {
                     fieldLabel: 'Celular',
@@ -298,6 +293,7 @@ var providerForm = Ext.create('Ext.form.Panel', {
             handler: function(btn){
                 var extform = btn.up('form');
                 var form = extform.getForm();
+                var win = extform.up('window');
                 if(!form.isValid())
                     return false
                 
@@ -305,29 +301,9 @@ var providerForm = Ext.create('Ext.form.Panel', {
                     success: function(form, request){
                         var obj = Ext.decode(request.response.responseText);                            
                         if(typeof obj != 'undefined'){
-                            var store = providersGrid.getStore();
-                            var row = {
-                                idprovider: obj.data.idprovider,
-                                idtypeid: obj.data.idtypeid,
-                                providertypeid: obj.data.providertypeid,
-                                idcity: obj.data.idcity,
-                                city: obj.data.city,
-                                idcountry: obj.data.idcountry,
-                                country: obj.data.country,
-                                provider: obj.data.provider,
-                                typeid: obj.data.typeid,
-                                providernumid: obj.data.providernumid,
-                                providerphone: obj.data.providerphone,
-                                provideremail: obj.data.provideremail,
-                                provideraddress: obj.data.provideraddress,
-                                contact: obj.data.contact,
-                                contacttitle: obj.data.contacttitle,
-                                contactphonehome: obj.data.contactphonehome,
-                                contactphonework: obj.data.contactphonework,
-                                contactphonemobile: obj.data.contactphonemobile,
-                                contactphoneworkext: obj.data.contactphoneworkext
-                            };
-                            providersGrid.getStore().insert(0, row);                            
+                            var store = providersGrid.getStore();//                            
+                            store.insert(0, obj.data);
+                            win.hide();
                         }
                     },
                     failure: function(form, resp){

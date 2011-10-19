@@ -70,6 +70,24 @@ class Admin_ProvidersController extends Zend_Controller_Action
                     $idprovider = $model->insert($data);
                     if($idprovider){
                         $data['idprovider'] = $idprovider;
+                        
+                        //Tipo de identificacion
+                        $timodel = new Model_Typesid();
+                        $row = $timodel->find($data['idtypeid']);                        
+                        $data['typeid'] = $row[0]->typeid;
+                        
+                        // Pais - ciudad
+                        $db = Zend_Registry::get('db');
+                        $select = $db->select()
+                                ->from(array('c' => 'city'), array('c.city'))
+                                ->join(array('p' => 'country'), 'p.idcountry = c.idcountry', array('country'))
+                                ->where('c.idcity = ?', $data['idcity'])
+                                ->where('c.idcountry = ?', $data['idcountry']);
+                        $stmt = $db->query($select);
+                        $info = $stmt->fetch();
+                        $data['country'] = $info['country'];
+                        $data['city'] = $info['city'];
+                        
                     }else{
                         throw new Exception(json_encode(array('Error al crear el proveedor')));
                     }
