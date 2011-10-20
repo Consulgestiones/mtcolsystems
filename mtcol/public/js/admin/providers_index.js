@@ -299,10 +299,16 @@ var providerForm = Ext.create('Ext.form.Panel', {
                 
                 form.submit({
                     success: function(form, request){
-                        var obj = Ext.decode(request.response.responseText);                            
+                        var obj = Ext.decode(request.response.responseText);    
+                        
                         if(typeof obj != 'undefined'){
-                            var store = providersGrid.getStore();//                            
-                            store.insert(0, obj.data);
+                            var store = providersGrid.getStore();
+                            if(Mtc.providerAction == 'create'){                                
+                                store.insert(0, obj.data);                                
+                            }else if(Mtc.providerAction == 'update'){
+                                Mtc.record.set(obj.data);
+                                Mtc.record.commit();
+                            }
                             win.hide();
                         }
                     },
@@ -323,6 +329,7 @@ var providerFormWindow = Ext.create('Ext.window.Window', {
 });
 
 function newProvider(){    
+    Mtc.providerAction = 'create';
     providerFormWindow.setTitle('Crear Proveedor');
     var frm = providerFormWindow.down('form').getForm();
     frm.reset();
@@ -330,6 +337,7 @@ function newProvider(){
 }
 function editProvider(){
     var rows = providersGrid.getSelectionModel().getSelection();
+    Mtc.providerAction = 'update';
     if(rows.length === 0){
         return;
     }else{
@@ -349,6 +357,7 @@ function editProvider(){
                 }
             });
         }
+        Mtc.record = record;
         providerFormWindow.setTitle('Editar proveedor');
         providerFormWindow.show();
     }
