@@ -329,5 +329,27 @@ function newProvider(){
     providerFormWindow.show();
 }
 function editProvider(){
-    alert('Editar proveedor');
+    var rows = providersGrid.getSelectionModel().getSelection();
+    if(rows.length === 0){
+        return;
+    }else{
+        var record = rows[0];
+        providerForm.loadRecord(record);
+        var cbocity = Ext.getCmp('cbocity');
+        cbocity.enable();
+        if(cbocity.store.getCount() == 0){
+            cbocity.clearValue();
+            cbocity.store.load({
+                scope: this,
+                params: {
+                    idcountry: record.get('idcountry')
+                },
+                callback: function(){
+                    cbocity.setValue(record.get('idcity'));
+                }
+            });
+        }
+        providerFormWindow.setTitle('Editar proveedor');
+        providerFormWindow.show();
+    }
 }
