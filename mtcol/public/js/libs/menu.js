@@ -25,7 +25,7 @@ Ext.onReady(function(){
             if(typeof level[idparent] == 'undefined')
                 level[idparent] = new Array();
 
-            level[idparent].push(menu[j]);
+            level[idparent].push(modulemenu[j]);
             counts[idparent] = (counts[idparent]+1);
         }
 

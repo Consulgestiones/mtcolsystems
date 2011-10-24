@@ -86,6 +86,11 @@
               <actionMethod actionName="index"/>
               <actionMethod actionName="getproducts"/>
             </controllerFile>
+            <controllerFile controllerName="Categories">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="getcategories"/>
+              <actionMethod actionName="save"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -133,6 +138,15 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Products">
                 <viewScriptFile forActionName="getproducts"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Categories">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Categories">
+                <viewScriptFile forActionName="getcategories"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Categories">
+                <viewScriptFile forActionName="save"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
