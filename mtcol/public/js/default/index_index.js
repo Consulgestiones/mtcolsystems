@@ -8,6 +8,14 @@ login = new Ext.form.Panel({
    url: '/index/login',
    waitTitle: 'Validando',
    collapsible: true,
+   /*keys: [
+       {
+           key: [Ext.EventObject.ENTER],
+           handler: function(){
+               this.up('form').submit();
+           }
+       }
+   ],*/   
    items: [       
        {
            fieldLabel: 'Usuario',
@@ -68,7 +76,30 @@ login = new Ext.form.Panel({
    ],
    renderTo:Ext.getBody()
 }).center();
-//var viewport = new Ext.Viewport({
-//    layout: 'absolute',
-//    items: [login]
-//})
+Ext.get('form-login').on('keydown', function(e){      
+   if(e.getKey() == 13){
+       var form = Ext.getCmp('form-login').getForm();
+       form.submit({
+                   success:function(form, request){
+                       var usr = Ext.decode(request.response.responseText).user;
+                       console.log(Ext.encode(usr));
+                       setGlobal('user', usr);
+                       setGlobal('menu', usr.menu);
+                       if(usr.applications.length == 1){
+                           var app = usr.applications[0];
+                           window.location = window.location + app.module + '/' + app.controller + '/' + app.action
+                       }else{
+                           window.location = window.location + 'applications';
+                       }
+                   },
+                   failure: function(form, request){
+                       Ext.MessageBox.show({
+                           title: 'Error',
+                           msg: 'Error de autenticación',
+                           buttons: Ext.MessageBox.OK,
+                           icon: Ext.MessageBox.ERROR
+                       })
+                   }
+               });
+   }
+});

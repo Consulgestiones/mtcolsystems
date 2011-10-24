@@ -36,6 +36,9 @@
 .btn-cancel {
     background-image:url(/images/icons/cancel.png) !important;
 }
+.btn-key {
+    background-image:url(/images/icons/bullet_key.png) !important;
+}
 .align-right {
     text-align: right;    
 }

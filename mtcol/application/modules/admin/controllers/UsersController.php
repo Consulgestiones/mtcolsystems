@@ -31,6 +31,7 @@ class Admin_UsersController extends Zend_Controller_Action
                 ->from(array('u' => 'user'))
                 ->columns(array('isactive' => new Zend_Db_Expr("CASE u.active WHEN 1 THEN 'Si' ELSE 'No' END")))
                 ->join(array('t' => 'typeid'), 't.idtypeid = u.idtypeid', array('typeid'))
+                ->join(array('p' => 'profile'), 'p.idprofile = u.idprofile', array('profile'))
                 ->order(array('lastname', 'firstname'))
                 ->limit($limit, $start);        
         
@@ -49,11 +50,14 @@ class Admin_UsersController extends Zend_Controller_Action
     {
         $data = $this->getRequest()->getPost();
         $form = new Form_User();
-        
+        $user = null;
         try{
             if($form->isValid($data)){  
                 $model = new Model_User();
                 $iduser = $data['iduser'];
+                
+                $db = Zend_Registry::get('db');
+                
                 if($iduser == 0){                    
                     $db = Zend_Registry::get('db');
                     $select = $db->select()
@@ -68,49 +72,63 @@ class Admin_UsersController extends Zend_Controller_Action
                         $data['password'] = md5($data['numid']);
                         $data['creationdate'] = date('Y-m-d G:i:s');
 
-
-                        if($model->insert($data)){
+                        $iduser = $model->insert($data);
+                        if($iduser){
                             $success = true;                            
-                            $msg = array();
+                            $msg = array();                                                        
+                            
                         }else{
-                            $success = false;
-                            $msg = array(
-                                    'Usuario' => array(
-                                        'formulario' => 'Error al crear el usuario'
-                                    ));                            
+                            throw new Exception('Error al crear el usuario');
+//                            $success = false;
+//                            $msg = array(
+//                                    'Usuario' => array(
+//                                        'formulario' => 'Error al crear el usuario'
+//                                    ));                            
                         }
 
                     }else{
-                        $success = false;
-                        $msg = array(
-                            'username' => array(
-                                'uniqueusername' => 'El usuario esta duplicado'
-                            )
-                        );                                                
+                        throw new Exception('El usuario esta duplicado');
+//                        $success = false;
+//                        $msg = array(
+//                            'username' => array(
+//                                'uniqueusername' => 'El usuario esta duplicado'
+//                            )
+//                        );                                                
                     }
                 }else{//es editar
-                    if($model->update($data, 'iduser = '.$iduser)){
-                        $success = true;
-                    }else{
-                        $success = false;
+                    if(!$model->update($data, 'iduser = '.$iduser)){
+                        throw new Exception('Error al editar el usuario');
                     }
                 }
 
             }else{     
-                $success = false;
-                $msg = $form->getMessages();                
+                throw new Exception(json_encode($form->getMessages()));
+//                $success = false;
+//                $msg = $form->getMessages();       
             }
-        }catch(Exception $ex){
+            
+            $select = $db->select()
+                    ->from(array('u' => 'user'))
+                    ->columns(array('isactive' => new Zend_Db_Expr("CASE u.active WHEN 1 THEN 'Si' ELSE 'No' END")))
+                    ->join(array('t' => 'typeid'), 't.idtypeid = u.idtypeid', array('typeid'))
+                    ->join(array('p' => 'profile'), 'p.idprofile = u.idprofile', array('profile'))
+                    ->where("iduser = ?", $iduser);        
+
+            $stmt = $db->query($select);
+            $user = $stmt->fetch();
+            $success = true;
+        }catch(Exception $e){
             $success = false;
             $msg = array(
                 'execution' => array(
-                    'exception' => $ex.getMessage()
+                    'exception' => $e->getMessage()
                 )
             );
         }
         $resp = array(
             'success' => $success,
-            'msg' => $msg
+            'msg' => $msg,
+            'data' => $user
         );
         
         
