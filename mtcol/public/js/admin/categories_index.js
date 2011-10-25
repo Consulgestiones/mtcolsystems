@@ -137,7 +137,7 @@ var categoryForm = Ext.create('Ext.form.Panel', {
             name: 'productcategory',
             allowBlank: false
         },
-        {
+        /*{
             fieldLabel: 'Activo',
             xtype: 'combo',
             name: 'inactive',
@@ -154,7 +154,7 @@ var categoryForm = Ext.create('Ext.form.Panel', {
                 autoLoad: true
             }),
             allowBlank: false
-        },
+        },*/
         {
             xtype: 'textarea',
             fieldLabel: 'Descripción',
@@ -163,6 +163,11 @@ var categoryForm = Ext.create('Ext.form.Panel', {
         {
             xtype: 'hidden',
             name: 'idproductcategory',
+            value: 0
+        },
+        {
+            xtype: 'hidden',
+            name: 'inactive',
             value: 0
         }
     ],
@@ -301,11 +306,38 @@ var subcategoriesDataStore = Ext.create('Ext.data.Store', {
 var subcategoriesTobBar = [
     {
         text: 'Nueva Sub Categoria',
-        iconCls: 'add'
+        iconCls: 'add',
+        handler: function(){
+            var rows = categoriesGrid.getSelectionModel().getSelection();
+            if(rows.length === 0)
+                return;
+            
+            Mtc.category = rows[0];
+            subcategoriesFormWin.setTitle('Nueva Sub Categoría');
+            subcategoryForm.getForm().reset();
+            subcategoriesFormWin.show();
+        }
     },
     {
         text: 'Editar Sub Categoria',
-        iconCls: 'edit'        
+        iconCls: 'edit',
+        handler: function(){
+            var rows = categoriesGrid.getSelectionModel().getSelection();
+            if(rows.length === 0)
+                return;
+            Mtc.category = rows[0];
+            
+            rows = subcategoriesGrid.getSelectionModel().getSelection();
+            if(rows.length === 0)
+                return;
+            
+            Mtc.subcategory = rows[0];
+            subcategoriesFormWin.setTitle('Modificar Categoría');
+            var form = subcategoryForm.getForm();
+            form.reset();
+            form.loadRecord(Mtc.subcategory);
+            subcategoriesFormWin.show();
+        }
     },
     {
         text: 'Activar / Inactivar',
@@ -349,4 +381,87 @@ var subcategoriesGrid = Ext.create('Ext.grid.Panel', {
     stripeRows: true,
     height: Mtc.config.gridHeight,    
     autoSizeColumns: true
+});
+
+var subcategoryForm = Ext.create('Ext.form.Panel', {
+    id: 'categoryForm',
+    defaultType: 'textfield',
+    url: '/admin/categories/savesubcategory',
+    frame: true,
+    items: [
+        {
+            fieldLabel: 'Sub Categoría',
+            allowBlank: false,
+            name: 'productsubcategory'
+        },        
+        {
+            xtype: 'textarea',
+            fieldLabel: 'Descripción',
+            name: 'description'
+        },
+        {
+            xtype: 'hidden',
+            name: 'idproductsubcategory',
+            value: 0
+        },
+        {
+            xtype: 'hidden',
+            name: 'inactive',
+            value: 0
+        }        
+    ],
+    buttons: [
+        {
+            text: 'Cancelar',
+            iconCls: 'btn-cancel',
+            handler: function(btn){
+                var win = btn.up('window');
+                if(typeof win != 'undefined')
+                    win.hide();
+            }
+        },
+        {
+            text: 'Guardar',
+            iconCls: 'btn-save',
+            handler: function(btn){
+                var win = btn.up('window');
+                var form = win.down('form').getForm();
+                if(form.isValid()){                    
+                    form.submit({
+                        params: {
+                            idproductcategory: Mtc.category.get('idproductcategory')
+                        },
+                        success: function(form, request){                            
+                            var obj = Ext.decode(request.response.responseText);
+                            if(Mtc.formAction == 'create'){
+                                var store = subcategoriesGrid.getStore();
+                                store.insert(0, obj.data);
+                            }else if(Mtc.formAction == 'edit'){
+                                Mtc.subcategory.set(obj.data);
+                                Mtc.subcategory.commit();
+                            }                         
+                            win.hide();
+                        },
+                        failure: function(form, request){
+                            var obj = Ext.decode(request.response.responseText);
+                            Ext.MessageBox.show({
+                                title: 'Error!!!',
+                                msg: obj.msg,
+                                icon: Ext.MessageBox.ERROR
+                            });
+                        }
+                    })
+                }
+            }
+        }
+    ]
+});
+
+var subcategoriesFormWin = Ext.create('Ext.window.Window', {
+    iconCls: '',
+    id: 'subcategoriesFormWin',
+    autoHeight: true,
+    items: subcategoryForm,
+    closeAction: 'hide',
+    modal: true
 });

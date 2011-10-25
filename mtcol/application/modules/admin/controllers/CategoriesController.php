@@ -64,6 +64,12 @@ class Admin_CategoriesController extends Zend_Controller_Action
             if(!$vdigits->isValid($idproductcategory) || !$vstring->isValid($productcategory))
                 throw new Exception('la información no es correcta');
             
+//            $data = array(
+//                'idproductcategory' => ($idproductcategory)?$idproductcategory:null,
+//                'productcategory' => $productcategory,
+//                'description' => $description,
+//                'inactive' => $inactive
+//            );
             $data = array(
                 'idproductcategory' => ($idproductcategory)?$idproductcategory:null,
                 'productcategory' => $productcategory,
@@ -169,8 +175,62 @@ class Admin_CategoriesController extends Zend_Controller_Action
         $this->_helper->json->sendJson($resp);
     }
 
+    public function savesubcategoryAction()
+    {
+        $idproductcategory = $this->getRequest()->getParam('idproductcategory');
+        $idproductsubcategory = $this->getRequest()->getParam('idproductsubcategory');
+        $productsubcategory = $this->getRequest()->getParam('productsubcategory');
+        $description = $this->getRequest()->getParam('description');       
+        $inactive = $this->getRequest()->getParam('inactive');       
+        
+        $vDigits = new Zend_Validate_Digits();
+        $nEmpty = new Zend_Validate_NotEmpty();
+        
+        try{
+            if(!$vDigits->isValid($idproductcategory) || !$vDigits->isValid($idproductsubcategory) || !$nEmpty->isValid($productsubcategory))
+                    throw new Exception('Los datos no son consistentes');
+            
+            $data = array(
+                'idproductsubcategory' => ($idproductsubcategory)?$idproductsubcategory:null,
+                'idproductcategory' => $idproductcategory,
+                'productsubcategory' => $productsubcategory,
+                'description' => $description,
+                'inactive' => $inactive
+            );
+            
+            $model = new Model_ProductSubcategory();
+            
+            if($idproductsubcategory){
+                $update = $model->update($data, "idproductsubcategory = ".$idproductsubcategory);
+                if(is_nan($update))
+                    throw new Exception('Error al modificar la subcategoría');
+            }else{
+                $idproductsubcategory = $model->insert($data);
+                if(!$idproductsubcategory)
+                    throw new Exception('Error al crear la subcategoría');
+                
+                $data['idproductsubcategory'] = $idproductsubcategory;                
+            }
+            $data['active'] = ($inactive)?'NO':'SI';
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }        
+        $resp = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($resp);
+    }
+
 
 }
+
+
 
 
 

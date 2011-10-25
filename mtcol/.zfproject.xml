@@ -92,6 +92,7 @@
               <actionMethod actionName="save"/>
               <actionMethod actionName="inactivate"/>
               <actionMethod actionName="getsubcategories"/>
+              <actionMethod actionName="savesubcategory"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -155,6 +156,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Categories">
                 <viewScriptFile forActionName="getsubcategories"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Categories">
+                <viewScriptFile forActionName="savesubcategory"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
