@@ -99,8 +99,82 @@ class Admin_CategoriesController extends Zend_Controller_Action
         $this->_helper->json->sendJson($resp);
     }
 
+    public function inactivateAction()
+    {
+        $idproductcategory = $this->getRequest()->getParam('idproductcategory');
+        
+        try{
+            $sql = sprintf("UPDATE product_category c SET c.inactive = CASE c.inactive WHEN 1 THEN 0 ELSE 1 END
+                            WHERE c.idproductcategory = %d", $idproductcategory);
+            
+            $db = Zend_Registry::get('db');
+            
+            $stmt = $db->exec($sql);
+//            $stmt = $db->query($sql);
+//            $result = $stmt->exec();
+            
+            $sql = sprintf("SELECT CASE inactive WHEN 1 THEN 'NO' ELSE 'SI' END FROM product_category WHERE idproductcategory = %d", $idproductcategory);
+            $stmt = $db->query($sql);
+            $inactive = $db->fetchOne($sql);
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();                   
+        }        
+        $resp = array(
+            'success' => $success,
+            'msg' => $msg,
+            'active' => $inactive
+        );
+        $this->_helper->json->sendJson($resp);
+        
+    }
+
+    public function getsubcategoriesAction()
+    {
+        $idproductcategory = $this->getRequest()->getParam('idproductcategory');
+        $start = $this->getRequest()->getParam('start');
+        $limit = $this->getRequest()->getParam('limit');
+        
+        $subcat = array();
+        try{
+            $db = Zend_Registry::get('db');
+            $select = sprintf("SELECT SQL_CALC_FOUND_ROWS s.idproductsubcategory, s.idproductcategory, s.productsubcategory, s.description, 
+                                        CASE s.inactive WHEN 1 THEN 'NO' ELSE 'SI' END AS active, s.inactive
+                                FROM product_subcategory s
+                                WHERE s.idproductcategory = %d
+                                ORDER BY s.productsubcategory
+                                LIMIT %d, %d", $idproductcategory, $start, $limit);
+            
+            $stmt = $db->query($select);
+            $subcat = $stmt->fetchAll();
+            
+            $sql = "SELECT FOUND_ROWS()";
+            $stmt = $db->query($sql);
+            $total = $stmt->fetchColumn();
+                    
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        $resp = array(
+            'success' => $success,
+            'data' => $subcat,
+            'total' => $total,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($resp);
+    }
+
 
 }
+
+
+
+
 
 
 

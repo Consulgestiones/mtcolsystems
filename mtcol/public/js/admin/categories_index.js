@@ -9,6 +9,10 @@ Ext.define('Mtc.model.Category', {
     ]
 });
 
+/**
+ * Grilla de categorias
+ */
+
 var categoriesDataStore = Ext.create('Ext.data.Store', {
     model: 'Mtc.model.Category',
     proxy: {
@@ -27,23 +31,25 @@ var categoriesDataStore = Ext.create('Ext.data.Store', {
 
 var categoriesTopBar = [
     {
-        text: 'Nueva',
+        text: 'Nueva Categoria',
         iconCls: 'add',
         handler: createCategory
     },
     {
-        text: 'Editar',
+        text: 'Editar Categoria',
         iconCls: 'edit',
         handler: editCategory
     },
     {
         text: 'Activar / Inactivar',
-        iconCls: 'delete'
-    },
+        iconCls: 'delete',
+        handler: inactiveCategory
+    }/*,
     {
         text: 'Sub Categorias',
-        iconCls: 'sub-cat'
-    }
+        iconCls: 'sub-cat',
+        handler: subCategories
+    }*/
 ];
 
 var categoriesPagingBar = new Ext.PagingToolbar({  
@@ -60,6 +66,7 @@ var categoriesGrid = Ext.create('Ext.grid.Panel', {
     tbar: categoriesTopBar,
     bbar: categoriesPagingBar,
     columns: [
+        Ext.create('Ext.grid.RowNumberer'),
         {
             header: 'Categoria',
             dataIndex: 'productcategory',
@@ -78,10 +85,40 @@ var categoriesGrid = Ext.create('Ext.grid.Panel', {
     ],
     enableColLock: false,
     stripeRows: true,
-    height: Mtc.config.gridHeight,
-    renderTo: Ext.get('slot1'),
-    autoSizeColumns: true
+    height: Mtc.config.gridHeight,    
+    autoSizeColumns: true,
+    flex: 1
 });
+categoriesGrid.getSelectionModel().on('selectionchange', function(sm, selection){
+    var record = selection[0];
+    var idpc = record.get('idproductcategory');
+    subCategories(idpc);
+});
+//categoriesGrid.on('rowclick', function(categoriesGrid, rowIndex, e) {
+//    alert('hola');
+//    var row = this.categoriesGrid.getView().getRow(rowIndex);
+//    var record = this.ds.getAt(rowIndex);
+//    subCategories(record.get('idproductcategory'));
+//}); 
+
+var panel = Ext.create('Ext.Panel', {
+    border: 0,
+    height: 400,
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },
+    items: [
+        categoriesGrid
+    ],
+    autoHeight: true,
+    renderTo: Ext.get('slot1')
+})
+
+
+/**
+ * Formulario de ingreso y edición de categorias
+ */
 
 var categoryForm = Ext.create('Ext.form.Panel', {
     id: 'categoryForm',
@@ -200,3 +237,116 @@ function editCategory(){
     
     categoryFormWin.show();
 }
+function inactiveCategory(){
+    var rows = categoriesGrid.getSelectionModel().getSelection();
+    if(rows.length === 0)
+        return;
+    
+    Mtc.record = rows[0];
+    
+    Ext.Ajax.request({
+        url: '/admin/categories/inactivate',
+        method: 'POST',
+        params: {
+            idproductcategory: Mtc.record.get('idproductcategory')
+        },
+        success: function(response){
+            var obj = Ext.decode(response.responseText);
+            Mtc.record.set('active', obj.active);
+            Mtc.record.commit();
+        }
+    });
+}
+function subCategories(idpc){    
+    panel.remove(subcategoriesGrid, false);
+    panel.add(subcategoriesGrid);
+    
+    subcategoriesGrid.getStore().load({
+        params: {
+            idproductcategory: idpc
+        }
+    })
+}
+
+/**
+ * Sub categorias
+ */
+Ext.define('Mtc.model.SubCategory', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'idproductsubcategory', type: 'int'},
+        {name: 'idproductcategory', type: 'int'},
+        {name: 'productsubcategory', type: 'string'},
+        {name: 'description', type: 'string'},
+        {name: 'active', type: 'string'},
+        {name: 'inactive', type: 'int'},
+    ]
+});
+
+var subcategoriesDataStore = Ext.create('Ext.data.Store', {
+    model: 'Mtc.model.SubCategory',
+    proxy: {
+        type: 'ajax',
+        url: '/admin/categories/getsubcategories',
+        method: 'POST',
+        reader: {
+            type: 'json',
+            totalProperty: 'total',
+            root: 'data'
+        }
+    },
+    autoLoad: false
+});
+
+var subcategoriesTobBar = [
+    {
+        text: 'Nueva Sub Categoria',
+        iconCls: 'add'
+    },
+    {
+        text: 'Editar Sub Categoria',
+        iconCls: 'edit'        
+    },
+    {
+        text: 'Activar / Inactivar',
+        iconCls: 'delete'
+    }
+];
+var subcategoriesPagingBar = new Ext.PagingToolbar({  
+    pageSize: Mtc.config.gridPageSize,  
+    store: subcategoriesDataStore,  
+    displayInfo: true  
+});
+
+var subcategoriesGrid = Ext.create('Ext.grid.Panel', {
+    id: 'subcategoriesGrid',
+    title: 'Sub Categorias',
+    iconCls: 'sub-cat',
+    tbar: subcategoriesTobBar,
+    bbar: subcategoriesPagingBar,
+    store: subcategoriesDataStore,
+    columns: [
+        Ext.create('Ext.grid.RowNumberer'),
+        {
+            header: 'Sub Categoria',
+            dataIndex: 'productsubcategory',
+            width: 200
+        },
+        {
+            header: 'Descripción',
+            dataIndex: 'description',
+            width: 200
+        },
+        {
+            header: 'Activa',
+            dataIndex: 'active',
+            width: 100
+        }
+    ],
+    flex: 1,
+    closeAction: 'hide',    
+    enableColLock: false,
+    stripeRows: true,
+    height: Mtc.config.gridHeight,    
+    autoSizeColumns: true
+});
