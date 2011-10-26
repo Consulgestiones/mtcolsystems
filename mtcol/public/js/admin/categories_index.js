@@ -90,8 +90,8 @@ var categoriesGrid = Ext.create('Ext.grid.Panel', {
     flex: 1
 });
 categoriesGrid.getSelectionModel().on('selectionchange', function(sm, selection){
-    var record = selection[0];
-    var idpc = record.get('idproductcategory');
+    Mtc.category = selection[0];
+    var idpc = Mtc.category.get('idproductcategory');
     subCategories(idpc);
 });
 //categoriesGrid.on('rowclick', function(categoriesGrid, rowIndex, e) {
@@ -302,12 +302,18 @@ var subcategoriesDataStore = Ext.create('Ext.data.Store', {
     },
     autoLoad: false
 });
+subcategoriesDataStore.on('beforeload', function(s){
+    var idpc = Mtc.category.get('idproductcategory');    
+    s.baseParams = {idproductcategory: idpc};    
+    var x = 1+1;
+});
 
 var subcategoriesTobBar = [
     {
         text: 'Nueva Sub Categoria',
         iconCls: 'add',
         handler: function(){
+            Mtc.formAction = 'create';
             var rows = categoriesGrid.getSelectionModel().getSelection();
             if(rows.length === 0)
                 return;
@@ -322,6 +328,7 @@ var subcategoriesTobBar = [
         text: 'Editar Sub Categoria',
         iconCls: 'edit',
         handler: function(){
+            Mtc.formAction = 'edit';
             var rows = categoriesGrid.getSelectionModel().getSelection();
             if(rows.length === 0)
                 return;
