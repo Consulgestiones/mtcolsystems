@@ -19,6 +19,7 @@ class Admin_ProductsController extends Zend_Controller_Action
         $limit = $this->getRequest()->getParam('limit');
         
         $select = sprintf("SELECT SQL_CALC_FOUND_ROWS p.idproduct, p.product, p.description, p.tax,
+                    p.inactive, CASE p.inactive WHEN 0 THEN 'SI' ELSE 'NO' END AS active,
                     pc.productcategory, pc.productcategory, ps.idproductsubcategory, ps.productsubcategory
                     FROM product p, product_category pc, product_subcategory ps
                     WHERE ps.idproductcategory = p.idproductcategory AND ps.idproductsubcategory = p.idproductsubcategory AND pc.idproductcategory = ps.idproductcategory

@@ -17,14 +17,19 @@ class Admin_CategoriesController extends Zend_Controller_Action
     {
         $start = $this->getRequest()->getParam('start');
         $limit = $this->getRequest()->getParam('limit');
+        $active = $this->getRequest()->getParam('active');
         $categories = array();
         $total = 0;
+        
+        $where = "WHERE c.inactive = 0";
+        
         try{
             $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS c.idproductcategory, c.productcategory,
                     c.description, CASE c.inactive WHEN 1 THEN 'NO' WHEN 0 THEN 'SI' END as active,
                     c.inactive
                     FROM product_category c
-                    LIMIT %d, %d", $start, $limit);
+                    %s
+                    LIMIT %d, %d", $where, $start, $limit);
 
             $db = Zend_Registry::get('db');
 

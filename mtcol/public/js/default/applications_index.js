@@ -26,6 +26,7 @@ if(usr != null){
         height: h,
         width: '100%',
         items: items,
+        autoHeight: true,
         layout: {
             type: 'table',
             columns: Mtc.config.appsColumns,
