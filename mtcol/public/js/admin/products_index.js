@@ -148,6 +148,30 @@ var productsTopBar = [
         handler: function(){
             
         }
+    },
+    {
+        text: 'Proveedores',
+        iconCls: 'users-admin',
+        handler: function(){
+            var selection = productsGrid.getSelectionModel().getSelection();
+            Mtc.product = selection[0];
+            var idproduct = Mtc.product.get('idproduct');
+            var product = Mtc.product.get('product');
+            productsGrid.hide();
+        //    mainPanel.items.each(function(c){mainPanel.remove(c, false)});
+            providersPanel.setTitle(product);
+            providersPanel.show();
+            providersAvailableGrid.getStore().load({
+                params: {
+                    idproduct: idproduct
+                }
+            });
+            providersAsignedGrid.getStore().load({
+                params: {
+                    idproduct: idproduct
+                }
+            });
+        }
     }
 ];
 
@@ -197,16 +221,6 @@ var productsGrid = Ext.create('Ext.grid.Panel', {
     height: Mtc.config.gridHeight
 });
 mainPanel.add(productsGrid);
-
-productsGrid.getSelectionModel().on('selectionchange', function(sm, selection){
-    Mtc.product = selection[0];
-    var idproduct = Mtc.product.get('idproduct');
-    var product = Mtc.product.get('product');
-    productsGrid.hide();
-//    mainPanel.items.each(function(c){mainPanel.remove(c, false)});
-    providersPanel.setTitle(product);
-    providersPanel.show();
-});
 
 
 
@@ -306,8 +320,14 @@ var providersAvailableGrid = Ext.create('Ext.grid.Panel', {
     alias: 'widget.providersavailable',
     title: 'Proveedores Disponibles',
     columnWidth: 0.4,
+    autoHeight: true,
     store: availableDataStore,
     columns: [
+        {
+            header: '#',
+            dataIndex: 'idprovider',
+            hidden: true
+        },
         {
             header: 'Tipo ID',
             dataIndex: 'typeid',
@@ -355,7 +375,13 @@ var providersAsignedGrid = Ext.create('Ext.grid.Panel', {
     alias: 'widget.providersasigned',    
     store: asignedDataStore,
     columnWidth: 0.4,
+    autoHeight: true,
     columns: [
+        {
+            header: '#',
+            dataIndex: 'idprovider',
+            hidden: true
+        },
         {
             header: 'Tipo ID',
             dataIndex: 'typeid',
@@ -382,19 +408,17 @@ var providersAsignedGrid = Ext.create('Ext.grid.Panel', {
 //
 var providersPanel = Ext.create('Ext.panel.Panel',{  
     closable: false,
-    /*closeAction: 'hide',
-    listeners: {
-        close: function(){
-//            mainPanel.items.each(function(c){mainPanel.remove(c, false)});
-//            mainPanel.add(productsGrid);
-            providersPanel.hide();
-            productsGrid.show();
-        }
-    },*/
+    title: 'Proveedores',
+    hidden: true,
     tbar: [
         '->',
         {
-            text: 'Volver'
+            text: 'Volver',
+            iconCls: 'back',
+            handler: function(){
+                providersPanel.hide();
+                productsGrid.show();
+            }
         }
     ],
     layout: 'column',

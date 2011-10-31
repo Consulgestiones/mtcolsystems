@@ -48,6 +48,9 @@
 .boxes {
     background-image:url(/images/icons/bricks.png) !important;
 }
+.back {
+    background-image:url(/images/icons/back.png) !important;
+}
 .align-right {
     text-align: right;    
 }

@@ -107,8 +107,92 @@ class Admin_ProvidersController extends Zend_Controller_Action
         
     }
 
+    public function getavailableAction()
+    {
+        $idproduct = $this->getRequest()->getParam('idproduct');
+        $start = $this->getRequest()->getParam('start');
+        $limit = $this->getRequest()->getParam('limit');
+        
+        try{
+            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS p.idprovider, ti.typeid, p.providernumid, p.provider, c.city
+                            FROM provider p, product_provider pp, city c, typeid ti
+                            WHERE p.idprovider NOT IN (
+                            SELECT idprovider
+                            FROM product_provider pp1
+                            WHERE idproduct = %d) AND c.idcity = p.idcity AND c.idcountry = p.idcountry AND ti.idtypeid = p.idtypeid
+                            AND p.inactive = 0
+                            ORDER BY p.provider
+                            LIMIT %d, %d", $idproduct, $start, $limit);
+                        
+            
+            $db = Zend_Registry::get('db');
+            $stmt = $db->query($sql);
+            $providers = $stmt->fetchAll();
+            
+            $sql = "SELECT FOUND_ROWS()";
+            $stmt = $db->query($sql);
+            $total = $stmt->fetchColumn();
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }        
+        
+        $data = array(
+            'success' => $success,
+            'data' => $providers,
+            'total' => $total,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($data);
+    }
+
+    public function getasignedAction()
+    {
+        $idproduct = $this->getRequest()->getParam('idproduct');
+        $start = $this->getRequest()->getParam('start');
+        $limit = $this->getRequest()->getParam('limit');
+        
+        try{            
+            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS p.idprovider, t.typeid, p.providernumid, p.provider, c.city
+                            FROM provider p, product_provider pp, city c, typeid t
+                            WHERE pp.idproduct = %d AND p.idprovider = pp.idprovider 
+                            AND c.idcity = p.idcity AND c.idcountry = p.idcountry AND t.idtypeid = p.idtypeid
+                            ORDER BY p.provider
+                            LIMIT %d, %d", $idproduct, $start, $limit);
+            
+            $db = Zend_Registry::get('db');
+            $stmt = $db->query($sql);
+            $providers = $stmt->fetchAll();
+            
+            $sql = "SELECT FOUND_ROWS()";
+            $stmt = $db->query($sql);
+            $total = $stmt->fetchColumn();
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        
+        $data = array(
+            'success' => $success,
+            'data' => $providers,
+            'total' => $total,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($data);
+    }
+
 
 }
+
+
+
+
 
 
 
