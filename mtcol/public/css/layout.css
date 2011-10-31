@@ -45,6 +45,9 @@
 .sub-cat {
     background-image:url(/images/icons/sub_cat.png) !important;
 }
+.boxes {
+    background-image:url(/images/icons/bricks.png) !important;
+}
 .align-right {
     text-align: right;    
 }

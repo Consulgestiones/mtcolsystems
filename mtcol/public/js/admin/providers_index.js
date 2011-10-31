@@ -1,28 +1,3 @@
-Ext.define('Provider', {
-    extend: 'Ext.data.Model',
-    fields: [
-        {name: 'idprovider', type: 'int'},
-        {name: 'idtypeid', type: 'int'},
-        {name: 'providertypeid', type: 'string'},
-        {name: 'idcity', type: 'int'},
-        {name: 'city', type: 'string'},
-        {name: 'idcountry', type: 'int'},
-        {name: 'country', type: 'string'},
-        {name: 'provider', type: 'string'},
-        {name: 'typeid', type: 'string'},
-        {name: 'providernumid', type: 'string'},
-        {name: 'providerphone', type: 'string'},
-        {name: 'provideremail', type: 'string'},
-        {name: 'provideraddress', type: 'string'},
-        {name: 'contact', type: 'string'},
-        {name: 'contacttitle', type: 'string'},
-        {name: 'contactphonehome', type: 'string'},
-        {name: 'contactphonework', type: 'string'},
-        {name: 'contactphonemobile', type: 'string'},
-        {name: 'contactphoneworkext', type: 'string'},
-    ]
-});
-
 Ext.define('Typeid', {
     extend: 'Ext.data.Model',
     fields: [
@@ -34,7 +9,7 @@ Ext.define('Typeid', {
 var providerProxy = new Ext.data.proxy.Ajax({
     id: 'ProvidersProxy',
     method: 'POST',
-    model: 'Provider',
+    model: 'Mtc.model.Provider',
     url: '/admin/providers/read',
     api: {
         read: '/admin/providers/read',
@@ -52,7 +27,7 @@ var providerProxy = new Ext.data.proxy.Ajax({
 var providersDataStore = new Ext.data.Store({
     storeId: 'ProviderDS',
     url: '/admin/providers/read',
-    model: 'Provider',
+    model: 'Mtc.model.Provider',
     proxy: providerProxy,
     pageSize: Mtc.config.gridPageSize,
     autoLoad: true

@@ -25,6 +25,17 @@ Ext.define('Mtc.model.ProductCategory', {
         {name: 'active', type: 'string'}
     ]
 });
+Ext.define('Mtc.model.ProductSubCategory', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'idproductsubcategory', type: 'int'},
+        {name: 'idproductcategory', type: 'int'},
+        {name: 'productsubcategory', type: 'string'},
+        {name: 'description', type: 'string'},
+        {name: 'inactive', type: 'int'},
+        {name: 'active', type: 'string'}
+    ]
+});
 
 Ext.define('Mtc.widgets.ProductCategoryCombo', {
     extend: 'Ext.form.field.ComboBox',
@@ -45,6 +56,42 @@ Ext.define('Mtc.widgets.ProductCategoryCombo', {
             type: 'ajax',
             url: '/admin/categories/getcategories',
             model: 'Mtc.model.ProductCategory',
+            reader: {
+                type: 'json',
+                successProperty: 'success',
+                root: 'data'
+            }
+        },
+        autoLoad: false
+    }
+});
+
+var mainPanel = Ext.create('Ext.panel.Panel', {
+    id: 'mainPanel',
+    border: 0,
+    layout: 'fit',
+    renderTo: Ext.get('slot1')
+});
+
+Ext.define('Mtc.widgets.ProductSubCategoryCombo', {
+    extend: 'Ext.form.field.ComboBox',
+    queryMode: 'local',
+    id: 'cboproductsubcategory',
+    name: 'idproductsubcategory',
+    emptyText: 'Seleccione',
+    alias: 'widget.productsubcategory',
+    displayField: 'productsubcategory',
+    triggerAction: 'all',
+    valueField: 'idproductsubcategory',
+    fieldLabel: 'Subcategoría',
+    editable: false,
+    frame: true,
+    store: {
+        model: 'Mtc.model.ProductSubCategory',
+        proxy: {
+            type: 'ajax',
+            url: '/admin/categories/getsubcategories',
+            model: 'Mtc.model.ProductSubCategory',
             reader: {
                 type: 'json',
                 successProperty: 'success',
@@ -114,6 +161,8 @@ var productsGrid = Ext.create('Ext.grid.Panel', {
     model: 'Mtc.model.Product',
     id: 'productsGrid',
     title: 'Productos',
+    iconCls: 'boxes',
+    flex: 1,
     store: productsDataStore,
     tbar: productsTopBar,
     bbar: productsPagingBar,
@@ -121,33 +170,45 @@ var productsGrid = Ext.create('Ext.grid.Panel', {
         {
             header: 'Producto',
             dataIndex: 'product',
-            width: 200
+            width: 150
         },
         {
             header: 'Categoria',
             dataIndex: 'productcategory',
-            width: 200
+            width: 100
         },
         {
             header: 'Sub Categoria',
             dataIndex: 'productsubcategory',
-            width: 200
+            width: 100
         },
         {
             header: 'Descripción',
             dataIndex: 'description',
-            width: 200
+            width: 150
         },
         {
             header: 'Activo',
             dataIndex: 'active',
-            width: 100
+            width: 50
         }
     ],
     enableColLock: false,
-    height: Mtc.config.gridHeight,
-    renderTo: Ext.get('slot1')
+    height: Mtc.config.gridHeight
 });
+mainPanel.add(productsGrid);
+
+productsGrid.getSelectionModel().on('selectionchange', function(sm, selection){
+    Mtc.product = selection[0];
+    var idproduct = Mtc.product.get('idproduct');
+    var product = Mtc.product.get('product');
+    productsGrid.hide();
+//    mainPanel.items.each(function(c){mainPanel.remove(c, false)});
+    providersPanel.setTitle(product);
+    providersPanel.show();
+});
+
+
 
 var productForm = Ext.create('Ext.form.Panel', {
     id: 'productForm',
@@ -161,12 +222,30 @@ var productForm = Ext.create('Ext.form.Panel', {
     items: [
         {
             fieldLabel: 'product',
-            allowBlak: false
+            name: 'product',
+            colspan: 2,
+            allowBlak: false,
+            width: 412
         },
         {
-            xtype: 'productcategory',            
+            xtype: 'productcategory',  
+            name: 'idproductcategory',
             fieldLabel: 'Categoría',
             id: 'cbocategory'
+        },
+        {
+            xtype: 'productsubcategory',            
+            name: 'idproductsubcategory',
+            fieldLabel: 'Subcategoría',
+            id: 'cbosubcategory',
+            disabled: true
+        },
+        {
+            xtype: 'textarea',
+            name: 'description',
+            fieldLabel: 'Descripción',
+            colspan: 2,
+            width: 412
         }
     ],
     buttons: [
@@ -185,6 +264,18 @@ var productForm = Ext.create('Ext.form.Panel', {
     ]
 });
 
+var prodcat = Ext.getCmp('cbocategory');
+var prodsubcat = Ext.getCmp('cbosubcategory');
+
+prodcat.on('select', function(){
+    prodsubcat.clearValue();
+    prodsubcat.store.load({
+        params: {
+            idproductcategory: prodcat.getValue()
+        }
+    });
+    prodsubcat.enable();
+});
 var productFormWin = Ext.create('Ext.window.Window', {
     id: 'productFormWin',
     title: 'Producto',
@@ -192,3 +283,155 @@ var productFormWin = Ext.create('Ext.window.Window', {
     items: productForm,
     modal: true
 });
+//Asignacion de proveedores a productos
+
+var availableDataStore = new Ext.data.Store({
+    storeId: 'providerAvailableDS',
+    model: 'Mtc.model.Provider',
+    proxy: {
+        type: 'ajax',
+        method: 'POST',
+        url: '/admin/providers/getavailable',
+        reader: {
+            type: 'json',
+            totalProperty: 'total',
+            root: 'data'
+        }
+    },
+    autoLoad: false
+});
+
+var providersAvailableGrid = Ext.create('Ext.grid.Panel', {
+    model: 'Mtc.model.Provider',
+    alias: 'widget.providersavailable',
+    title: 'Proveedores Disponibles',
+    columnWidth: 0.4,
+    store: availableDataStore,
+    columns: [
+        {
+            header: 'Tipo ID',
+            dataIndex: 'typeid',
+            width: 100
+        },
+        {
+            header: 'Num ID',
+            dataIndex: 'providernumid',
+            width: 100
+        },
+        {
+            header: 'Proveedor',
+            dataIndex: 'provider',
+            width: 200
+        },
+        {
+            header: 'Ciudad',
+            dataIndex: 'city',
+            width: 100
+        }
+    ],
+    pageSize: Mtc.config.gridPageSize
+});
+//
+//
+var asignedDataStore = new Ext.data.Store({
+    id: 'providerAsignedDS',
+    model: 'Mtc.model.Provider',
+    proxy: {
+        type: 'ajax',
+        method: 'POST',
+        url: '/admin/providers/getasigned',
+        reader: {
+            type: 'json',
+            totalProperty: 'total',
+            root: 'data'
+        }
+    },
+    autoLoad: false
+});
+//
+var providersAsignedGrid = Ext.create('Ext.grid.Panel', {
+    model: 'Mtc.model.Provider',
+    title: 'Proveedores Seleccionados',
+    alias: 'widget.providersasigned',    
+    store: asignedDataStore,
+    columnWidth: 0.4,
+    columns: [
+        {
+            header: 'Tipo ID',
+            dataIndex: 'typeid',
+            width: 100
+        },
+        {
+            header: 'Num ID',
+            dataIndex: 'providernumid',
+            width: 100
+        },
+        {
+            header: 'Proveedor',
+            dataIndex: 'provider',
+            width: 200
+        },
+        {
+            header: 'Ciudad',
+            dataIndex: 'city',
+            width: 100
+        }
+    ],
+    pageSize: Mtc.config.gridPageSize
+});
+//
+var providersPanel = Ext.create('Ext.panel.Panel',{  
+    closable: false,
+    /*closeAction: 'hide',
+    listeners: {
+        close: function(){
+//            mainPanel.items.each(function(c){mainPanel.remove(c, false)});
+//            mainPanel.add(productsGrid);
+            providersPanel.hide();
+            productsGrid.show();
+        }
+    },*/
+    tbar: [
+        '->',
+        {
+            text: 'Volver'
+        }
+    ],
+    layout: 'column',
+    width: '100%',
+    autoHeight: true,
+    items: [
+        providersAvailableGrid,
+        {
+            xtype: 'panel',
+            /*columnWidth: 0.2,*/
+            layout: 'vbox',
+            bodyPadding: 5,
+            items: [
+                {
+                    xtype: 'button',
+                    text: '>'
+                },
+                {
+                    xtype: 'button',
+                    text: '<'
+                }
+            ]
+        },
+        providersAsignedGrid
+    ]
+});
+mainPanel.add(providersPanel);
+//var panel = Ext.create('Ext.Panel', {    
+//    border: 0,
+//    width: 800,
+//    layout: {
+//        type: 'hbox',
+//        align: 'left'
+//    },
+//    items: [
+//        productsGrid
+//    ],
+//    autoHeight: true,
+//    renderTo: Ext.get('slot1')
+//});
