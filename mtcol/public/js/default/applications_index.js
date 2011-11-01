@@ -14,11 +14,11 @@ if(usr != null){
             tag: 'div',
             html: '<center><a href="/' + apps[i].module + '/' + apps[i].controller + '/' + apps[i].action + '" ><img src="' + apps[i].img + '" /></a><br /><span class="item-label-inner">' + apps[i].application + '</span></center>',
             autoHeight: true,
-            width: Mtc.config.appsWidthItem
+            width: AppConfig.appsWidthItem
         });
     }
     
-    var h = Math.ceil((items.length/Mtc.config.appsColumns)) * 190;
+    var h = Math.ceil((items.length/AppConfig.appsColumns)) * 190;
     
     Ext.create('Ext.panel.Panel', {
         title: 'Módulos',
@@ -29,7 +29,7 @@ if(usr != null){
         autoHeight: true,
         layout: {
             type: 'table',
-            columns: Mtc.config.appsColumns,
+            columns: AppConfig.appsColumns,
             itemCls: 'split-item'
         },
         renderTo: Ext.get('slot1')

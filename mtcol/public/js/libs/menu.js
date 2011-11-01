@@ -82,6 +82,12 @@ Ext.onReady(function(){
     }
 
     mnuitems.push({
+       text: 'Módulos',
+       handler: function(){
+           document.location = '/applications';
+       }
+    });
+    mnuitems.push({
        text: 'Salir' 
     });
 
