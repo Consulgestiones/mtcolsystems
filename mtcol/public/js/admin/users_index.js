@@ -61,12 +61,12 @@ var usersDataStore = new Ext.data.Store({
         },
         writer: new Ext.data.JsonWriter()
     },
-    pageSize: Mtc.config.gridPageSize,
+    pageSize: AppConfig.gridPageSize,
     autoLoad: true
 });
 
 var usersPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: usersDataStore,  
     displayInfo: true  
 });
@@ -204,7 +204,7 @@ var usersGrid = new Ext.grid.GridPanel({
 ],
     enableColLock: false,
     stripeRows: true,
-    height: Mtc.config.gridHeight,
+    height: AppConfig.gridHeight,
     renderTo: Ext.get('slot1'),
     autoSizeColumns: true
 });

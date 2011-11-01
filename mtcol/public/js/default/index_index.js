@@ -1,50 +1,67 @@
 login = new Ext.form.Panel({
    id: 'form-login',
-   title: 'Ingresar',
-   width: 300,
-   height: 130,
+   title: 'Ingresar a MTC',
+   width: 330,
+   height: 170,
+   bodyPadding: 10,
+   frame: true,
    defaultType: 'textfield',
-   anchor: 'absolute',
    url: '/index/login',
    waitTitle: 'Validando',
-   collapsible: true,
-   /*keys: [
+   layout: {
+       type: 'table',
+       columns: 2
+   },
+   collapsible: false,
+ 
+   items: [
+       new Ext.Img({
+           src: '/images/logo.png',
+           width: 85
+       }),
+//        {
+//            xtype: 'image',
+//            url: '/images/header.jpg'
+//        },
        {
-           key: [Ext.EventObject.ENTER],
-           handler: function(){
-               this.up('form').submit();
-           }
-       }
-   ],*/   
-   items: [       
-       {
-           fieldLabel: 'Usuario',
-           x:5,
-           y:5,
-           id: 'txtuser',
-           name: 'user',
-           allowBlank: false
+           xtype: 'container',
+           height: 70,          
+           width: 300,
+           bodyPadding: 10,
+           layout: {
+               type: 'vbox'
+           },
+           defaultType: 'textfield',
+           items: [
+               {
+                   fieldLabel: 'Usuario',
+                   id: 'txtuser',
+                   name: 'user',
+                   allowBlank: false,
+                   autoHeight: true,
+                   labelStyle: 'width: 50px'
+               },
+               {           
+                   fieldLabel: 'Clave',
+                   inputType: 'password',
+                   id: 'txtpass',
+                   name: 'pass',
+                   allowBlank: false,
+                   labelStyle: 'width: 50px'
+               },
+               {
+                   xtype: 'label',
+                   id: 'login-status',
+                   text: ''
+               }
+           ]
        },
-       {           
-           fieldLabel: 'Clave',
-           inputType: 'password',
-           x:5,
-           y:10,
-           id: 'txtpass',
-           name: 'pass',
-           allowBlank: false
-       },
+       
+   ],
+   buttons: [
+       
        {
-           xtype: 'label',
-           id: 'login-status',
-           text: ''
-       },
-       {
-           xtype: 'button',
-           x: 217,
-           y: 15,
-           id: 'btnlogin',
-           name: 'login',
+           id: 'btnlogin',           
            text: 'Entrar',
            handler: function(){
                Ext.getCmp('login-status').text = 'Comprobando...';
@@ -73,6 +90,7 @@ login = new Ext.form.Panel({
                });
            }
        }
+       
    ],
    renderTo:Ext.getBody()
 }).center();

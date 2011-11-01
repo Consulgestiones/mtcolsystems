@@ -29,12 +29,12 @@ var providersDataStore = new Ext.data.Store({
     url: '/admin/providers/read',
     model: 'Mtc.model.Provider',
     proxy: providerProxy,
-    pageSize: Mtc.config.gridPageSize,
+    pageSize: AppConfig.gridPageSize,
     autoLoad: true
 });
 
 var providersPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: providersDataStore,  
     displayInfo: true  
 });
@@ -140,7 +140,7 @@ var providersGrid = new Ext.grid.Panel({
     ],
     enableColLock: false,
     stripeRows: true,
-    height: Mtc.config.gridHeight,
+    height: AppConfig.gridHeight,
     renderTo: Ext.get('slot1'),
     autoSizeColumns: true
 });

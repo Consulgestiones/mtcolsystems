@@ -1,10 +1,17 @@
 Ext.ns('Mtc');
-Mtc.config = {
+Ext.define('AppConfig', {
+    singleton: true,
     gridPageSize: 15,
     gridHeight: 400,
     appsColumns: 3,
     appsWidthItem: 400
-};
+});
+//Mtc.config = {
+//    gridPageSize: 15,
+//    gridHeight: 400,
+//    appsColumns: 3,
+//    appsWidthItem: 400
+//};
 /**
  * Modelos
  */

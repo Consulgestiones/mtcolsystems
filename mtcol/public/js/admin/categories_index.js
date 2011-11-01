@@ -26,7 +26,7 @@ var categoriesDataStore = Ext.create('Ext.data.Store', {
         }
     },
     autoLoad: 'true',
-    pageSize: Mtc.config.gridPageSize
+    pageSize: AppConfig.gridPageSize
 });
 
 var categoriesTopBar = [
@@ -53,7 +53,7 @@ var categoriesTopBar = [
 ];
 
 var categoriesPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: categoriesDataStore,  
     displayInfo: true  
 });
@@ -85,7 +85,7 @@ var categoriesGrid = Ext.create('Ext.grid.Panel', {
     ],
     enableColLock: false,
     stripeRows: true,
-    height: Mtc.config.gridHeight,    
+    height: AppConfig.gridHeight,    
     autoSizeColumns: true,
     flex: 1
 });
@@ -352,7 +352,7 @@ var subcategoriesTobBar = [
     }
 ];
 var subcategoriesPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: subcategoriesDataStore,  
     displayInfo: true  
 });
@@ -386,7 +386,7 @@ var subcategoriesGrid = Ext.create('Ext.grid.Panel', {
     closeAction: 'hide',    
     enableColLock: false,
     stripeRows: true,
-    height: Mtc.config.gridHeight,    
+    height: AppConfig.gridHeight,    
     autoSizeColumns: true
 });
 

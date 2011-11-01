@@ -115,7 +115,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
         
         try{
             $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS p.idprovider, ti.typeid, p.providernumid, p.provider, c.city
-                            FROM provider p, product_provider pp, city c, typeid ti
+                            FROM provider p, city c, typeid ti
                             WHERE p.idprovider NOT IN (
                             SELECT idprovider
                             FROM product_provider pp1
@@ -123,6 +123,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
                             AND p.inactive = 0
                             ORDER BY p.provider
                             LIMIT %d, %d", $idproduct, $start, $limit);
+                        
                         
             
             $db = Zend_Registry::get('db');
@@ -187,8 +188,75 @@ class Admin_ProvidersController extends Zend_Controller_Action
         $this->_helper->json->sendJson($data);
     }
 
+    public function asignproductAction()
+    {
+        $idproduct = $this->getRequest()->getParam('idproduct');
+        $providers = json_decode($this->getRequest()->getParam('providers'));
+        
+        try{
+            if(!is_array($providers))
+                throw new Exception ('Error al recibir los datos');
+                              
+            $db = Zend_Registry::get('db');
+            $total = count($providers);
+            for($i = 0; $i < $total; $i++){
+                $d = array(
+                    'idproduct' => $idproduct,
+                    'idprovider' => $providers[$i]
+                );
+                $db->insert('product_provider', $d);
+            }                                                
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        
+        $data = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($data);
+    }
+
+    public function unasignproductAction()
+    {
+        $idproduct = $this->getRequest()->getParam('idproduct');
+        $providers = json_decode($this->getRequest()->getParam('providers'));
+        
+        try{
+            if(!is_array($providers))
+                throw new Exception ('Error al recibir los datos');
+                              
+            $model = new Admin_Model_ProductProvider();
+            $total = count($providers);            
+            for($i = 0; $i < $total; $i++){
+                $where = 'idproduct = '.$idproduct.' AND idprovider = '.$providers[$i];
+                $delete = $model->delete($where);                
+            }                                                
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        
+        $data = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($data);
+    }
+
 
 }
+
+
+
+
 
 
 

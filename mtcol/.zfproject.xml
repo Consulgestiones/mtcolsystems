@@ -83,6 +83,8 @@
               <actionMethod actionName="save"/>
               <actionMethod actionName="getavailable"/>
               <actionMethod actionName="getasigned"/>
+              <actionMethod actionName="asignproduct"/>
+              <actionMethod actionName="unasignproduct"/>
             </controllerFile>
             <controllerFile controllerName="Products">
               <actionMethod actionName="index"/>
@@ -167,6 +169,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Providers">
                 <viewScriptFile forActionName="getasigned"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Providers">
+                <viewScriptFile forActionName="asignproduct"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Providers">
+                <viewScriptFile forActionName="unasignproduct"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

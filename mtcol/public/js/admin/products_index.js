@@ -154,21 +154,30 @@ var productsTopBar = [
         iconCls: 'users-admin',
         handler: function(){
             var selection = productsGrid.getSelectionModel().getSelection();
+            if(selection.length === 0)
+                return;
+            
             Mtc.product = selection[0];
-            var idproduct = Mtc.product.get('idproduct');
+            Mtc.idproduct = Mtc.product.get('idproduct');
             var product = Mtc.product.get('product');
             productsGrid.hide();
         //    mainPanel.items.each(function(c){mainPanel.remove(c, false)});
             providersPanel.setTitle(product);
             providersPanel.show();
-            providersAvailableGrid.getStore().load({
+            var availableStore = providersAvailableGrid.getStore();
+            var asignedStore = providersAsignedGrid.getStore();
+            
+//            availableStore.setBaseParam('idproduct', Mtc.idproduct);
+//            asignedStore.setBaseParam('idproduct', Mtc.idproduct);
+            
+            availableStore.load({
                 params: {
-                    idproduct: idproduct
+                    idproduct: Mtc.idproduct
                 }
             });
-            providersAsignedGrid.getStore().load({
+            asignedStore.load({
                 params: {
-                    idproduct: idproduct
+                    idproduct: Mtc.idproduct
                 }
             });
         }
@@ -176,7 +185,7 @@ var productsTopBar = [
 ];
 
 var productsPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: productsDataStore,  
     displayInfo: true  
 });
@@ -218,7 +227,7 @@ var productsGrid = Ext.create('Ext.grid.Panel', {
         }
     ],
     enableColLock: false,
-    height: Mtc.config.gridHeight
+    height: AppConfig.gridHeight
 });
 mainPanel.add(productsGrid);
 
@@ -315,18 +324,34 @@ var availableDataStore = new Ext.data.Store({
     autoLoad: false
 });
 
+var availablePagingBar = new Ext.PagingToolbar({  
+    pageSize: AppConfig.gridPageSize,  
+    store: availableDataStore,  
+    displayInfo: true  
+});
+
 var providersAvailableGrid = Ext.create('Ext.grid.Panel', {
     model: 'Mtc.model.Provider',
     alias: 'widget.providersavailable',
     title: 'Proveedores Disponibles',
-    columnWidth: 0.4,
-    autoHeight: true,
+    bbar: availablePagingBar,
+    columnWidth: 0.5,
+    height: AppConfig.gridHeight,
+    selModel: {
+        mode: 'MULTI',
+        allowDeselect: true
+    },
     store: availableDataStore,
     columns: [
         {
             header: '#',
             dataIndex: 'idprovider',
             hidden: true
+        },
+        {
+            header: 'Proveedor',
+            dataIndex: 'provider',
+            width: 200
         },
         {
             header: 'Tipo ID',
@@ -337,19 +362,14 @@ var providersAvailableGrid = Ext.create('Ext.grid.Panel', {
             header: 'Num ID',
             dataIndex: 'providernumid',
             width: 100
-        },
-        {
-            header: 'Proveedor',
-            dataIndex: 'provider',
-            width: 200
-        },
+        },        
         {
             header: 'Ciudad',
             dataIndex: 'city',
             width: 100
         }
     ],
-    pageSize: Mtc.config.gridPageSize
+    pageSize: AppConfig.gridPageSize
 });
 //
 //
@@ -368,19 +388,38 @@ var asignedDataStore = new Ext.data.Store({
     },
     autoLoad: false
 });
-//
+
+var asignedPagingBar = new Ext.PagingToolbar({  
+    pageSize: AppConfig.gridPageSize,  
+    store: asignedDataStore,  
+    displayInfo: true  
+});
+
 var providersAsignedGrid = Ext.create('Ext.grid.Panel', {
     model: 'Mtc.model.Provider',
     title: 'Proveedores Seleccionados',
-    alias: 'widget.providersasigned',    
+    alias: 'widget.providersasigned',     
     store: asignedDataStore,
-    columnWidth: 0.4,
-    autoHeight: true,
+    bbar: asignedPagingBar,
+    baseParams: {
+        idproduct: Mtc.idproduct
+    },
+    columnWidth: 0.5,
+    height: AppConfig.gridHeight,
+    selModel: {
+        mode: 'MULTI',
+        allowDeselect: true
+    },
     columns: [
         {
             header: '#',
             dataIndex: 'idprovider',
             hidden: true
+        },
+        {
+            header: 'Proveedor',
+            dataIndex: 'provider',
+            width: 200
         },
         {
             header: 'Tipo ID',
@@ -391,19 +430,14 @@ var providersAsignedGrid = Ext.create('Ext.grid.Panel', {
             header: 'Num ID',
             dataIndex: 'providernumid',
             width: 100
-        },
-        {
-            header: 'Proveedor',
-            dataIndex: 'provider',
-            width: 200
-        },
+        },        
         {
             header: 'Ciudad',
             dataIndex: 'city',
             width: 100
         }
     ],
-    pageSize: Mtc.config.gridPageSize
+    pageSize: AppConfig.gridPageSize
 });
 //
 var providersPanel = Ext.create('Ext.panel.Panel',{  
@@ -416,6 +450,8 @@ var providersPanel = Ext.create('Ext.panel.Panel',{
             text: 'Volver',
             iconCls: 'back',
             handler: function(){
+                providersAsignedGrid.getStore().removeAll();
+                providersAvailableGrid.getStore().removeAll();
                 providersPanel.hide();
                 productsGrid.show();
             }
@@ -427,18 +463,92 @@ var providersPanel = Ext.create('Ext.panel.Panel',{
     items: [
         providersAvailableGrid,
         {
-            xtype: 'panel',
-            /*columnWidth: 0.2,*/
-            layout: 'vbox',
-            bodyPadding: 5,
+            xtype: 'container',            
+            layout: {
+                type: 'vbox',
+                align: 'center',
+                pack: 'start'
+            },
+            width: 60,
+            padding: 10,
+            height: AppConfig.gridHeight,
+            defaults: {
+                style: {                    
+                    margin: '5px'
+                }
+            },
             items: [
                 {
                     xtype: 'button',
-                    text: '>'
+                    text: '>',
+                    handler: function(){
+                        var selection = providersAvailableGrid.getSelectionModel().getSelection();
+                        if(selection.length > 0){
+                            var idproviders = new Array();
+                            for(var i = 0; i < selection.length; i++){
+                                idproviders.push(selection[i].get('idprovider'));
+                            }
+                            Ext.Ajax.request({
+                                url: '/admin/providers/asignproduct',
+                                method: 'POST',
+                                params: {
+                                    idproduct: Mtc.idproduct,
+                                    providers: Ext.encode(idproviders)
+                                },
+                                success: function(response){
+                                    var obj = Ext.decode(response.responseText);
+                                    if(obj.success){
+                                        var availableStore = providersAvailableGrid.getStore();
+                                        var asignedStore = providersAsignedGrid.getStore();
+                                        
+                                        asignedStore.loadRecords(selection, {addRecords: true});
+                                        availableStore.remove(selection);
+                                    }else{
+                                        Ext.MessageBox.show({
+                                            title: 'Error!!!',
+                                            msg: obj.msg
+                                        });                                        
+                                    }
+                                }
+                            });
+                        }
+                    }
                 },
                 {
                     xtype: 'button',
-                    text: '<'
+                    text: '<',
+                    handler: function(){
+                        var selection = providersAsignedGrid.getSelectionModel().getSelection();
+                        if(selection.length > 0){
+                            var idproviders = new Array();
+                            for(var i = 0; i < selection.length; i++){
+                                idproviders.push(selection[i].get('idprovider'));
+                            }
+                            Ext.Ajax.request({
+                                url: '/admin/providers/unasignproduct',
+                                method: 'POST',
+                                params: {
+                                    idproduct: Mtc.idproduct,
+                                    providers: Ext.encode(idproviders)
+                                },
+                                success: function(response){
+                                    var obj = Ext.decode(response.responseText);
+                                    if(obj.success){
+                                        var availableStore = providersAvailableGrid.getStore();
+                                        var asignedStore = providersAsignedGrid.getStore();
+                                        
+                                        availableStore.loadRecords(selection, {addRecords: true});
+                                        asignedStore.remove(selection);
+                                    }else{
+                                        Ext.MessageBox.show({
+                                            title: 'Error!!!',
+                                            msg: obj.msg
+                                        });                                        
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }
             ]
         },
@@ -446,16 +556,3 @@ var providersPanel = Ext.create('Ext.panel.Panel',{
     ]
 });
 mainPanel.add(providersPanel);
-//var panel = Ext.create('Ext.Panel', {    
-//    border: 0,
-//    width: 800,
-//    layout: {
-//        type: 'hbox',
-//        align: 'left'
-//    },
-//    items: [
-//        productsGrid
-//    ],
-//    autoHeight: true,
-//    renderTo: Ext.get('slot1')
-//});

@@ -29,12 +29,12 @@ var profilesDataStore = new Ext.data.Store({
             root: 'data'
         }
     },
-    pageSize: Mtc.config.gridPageSize,
+    pageSize: AppConfig.gridPageSize,
     autoLoad: true
 });
 
 var profilesPagingBar = new Ext.PagingToolbar({  
-    pageSize: Mtc.config.gridPageSize,  
+    pageSize: AppConfig.gridPageSize,  
     store: profilesDataStore,  
     displayInfo: true  
 });
@@ -88,7 +88,7 @@ var profilesGrid = new Ext.grid.GridPanel({
         }
     ],
     enableColLock: false,
-    height: Mtc.config.gridHeight,
+    height: AppConfig.gridHeight,
     renderTo: Ext.get('slot1')
 });
 
