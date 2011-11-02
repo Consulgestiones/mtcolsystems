@@ -23,7 +23,7 @@ if(usr != null){
     Ext.create('Ext.panel.Panel', {
         title: 'Módulos',
         draggable: false,
-        height: h,
+        //height: h,
         width: '100%',
         items: items,
         autoHeight: true,
