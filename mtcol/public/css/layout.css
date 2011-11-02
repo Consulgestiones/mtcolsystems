@@ -51,6 +51,9 @@
 .back {
     background-image:url(/images/icons/back.png) !important;
 }
+.godoc {
+    background-image:url(/images/icons/page_green.png) !important;
+}
 .align-right {
     text-align: right;    
 }
