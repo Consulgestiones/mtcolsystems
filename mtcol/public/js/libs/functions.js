@@ -31,6 +31,134 @@ function getGlobal(id){
         return Ext.decode(glob[id]);
     return null;
 }
+
+/**
+ * Funcion para cargar dinamicamente scripts
+ **/
+function loadScript(url){    
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+    //cleanup
+    setTimeout(function(){
+        document.getElementsByTagName('head')[0].removeChild(script);
+    }, 1000);
+}
+function loadModels(models, fn){
+    fn = fn || 'main';
+    var nloads = 0;
+    var _models;
+    if(!(models instanceof Array)){
+        _models = [models];
+    }else{
+        _models = models;
+    }
+    
+    var _scripts = new Array();
+    var head = document.getElementsByTagName('head')[0];
+    for(var i = 0; i < _models.length; i++){
+        _scripts[_models[i]] = document.createElement('script');
+        _scripts[_models[i]].type = 'text/javascript';
+        _scripts[_models[i]].src = '/js/app/models/' + _models[i] + '.js';
+        
+        if(Ext.isIE){
+            _scripts[_models[i]].onReadyStateChange = function(){
+                if(_scripts[_models[i]].readyState == 'complete' || _scripts[_models[i]].readyState == 'loaded'){
+                    nloads++;
+                    if(nloads == _models.length)
+                        if(typeof fn == 'function')
+                            fn();
+                        else if(typeof window[fn] == 'function')
+                            window[fn]();
+                }
+            }
+        }else{
+            _scripts[_models[i]].addEventListener('load',function(){
+                nloads++;
+                if(nloads == _models.length)
+                    if(typeof fn == 'function')
+                        fn();
+                    else if(typeof window[fn] == 'function')
+                        window[fn]();
+            },false);
+        }
+        
+        
+        head.appendChild(_scripts[_models[i]]);        
+    }
+    //cleanup
+    setTimeout(function(){
+        for(var j = 0; j < _models.length; j++){
+            head.removeChild(_scripts[_models[j]]);
+        }        
+    }, 1000);
+}
+function loadViews(views, fn){
+    fn = fn || 'main';
+    var nloads = 0;
+    var _views;
+    if(!(views instanceof Array)){
+        _views = [views];
+    }else{
+        _views = views;
+    }
+    
+    var _scripts = new Array();
+    var head = document.getElementsByTagName('head')[0];
+    for(var i = 0; i < _views.length; i++){
+        _scripts[_views[i]] = document.createElement('script');
+        _scripts[_views[i]].type = 'text/javascript';
+        _scripts[_views[i]].src = '/js/app/views/' + _views[i] + '.js';
+        
+        if(Ext.isIE){
+            _scripts[_views[i]].onReadyStateChange = function(){
+                if(_scripts[_views[i]].readyState == 'complete' || _scripts[_views[i]].readyState == 'loaded'){
+                    nloads++;
+                    if(nloads == _views.length)
+                        if(typeof fn == 'function')
+                            fn();
+                        else if(typeof window[fn] == 'function')
+                            window[fn]();
+                }
+            }
+        }else{
+            _scripts[_views[i]].addEventListener('load',function(){
+                nloads++;
+                if(nloads == _views.length)
+                    if(typeof fn == 'function')
+                        fn();
+                    else if(typeof window[fn] == 'function')
+                        window[fn]();
+            },false);
+        }
+        
+        
+        head.appendChild(_scripts[_views[i]]);        
+    }
+    //cleanup
+    setTimeout(function(){
+        for(var j = 0; j < _views.length; j++){
+            head.removeChild(_scripts[_views[j]]);
+        }        
+    }, 1000);
+}
+function Application(conf, fn){
+    conf = conf || {};
+    var cmodels = conf.models || [];
+    var cviews = conf.views || [];
+    
+    if(cmodels.length > 0){
+        if(cviews.length > 0){
+            loadModels(cmodels, loadViews(cviews, fn));
+        }else{
+            loadModels(cmodels, fn);
+        }
+    }else if(cviews.length > 0){
+        loadViews(cviews, fn);
+    }
+}
+
 /**
  * Vtypes para Ext-Js
  */
