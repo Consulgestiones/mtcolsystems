@@ -35,10 +35,18 @@ function getGlobal(id){
 /**
  * Funcion para cargar dinamicamente scripts
  **/
-function loadScript(url){    
+function loadScript(url, callback){    
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = url;
+    
+    if(Ext.isIE){
+        script.onReadyStateChange = callback;
+    }else{
+        script.addEventListener('load', callback);
+    }
+    
+    
     document.getElementsByTagName('head')[0].appendChild(script);
     //cleanup
     setTimeout(function(){
@@ -107,9 +115,12 @@ function loadViews(views, fn){
     var _scripts = new Array();
     var head = document.getElementsByTagName('head')[0];
     for(var i = 0; i < _views.length; i++){
+        var split = _views[i].split('_');
+        var controller = split[0].toLowerCase();
+        var view = split[1];
         _scripts[_views[i]] = document.createElement('script');
         _scripts[_views[i]].type = 'text/javascript';
-        _scripts[_views[i]].src = '/js/app/views/' + _views[i] + '.js';
+        _scripts[_views[i]].src = '/js/app/views/' + controller + '/' + view + '.js';
         
         if(Ext.isIE){
             _scripts[_views[i]].onReadyStateChange = function(){

@@ -27,7 +27,7 @@ class My_View_Helper_DynamicResources extends Zend_View_Helper_Abstract {
         if(!empty($scriptjs) || !empty($scripcss))
             $script = '<script type="text/javascript">
                         Ext.onReady(function(){
-                        Ext.Loader.setConfig({enabled:true});
+                        //Ext.Loader.setConfig({enabled:true});
                         '.$scripcss.'
                         '.$scriptjs.'                        
                 });    

@@ -1,24 +1,27 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
-    models: ['InvoiceHeader', 'TypeId'],
-    views: ['InvoiceForm', 'InvoiceGrid']
-}, 'invoice_index');
-function invoice_index(){    
-    //Panel principal donde se van a agregar todos los widgets
-    var mainPanel = Ext.create('Ext.panel.Panel', {
-        title: 'pruebas',
-        border: 0,
-        id: 'mainPanel',
-        initComponent: function(){
-            this.items = [
-                {
-                    xtype: 'invoicegrid'
-                }
-            ];
-        },        
-        renderTo: Ext.get('slot1')
+    models: ['InvoiceHeader'],
+    views: ['Invoice_Grid']
+}, function(){
+    var grid = Ext.create('Mtc.views.invoice.Grid', {
+        title: 'Facturas'
     });
-
+    var a = 1;
+    var b = 2;
+});
+//function invoice_index(){       
+//    var a = Ext.create('Mtc.view.InvoiceGrid', {});
+//    
+//    //Panel principal donde se van a agregar todos los widgets
+//    var mainPanel = Ext.create('Ext.panel.Panel', {
+//        title: 'pruebas',
+//        border: 0,
+//        id: 'mainPanel',
+//        renderTo: Ext.get('slot1')
+//    });
+//    
+//    mainPanel.add(a);
+//}
 //    //Data store de la tabla de facturas
 //    var invoicesDataStore = Ext.create('Ext.data.Store', {
 //        storeId: 'invoicesDS',
@@ -123,4 +126,4 @@ function invoice_index(){
 //    mainPanel.add({
 //        xtype: 'invoicegrid'
 //    });
-}
+//}

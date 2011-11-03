@@ -1,3 +1,10 @@
+Ext.Loader.setConfig({
+        enabled:true,
+        paths: {
+            Mtc: '/js/app'
+        }
+    }
+);
 Ext.ns('Mtc');
 Ext.define('AppConfig', {
     singleton: true,
