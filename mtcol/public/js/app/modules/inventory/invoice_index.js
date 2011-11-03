@@ -1,13 +1,21 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
     models: ['InvoiceHeader', 'TypeId'],
-    views: ['InvoiceForm']
+    views: ['InvoiceForm', 'InvoiceGrid']
 }, 'invoice_index');
-function invoice_index(){
+function invoice_index(){    
     //Panel principal donde se van a agregar todos los widgets
     var mainPanel = Ext.create('Ext.panel.Panel', {
+        title: 'pruebas',
         border: 0,
         id: 'mainPanel',
+        initComponent: function(){
+            this.items = [
+                {
+                    xtype: 'invoicegrid'
+                }
+            ];
+        },        
         renderTo: Ext.get('slot1')
     });
 
@@ -112,5 +120,7 @@ function invoice_index(){
 //        height: AppConfig.gridHeight
 //    });
 
-    mainPanel.add(invoicesGrid);
+//    mainPanel.add({
+//        xtype: 'invoicegrid'
+//    });
 }
