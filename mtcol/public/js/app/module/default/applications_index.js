@@ -25,7 +25,8 @@ if(usr != null){
         //height: h,
         width: '100%',
         items: items,
-        autoHeight: true,
+        //autoHeight: true,
+        hight: 400,
         layout: {
             type: 'table',
             columns: AppConfig.appsColumns,

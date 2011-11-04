@@ -68,7 +68,7 @@ function loadModels(models, fn){
     for(var i = 0; i < _models.length; i++){
         _scripts[_models[i]] = document.createElement('script');
         _scripts[_models[i]].type = 'text/javascript';
-        _scripts[_models[i]].src = '/js/app/models/' + _models[i] + '.js';
+        _scripts[_models[i]].src = '/js/app/model/' + _models[i] + '.js';
         
         if(Ext.isIE){
             _scripts[_models[i]].onReadyStateChange = function(){
@@ -102,6 +102,55 @@ function loadModels(models, fn){
         }        
     }, 1000);
 }
+function loadStores(stores, fn){
+    fn = fn || 'main';
+    var nloads = 0;
+    var _stores;
+    if(!(stores instanceof Array)){
+        _stores = [stores];
+    }else{
+        _stores = stores;
+    }
+    
+    var _scripts = new Array();
+    var head = document.getElementsByTagName('head')[0];
+    for(var i = 0; i < _stores.length; i++){
+        _scripts[_stores[i]] = document.createElement('script');
+        _scripts[_stores[i]].type = 'text/javascript';
+        _scripts[_stores[i]].src = '/js/app/store/' + _stores[i] + '.js';
+        
+        if(Ext.isIE){
+            _scripts[_stores[i]].onReadyStateChange = function(){
+                if(_scripts[_stores[i]].readyState == 'complete' || _scripts[_stores[i]].readyState == 'loaded'){
+                    nloads++;
+                    if(nloads == _stores.length)
+                        if(typeof fn == 'function')
+                            fn();
+                        else if(typeof window[fn] == 'function')
+                            window[fn]();
+                }
+            }
+        }else{
+            _scripts[_stores[i]].addEventListener('load',function(){
+                nloads++;
+                if(nloads == _stores.length)
+                    if(typeof fn == 'function')
+                        fn();
+                    else if(typeof window[fn] == 'function')
+                        window[fn]();
+            },false);
+        }
+        
+        
+        head.appendChild(_scripts[_stores[i]]);        
+    }
+    //cleanup
+    setTimeout(function(){
+        for(var j = 0; j < _stores.length; j++){
+            head.removeChild(_scripts[_stores[j]]);
+        }        
+    }, 1000);
+}
 function loadViews(views, fn){
     fn = fn || 'main';
     var nloads = 0;
@@ -115,12 +164,12 @@ function loadViews(views, fn){
     var _scripts = new Array();
     var head = document.getElementsByTagName('head')[0];
     for(var i = 0; i < _views.length; i++){
-        var split = _views[i].split('_');
+        var split = _views[i].split('.');
         var controller = split[0].toLowerCase();
         var view = split[1];
         _scripts[_views[i]] = document.createElement('script');
         _scripts[_views[i]].type = 'text/javascript';
-        _scripts[_views[i]].src = '/js/app/views/' + controller + '/' + view + '.js';
+        _scripts[_views[i]].src = '/js/app/view/' + controller + '/' + view + '.js';
         
         if(Ext.isIE){
             _scripts[_views[i]].onReadyStateChange = function(){
@@ -158,17 +207,42 @@ function Application(conf, fn){
     conf = conf || {};
     var cmodels = conf.models || [];
     var cviews = conf.views || [];
-    
-    if(cmodels.length > 0){
-        if(cviews.length > 0){
+    var cstores = conf.stores || [];
+        
+    if(cmodels.length > 0){        
+        if(cstores.length > 0){
+            if(cviews.length > 0){
+                loadViews(cviews, loadStores(cstores, loadModels(cmodels, fn)));
+//                loadModels(cmodels, loadStores(cstores, loadViews(cviews, fn)));
+            }else{
+                loadModels(cmodels, loadStores(cstores, fn));
+            }
+        }else if(cviews.length > 0){
             loadModels(cmodels, loadViews(cviews, fn));
         }else{
             loadModels(cmodels, fn);
+        }
+    }else if(cstores.length > 0){
+        if(cviews.length > 0){
+            loadStores(cstores, loadViews(cviews, fn));
+        }else{
+            loadStores(cstores, fn);
         }
     }else if(cviews.length > 0){
         loadViews(cviews, fn);
     }
 }
+    
+//    if(cmodels.length > 0){
+//        if(cviews.length > 0){
+//            loadModels(cmodels, loadViews(cviews, fn));
+//        }else{
+//            loadModels(cmodels, fn);
+//        }
+//    }else if(cviews.length > 0){
+//        loadViews(cviews, fn);
+//    }
+//}
 
 /**
  * Vtypes para Ext-Js

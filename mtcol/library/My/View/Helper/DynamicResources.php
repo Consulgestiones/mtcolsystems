@@ -6,14 +6,14 @@ class My_View_Helper_DynamicResources extends Zend_View_Helper_Abstract {
         $view = Zend_Controller_Front::getInstance()->getRequest()->getActionName();        
         $filejs = $controller.'_'.$view.'.js';
         $filecss = $controller.'_'.$view.'.css';
-        $urljs = APPLICATION_PATH."/../public/js/app/modules/".$module."/".$filejs;        
+        $urljs = APPLICATION_PATH."/../public/js/app/module/".$module."/".$filejs;        
         $urlcss = APPLICATION_PATH."/../public/css/".$module."/".$filecss;
         
         
         $scriptjs  = (file_exists($urljs))?'
             var script = document.createElement("script");
             script.type = "text/javascript";
-            script.src = "/js/app/modules/'.$module.'/'.$filejs.'";
+            script.src = "/js/app/module/'.$module.'/'.$filejs.'";
             document.getElementsByTagName("head")[0].appendChild(script);            
             ':'';        
         

@@ -1,13 +1,22 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
-    models: ['InvoiceHeader'],
-    views: ['Invoice_Grid']
-}, function(){
-    var grid = Ext.create('Mtc.views.invoice.Grid', {
-        title: 'Facturas'
-    });
-    var a = 1;
-    var b = 2;
+    models: ['Invoice'],
+    views: ['invoice.Grid'],
+    stores: ['Invoice']
+}, function(){       
+    var panel = Ext.create('Ext.panel.Panel', {
+        title: 'Main Panel',
+        items: [
+            {
+                xtype: 'textfield',
+                fieldLabel: 'prueba'
+            },
+            {
+                xtype: 'invoicegrid'
+            }
+        ],
+        renderTo: Ext.get('slot1')
+    });    
 });
 //function invoice_index(){       
 //    var a = Ext.create('Mtc.view.InvoiceGrid', {});

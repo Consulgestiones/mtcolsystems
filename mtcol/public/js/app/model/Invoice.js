@@ -1,4 +1,4 @@
-Ext.define('Mtc.model.InvoiceHeader', {
+Ext.define('Mtc.model.Invoice', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'idinvoice', type: 'int'},
