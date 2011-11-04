@@ -74,11 +74,12 @@ function loadModels(models, fn){
             _scripts[_models[i]].onReadyStateChange = function(){
                 if(_scripts[_models[i]].readyState == 'complete' || _scripts[_models[i]].readyState == 'loaded'){
                     nloads++;
-                    if(nloads == _models.length)
+                    if(nloads == _models.length){
                         if(typeof fn == 'function')
                             fn();
                         else if(typeof window[fn] == 'function')
                             window[fn]();
+                    }
                 }
             }
         }else{
@@ -123,11 +124,12 @@ function loadStores(stores, fn){
             _scripts[_stores[i]].onReadyStateChange = function(){
                 if(_scripts[_stores[i]].readyState == 'complete' || _scripts[_stores[i]].readyState == 'loaded'){
                     nloads++;
-                    if(nloads == _stores.length)
+                    if(nloads == _stores.length){
                         if(typeof fn == 'function')
                             fn();
                         else if(typeof window[fn] == 'function')
                             window[fn]();
+                    }
                 }
             }
         }else{
@@ -203,34 +205,176 @@ function loadViews(views, fn){
         }        
     }, 1000);
 }
+//function Application(conf, fn){
+//    conf = conf || {};
+//    var cmodels = conf.models || [];
+//    var cviews = conf.views || [];
+//    var cstores = conf.stores || [];   
+//    
+//        
+//    if(cmodels.length > 0){        
+//        if(cstores.length > 0){
+//            if(cviews.length > 0){
+//                loadViews(cviews, loadStores(cstores, loadModels(cmodels, fn)));
+////                loadViews(cviews, loadStores, cstores)
+////                loadModels(cmodels, loadStores(cstores, loadViews(cviews, fn)));
+//            }else{
+//                loadStores(cstores, loadModels(cmodels, fn));
+//            }
+//        }else if(cviews.length > 0){
+//            loadViews(cviews, loadModels(cmodels, fn));
+//        }else{
+//            loadModels(cmodels, fn);
+//        }
+//    }else if(cstores.length > 0){
+//        if(cviews.length > 0){
+//            loadViews(cviews, loadStores(cstores, fn));
+//        }else{
+//            loadStores(cstores, fn);
+//        }
+//    }else if(cviews.length > 0){
+//        loadViews(cviews, fn);
+//    }
+//}
+
 function Application(conf, fn){
     conf = conf || {};
     var cmodels = conf.models || [];
     var cviews = conf.views || [];
     var cstores = conf.stores || [];
+    
+    this.loadModels = function(){
         
-    if(cmodels.length > 0){        
-        if(cstores.length > 0){
-            if(cviews.length > 0){
-                loadViews(cviews, loadStores(cstores, loadModels(cmodels, fn)));
-//                loadModels(cmodels, loadStores(cstores, loadViews(cviews, fn)));
-            }else{
-                loadStores(cstores, loadModels(cmodels, fn));
+        if(cmodels.length == 0){
+            loadStores();
+        }else{
+            var nmodels = 0;
+
+            var _scripts = new Array();
+            var head = document.getElementsByTagName('head')[0];
+            for(var i = 0; i < cmodels.length; i++){
+                _scripts[cmodels[i]] = document.createElement('script');
+                _scripts[cmodels[i]].type = 'text/javascript';
+                _scripts[cmodels[i]].src = '/js/app/model/' + cmodels[i] + '.js';
+
+                if(Ext.isIE){
+                    _scripts[cmodels[i]].onReadyStateChange = function(){
+                        if(_scripts[cmodels[i]].readyState == 'complete' || _scripts[cmodels[i]].readyState == 'loaded'){
+                            nmodels++;
+                            if(nmodels == cmodels.length){
+                                loadStores();
+                            }
+                        }
+                    }
+                }else{
+                    _scripts[cmodels[i]].addEventListener('load',function(){
+                        nmodels++;
+                        if(nmodels == cmodels.length)
+                            loadStores();
+                    },false);
+                }
+
+
+                head.appendChild(_scripts[cmodels[i]]);        
             }
-        }else if(cviews.length > 0){
-            loadViews(cviews, loadModels(cmodels, fn));
-        }else{
-            loadModels(cmodels, fn);
+            //cleanup
+            setTimeout(function(){
+                for(var j = 0; j < cmodels.length; j++){
+                    head.removeChild(_scripts[cmodels[j]]);
+                }        
+            }, 1000);
+            
         }
-    }else if(cstores.length > 0){
-        if(cviews.length > 0){
-            loadViews(cviews, loadStores(cstores, fn));
+    };
+    this.loadStores = function(){
+        
+        if(cstores.length == 0){
+            loadViews();
         }else{
-            loadStores(cstores, fn);
+
+            var nstores = 0;
+            var _scripts = new Array();
+            var head = document.getElementsByTagName('head')[0];
+            for(var i = 0; i < cstores.length; i++){
+                _scripts[cstores[i]] = document.createElement('script');
+                _scripts[cstores[i]].type = 'text/javascript';
+                _scripts[cstores[i]].src = '/js/app/store/' + cstores[i] + '.js';
+
+                if(Ext.isIE){
+                    _scripts[cstores[i]].onReadyStateChange = function(){
+                        if(_scripts[cstores[i]].readyState == 'complete' || _scripts[cstores[i]].readyState == 'loaded'){
+                            nstores++;
+                            if(nstores == cstores.length){
+                                loadViews();
+                            }
+                        }
+                    }
+                }else{
+                    _scripts[cstores[i]].addEventListener('load',function(){
+                        nstores++;
+                        if(nstores == cstores.length)
+                            loadViews();
+                    },false);
+                }
+
+
+                head.appendChild(_scripts[cstores[i]]);        
+            }
+            //cleanup
+            setTimeout(function(){
+                for(var j = 0; j < cstores.length; j++){
+                    head.removeChild(_scripts[cstores[j]]);
+                }        
+            }, 1000);
+
         }
-    }else if(cviews.length > 0){
-        loadViews(cviews, fn);
+    };
+    this.loadViews = function(){
+        
+        if(cviews.length == 0){
+            (fn)();
+        }else{
+
+            var nviews = 0;
+            var _scripts = new Array();
+            var head = document.getElementsByTagName('head')[0];
+            for(var i = 0; i < cviews.length; i++){
+                var split = cviews[i].split('.');
+                var controller = split[0].toLowerCase();
+                var view = split[1];
+                _scripts[cviews[i]] = document.createElement('script');
+                _scripts[cviews[i]].type = 'text/javascript';
+                _scripts[cviews[i]].src = '/js/app/view/' + controller + '/' + view + '.js';
+
+                if(Ext.isIE){
+                    _scripts[cviews[i]].onReadyStateChange = function(){
+                        if(_scripts[cviews[i]].readyState == 'complete' || _scripts[cviews[i]].readyState == 'loaded'){
+                            nviews++;
+                            if(nviews == cviews.length)
+                                (fn)();
+                        }
+                    }
+                }else{
+                    _scripts[cviews[i]].addEventListener('load',function(){
+                        nviews++;
+                        if(nviews == cviews.length)
+                            (fn)();
+                    },false);
+                }
+
+
+                head.appendChild(_scripts[cviews[i]]);        
+            }
+            //cleanup
+            setTimeout(function(){
+                for(var j = 0; j < cviews.length; j++){
+                    head.removeChild(_scripts[cviews[j]]);
+                }        
+            }, 1000);
+
+        }
     }
+    loadModels();
 }
     
 //    if(cmodels.length > 0){
