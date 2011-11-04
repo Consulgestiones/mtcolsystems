@@ -215,16 +215,16 @@ function Application(conf, fn){
                 loadViews(cviews, loadStores(cstores, loadModels(cmodels, fn)));
 //                loadModels(cmodels, loadStores(cstores, loadViews(cviews, fn)));
             }else{
-                loadModels(cmodels, loadStores(cstores, fn));
+                loadStores(cstores, loadModels(cmodels, fn));
             }
         }else if(cviews.length > 0){
-            loadModels(cmodels, loadViews(cviews, fn));
+            loadViews(cviews, loadModels(cmodels, fn));
         }else{
             loadModels(cmodels, fn);
         }
     }else if(cstores.length > 0){
         if(cviews.length > 0){
-            loadStores(cstores, loadViews(cviews, fn));
+            loadViews(cviews, loadStores(cstores, fn));
         }else{
             loadStores(cstores, fn);
         }
