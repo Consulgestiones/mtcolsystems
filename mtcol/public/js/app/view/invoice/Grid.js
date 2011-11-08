@@ -2,7 +2,16 @@ Ext.define('Mtc.view.invoice.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.invoicegrid',
     store: Ext.create('Mtc.store.Invoice'),
-    title: 'Factura',
+    tbar: [
+        {
+            text: 'Ingresar Factura',
+            iconCls: 'add'
+        },
+        {
+            text: 'Modificar Factura',
+            iconCls: 'edit'
+        }
+    ],
     columns: [
             {
                 header: 'Factura No',
