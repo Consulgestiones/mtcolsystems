@@ -1,15 +1,61 @@
 Ext.define('Mtc.view.invoice.Grid', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.invoicegrid',       
+    alias: 'widget.invoicegrid',
     store: Ext.create('Mtc.store.Invoice'),
+    title: 'Factura',
     columns: [
             {
-                header: 'Col 1',
-                dataIndex: 'col1'
+                header: 'Factura No',
+                dataIndex: 'invoicenumber'
             },
             {
-                header: 'Col 2',
-                dataIndex: 'col2'
+                header: 'Proveedor',
+                dataIndex: 'provider'
+            },
+            {
+                header: 'Fecha',
+                dataIndex: 'dinvoice'
+            },
+            {
+                header: 'Pais',
+                dataIndex: 'country'
+            },
+            {
+                header: 'Ciudad',
+                dataIndex: 'city'
+            },
+            {
+                header: 'Ciudad',
+                dataIndex: 'city'
+            },
+            {
+                header: 'Estado',
+                dataIndex: 'invoicestatus'
+            },
+            {
+                header: 'Subtotal',
+                dataIndex: 'subtotal'
+            },
+            {
+                header: 'Impuesto',
+                dataIndex: 'tax'
+            },
+            {
+                header: 'Total',
+                dataIndex: 'total'
+            }
+        ],
+        tbar: [
+            {
+                text: 'Ingresar Factura',
+                iconCls: 'add',
+                handler: function(){
+                    alert(typeof Mtc.model.Invoicexxx);
+                }
+            },
+            {
+                text: 'Modificar Factura',
+                iconCls: 'edit'
             }
         ]
 }); 

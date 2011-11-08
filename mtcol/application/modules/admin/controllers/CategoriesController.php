@@ -41,6 +41,7 @@ class Admin_CategoriesController extends Zend_Controller_Action
             $total = $stmt->fetchColumn();
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -97,6 +98,7 @@ class Admin_CategoriesController extends Zend_Controller_Action
             }
             $data['active'] = ($inactive)?'NO':'SI';
             $success = true;
+            $msg = 1;
         }catch(Exception $e){                        
             $success = false;
             $msg = $e->getMessage();
@@ -129,6 +131,7 @@ class Admin_CategoriesController extends Zend_Controller_Action
             $inactive = $db->fetchOne($sql);
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();                   
@@ -166,6 +169,7 @@ class Admin_CategoriesController extends Zend_Controller_Action
             $total = $stmt->fetchColumn();
                     
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -219,6 +223,7 @@ class Admin_CategoriesController extends Zend_Controller_Action
             $data['active'] = ($inactive)?'NO':'SI';
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();

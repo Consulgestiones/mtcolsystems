@@ -107,6 +107,13 @@ function validateFunction(p){
     alert(p);
 }
 function setSection(params){
+    
+    if(typeof sloaded == 'undefined')
+        sloaded = '';
+    
+    if(sloaded == params.src)
+        return;
+    
     var head = document.getElementsByTagName('head');
     if(typeof scriptfunc != 'undefined')
         head[0].removeChild(scriptfunc);
@@ -119,6 +126,7 @@ function setSection(params){
 //    script.src = '/js/admin/profiles_index.js';
         
     head[0].appendChild(scriptfunc);       
+    sloaded = params.src;
 }
 
 Ext.apply(Ext.form.field.VTypes, {

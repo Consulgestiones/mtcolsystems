@@ -34,6 +34,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             $stmt2 = $db->query($sql);
             $total = $stmt2->fetchColumn();
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -93,6 +94,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             }else{
                 throw new Exception(json_encode($form->getErrorMessages()));
             }
+            $msg = 1;
         }catch(Exception $e){
             $data = null;
             $msg = $e->getMessage();
@@ -135,6 +137,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             $total = $stmt->fetchColumn();
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -173,6 +176,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             $total = $stmt->fetchColumn();
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -208,6 +212,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             }                                                
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -230,7 +235,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             if(!is_array($providers))
                 throw new Exception ('Error al recibir los datos');
                               
-            $model = new Admin_Model_ProductProvider();
+            $model = new Model_ProductProvider();
             $total = count($providers);            
             for($i = 0; $i < $total; $i++){
                 $where = 'idproduct = '.$idproduct.' AND idprovider = '.$providers[$i];
@@ -238,6 +243,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
             }                                                
             
             $success = true;
+            $msg = 1;
         }catch(Exception $e){
             $success = false;
             $msg = $e->getMessage();

@@ -18,7 +18,8 @@ class Admin_ProfilesController extends Zend_Controller_Action
         $start = $this->getRequest()->getParam('start');
         $limit = $this->getRequest()->getParam('limit');
         
-        $profiles = new Admin_Model_Profile();
+//        $profiles = new Admin_Model_Profile();
+        $profiles = new Model_Profile();
         
         $query = $profiles->fetchRow($profiles->select()
                 ->from('profile', array())

@@ -69,7 +69,7 @@ class Admin_UsersController extends Zend_Controller_Action
                     if($count == 0){
                         $data['iduser'] = null;
                         $data['idprofile'] = 1;
-                        $data['password'] = md5($data['numid']);
+                        $data['password'] = md5($data['usernumid']);
                         $data['creationdate'] = date('Y-m-d G:i:s');
 
                         $iduser = $model->insert($data);

@@ -205,43 +205,18 @@ function loadViews(views, fn){
         }        
     }, 1000);
 }
-//function Application(conf, fn){
-//    conf = conf || {};
-//    var cmodels = conf.models || [];
-//    var cviews = conf.views || [];
-//    var cstores = conf.stores || [];   
-//    
-//        
-//    if(cmodels.length > 0){        
-//        if(cstores.length > 0){
-//            if(cviews.length > 0){
-//                loadViews(cviews, loadStores(cstores, loadModels(cmodels, fn)));
-////                loadViews(cviews, loadStores, cstores)
-////                loadModels(cmodels, loadStores(cstores, loadViews(cviews, fn)));
-//            }else{
-//                loadStores(cstores, loadModels(cmodels, fn));
-//            }
-//        }else if(cviews.length > 0){
-//            loadViews(cviews, loadModels(cmodels, fn));
-//        }else{
-//            loadModels(cmodels, fn);
-//        }
-//    }else if(cstores.length > 0){
-//        if(cviews.length > 0){
-//            loadViews(cviews, loadStores(cstores, fn));
-//        }else{
-//            loadStores(cstores, fn);
-//        }
-//    }else if(cviews.length > 0){
-//        loadViews(cviews, fn);
-//    }
-//}
 
 function Application(conf, fn){
     conf = conf || {};
     var cmodels = conf.models || [];
     var cviews = conf.views || [];
-    var cstores = conf.stores || [];
+    var cstores = conf.stores || [];    
+    
+    if(typeof rloaded == 'undefined')
+        rloaded = false;
+    
+    if(rloaded)
+        return;
     
     this.loadModels = function(){
         
@@ -252,7 +227,8 @@ function Application(conf, fn){
 
             var _scripts = new Array();
             var head = document.getElementsByTagName('head')[0];
-            for(var i = 0; i < cmodels.length; i++){
+            for(var i = 0; i < cmodels.length; i++){                                
+                
                 _scripts[cmodels[i]] = document.createElement('script');
                 _scripts[cmodels[i]].type = 'text/javascript';
                 _scripts[cmodels[i]].src = '/js/app/model/' + cmodels[i] + '.js';
@@ -269,8 +245,9 @@ function Application(conf, fn){
                 }else{
                     _scripts[cmodels[i]].addEventListener('load',function(){
                         nmodels++;
-                        if(nmodels == cmodels.length)
+                        if(nmodels == cmodels.length){
                             loadStores();
+                        }
                     },false);
                 }
 
@@ -295,7 +272,8 @@ function Application(conf, fn){
             var nstores = 0;
             var _scripts = new Array();
             var head = document.getElementsByTagName('head')[0];
-            for(var i = 0; i < cstores.length; i++){
+            for(var i = 0; i < cstores.length; i++){                
+                
                 _scripts[cstores[i]] = document.createElement('script');
                 _scripts[cstores[i]].type = 'text/javascript';
                 _scripts[cstores[i]].src = '/js/app/store/' + cstores[i] + '.js';
@@ -312,8 +290,9 @@ function Application(conf, fn){
                 }else{
                     _scripts[cstores[i]].addEventListener('load',function(){
                         nstores++;
-                        if(nstores == cstores.length)
+                        if(nstores == cstores.length){
                             loadViews();
+                        }
                     },false);
                 }
 
@@ -339,6 +318,7 @@ function Application(conf, fn){
             var _scripts = new Array();
             var head = document.getElementsByTagName('head')[0];
             for(var i = 0; i < cviews.length; i++){
+                
                 var split = cviews[i].split('.');
                 var controller = split[0].toLowerCase();
                 var view = split[1];
@@ -350,15 +330,18 @@ function Application(conf, fn){
                     _scripts[cviews[i]].onReadyStateChange = function(){
                         if(_scripts[cviews[i]].readyState == 'complete' || _scripts[cviews[i]].readyState == 'loaded'){
                             nviews++;
-                            if(nviews == cviews.length)
+                            if(nviews == cviews.length){
                                 (fn)();
+                            }
                         }
                     }
                 }else{
                     _scripts[cviews[i]].addEventListener('load',function(){
                         nviews++;
-                        if(nviews == cviews.length)
+                        if(nviews == cviews.length){
+                            rloaded = true;
                             (fn)();
+                        }
                     },false);
                 }
 
