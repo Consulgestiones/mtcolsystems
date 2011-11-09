@@ -233,15 +233,16 @@ function Application(conf, fn){
                 _scripts[cmodels[i]].type = 'text/javascript';
                 _scripts[cmodels[i]].src = '/js/app/model/' + cmodels[i] + '.js';
 
-                if(Ext.isIE){
-                    _scripts[cmodels[i]].onReadyStateChange = function(){
-                        if(_scripts[cmodels[i]].readyState == 'complete' || _scripts[cmodels[i]].readyState == 'loaded'){
+                if(Ext.isIE){    
+                    _scripts[cmodels[i]].k = cmodels[i];
+                    _scripts[cmodels[i]].addEventListener('readystatechange', function(){
+                        if(_scripts[this.k].readyState == 'complete' || _scripts[this.k].readyState == 'loaded'){
                             nmodels++;
                             if(nmodels == cmodels.length){
                                 loadStores();
                             }
                         }
-                    }
+                    });
                 }else{
                     _scripts[cmodels[i]].addEventListener('load',function(){
                         nmodels++;
@@ -279,8 +280,9 @@ function Application(conf, fn){
                 _scripts[cstores[i]].src = '/js/app/store/' + cstores[i] + '.js';
 
                 if(Ext.isIE){
-                    _scripts[cstores[i]].onReadyStateChange = function(){
-                        if(_scripts[cstores[i]].readyState == 'complete' || _scripts[cstores[i]].readyState == 'loaded'){
+                    _scripts[cstores[i]].k = cstores[i];
+                    _scripts[cstores[i]].onreadystatechange = function(){
+                        if(_scripts[this.k].readyState == 'complete' || _scripts[this.k].readyState == 'loaded'){
                             nstores++;
                             if(nstores == cstores.length){
                                 loadViews();
@@ -327,19 +329,21 @@ function Application(conf, fn){
                 _scripts[cviews[i]].src = '/js/app/view/' + controller + '/' + view + '.js';
 
                 if(Ext.isIE){
-                    _scripts[cviews[i]].onReadyStateChange = function(){
-                        if(_scripts[cviews[i]].readyState == 'complete' || _scripts[cviews[i]].readyState == 'loaded'){
+                    _scripts[cviews[i]].k = cviews[i];
+                    _scripts[cviews[i]].onreadystatechange = function(){                    
+                        if(_scripts[this.k].readyState == 'complete' || _scripts[this.k].readyState == 'loaded'){
                             nviews++;
                             if(nviews == cviews.length){
                                 (fn)();
                             }
                         }
-                    }
+                    };
                 }else{
                     _scripts[cviews[i]].addEventListener('load',function(){
                         nviews++;
                         if(nviews == cviews.length){
                             rloaded = true;
+                            alert('hola todos');
                             (fn)();
                         }
                     },false);

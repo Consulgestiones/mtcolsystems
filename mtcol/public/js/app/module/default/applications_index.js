@@ -7,7 +7,7 @@ Application({
     });
     
     var user = getGlobal('user');
-    var apps = user.applications;    
+    var apps = user.applications;        
     
     for(var i = 0; i < apps.length; i++){
         var a = apps[i];                
