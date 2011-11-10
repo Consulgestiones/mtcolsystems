@@ -167,8 +167,45 @@ class Admin_UsersController extends Zend_Controller_Action
         
     }
 
+    public function setapplicationsAction()
+    {
+        $iduser = $this->getRequest()->getParam('iduser');
+        $apps = $this->getRequest()->getParam('applications');
+        $db = Zend_Registry::get('db');
+        try{
+            $db->beginTransaction();
+            $db->delete('user_application', 'iduser = '.$iduser);
+            if($apps){
+                for($i = 0; $i < count($apps); $i++){
+                    $data = array(
+                        'iduser' => $iduser,
+                        'idapplication' => $apps[$i]
+                    );
+                    $db->insert('user_application', $data);
+                }
+            }
+            
+            
+            
+            $db->commit();
+            $success = true;
+            $msg = 1;
+        }catch(Exception $e){
+            $db->rollBack();
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        $data = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($data);
+    }
+
 
 }
+
+
 
 
 

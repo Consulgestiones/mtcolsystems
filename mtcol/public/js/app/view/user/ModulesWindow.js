@@ -15,14 +15,18 @@ Ext.define('Mtc.view.user.ModulesWindow', {
                     xtype: 'fieldset',
                     title: 'Aplicaciones',
                     id: 'appPanel'
+                },
+                {
+                    xtype: 'hidden',
+                    name: 'iduser',
+                    id: 'hdniduser'
                 }
             ],
             buttons: [
                 {
                     text: 'Cancelar',
                     iconCls: 'btn-cancel',
-                    handler: function(){
-                        setNotification('Satisfactorio', 'Las aplicaciones fueron configuradas');
+                    handler: function(){                        
                         this.up('window').close();
                     }
                 },
@@ -32,6 +36,7 @@ Ext.define('Mtc.view.user.ModulesWindow', {
                     handler: function(){
                         var form = this.up('form').getForm();
                         var win = this.up('window');
+                        Ext.getCmp('hdniduser').setValue(win.iduser);
                         form.submit({
                             success: function(frm, request){
                                 var obj = Ext.decode(request.response.responseText);
@@ -51,7 +56,8 @@ Ext.define('Mtc.view.user.ModulesWindow', {
             ]
         }
     ],
-    constructor: function(options){        
+    constructor: function(options){ 
+        Ext.apply(this, options);
         Ext.Ajax.request({
             method: 'POST',
             url: '/admin/users/getapplications',
@@ -68,7 +74,7 @@ Ext.define('Mtc.view.user.ModulesWindow', {
                             xtype: 'checkboxfield',
                             inputValue: apps[i].idapplication,
                             fieldLabel: apps[i].application,
-                            name: 'application[]',
+                            name: 'applications[]',
                             checked: (apps[i].enabled == '1')
                         });
                     }
