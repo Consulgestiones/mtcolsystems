@@ -1,7 +1,7 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
     models: ['Invoice', 'InvoiceDetail'],
-    views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid'],
+    views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid', 'util.Notification'],
     stores: ['Invoice', 'InvoiceDetail']
 }, function(){  
     var mainPanel = Ext.create('Mtc.view.invoice.MainPanel', {
