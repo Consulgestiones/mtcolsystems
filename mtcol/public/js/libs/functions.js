@@ -342,8 +342,7 @@ function Application(conf, fn){
                     _scripts[cviews[i]].addEventListener('load',function(){
                         nviews++;
                         if(nviews == cviews.length){
-                            rloaded = true;
-                            alert('hola todos');
+                            rloaded = true;                            
                             (fn)();
                         }
                     },false);

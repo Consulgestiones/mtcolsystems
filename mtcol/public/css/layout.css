@@ -54,6 +54,9 @@
 .godoc {
     background-image:url(/images/icons/page_green.png) !important;
 }
+.puzzle {
+    background-image:url(/images/icons/plugin.png) !important;
+}
 .align-right {
     text-align: right;    
 }
