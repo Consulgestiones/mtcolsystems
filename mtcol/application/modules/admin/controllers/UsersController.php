@@ -135,7 +135,42 @@ class Admin_UsersController extends Zend_Controller_Action
                 
         $this->_helper->json->sendJson($resp);
     }
+
+    public function getapplicationsAction()
+    {
+        $iduser = $this->getRequest()->getParam('iduser');
+        $apps = array();
+        try{
+            
+            $sql = sprintf("SELECT a.idapplication, a.application, COUNT(ua.idapplication) AS enabled
+                            FROM application a
+                            LEFT JOIN user_application ua ON ua.idapplication = a.idapplication AND ua.iduser = %d
+                            GROUP BY a.idapplication, a.application
+                            ORDER BY a.application", $iduser);
+            
+            $db = Zend_Registry::get('db');
+            $stmt = $db->query($sql);
+            $apps = $stmt->fetchAll();
+            
+            $success = true;
+            $msg = 1;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        $data = array(
+            'data' => $apps,
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($data);
+        
+    }
+
+
 }
+
+
 
 
 

@@ -363,103 +363,17 @@ function Application(conf, fn){
     loadModels();
 }
     
-//    if(cmodels.length > 0){
-//        if(cviews.length > 0){
-//            loadModels(cmodels, loadViews(cviews, fn));
-//        }else{
-//            loadModels(cmodels, fn);
-//        }
-//    }else if(cviews.length > 0){
-//        loadViews(cviews, fn);
-//    }
-//}
-
-/**
- * Vtypes para Ext-Js
- */
-//
-//Ext.apply(Ext.form.VTypes, {
-//    uniqueusername: function(val, field){            
-//        Ext.Ajax.request({
-//            url: '/util/users/uniqueusername',
-//            params: {
-//                username: field.getValue()
-//            },
-//            success: function(response){
-//                var obj = Ext.decode(response.responseText);                    
-//                var unique = obj.unique;
-//                if(unique){                        
-//                    uniqueUserNameTrue();
-//                }else{
-//                    uniqueUserNameFalse();
-//                }                                          
-//
-//            }
-//        });            
-//    },
-//    uniqueusernameText: 'Nombre de usuario duplicado'
-//});
-//function uniqueUserNameTrue(){
-//    return true;
-//}
-//function uniqueUserNameFalse(){
-//    return false;
-//}
-//Ext.apply(Ext.form.VTypes, {
-// uniqueusernameMask : /[a-z0-9_\.\-@\+]/i,
-// uniqueusername : function(val) {
-//     if (val.length < 4) {
-//         Ext.apply(Ext.form.VTypes, {
-//             uniqueusernameText: 'Debe ser mayor a 4 caracteres'
-//         });
-//         return false;
-//     } else {
-//         Ext.Ajax.request({
-//             url: '/util/users/uniqueusername',
-//             method: 'POST',
-//             params: 'username=' + val,
-//             success: function(o) {
-//                 var obj = Ext.decode(o.responseText);
-//                 if (obj.unique) {
-//                     resetUsernameValidator(false);
-//                     Ext.apply(Ext.form.VTypes, {
-//                         uniqueusernameText: 'Nombre de usuario no disponible'
-//                     });
-//                     return false;
-//                 } else {
-//                     resetUsernameValidator(true);
-//                 }
-//             }
-//         });
-//         return true;
-//     }
-// },
-//    uniqueusernameText : 'Nombre de usuario no esta disponible'
-//});
-//function resetUsernameValidator(is_error) {
-// Ext.apply(Ext.form.VTypes, {
-//     uniqueusername : function(val) {
-//         if (val.length < 4) {
-//             Ext.apply(Ext.form.VTypes, {
-//                 uniqueusernameText: 'Debe ser de mas de 4 caracteres'
-//             });
-//             return false;
-//         } else {
-//             Ext.Ajax.request({
-//                 url: '/util/users/uniqueusername',
-//                 method: 'POST',
-//                 params: 'username=' + val,
-//                 success: function(o) {
-//                     var obj = Ext.decode(o.responseText);
-//                     if (o.unique) {
-//                         resetUsernameValidator(false);
-//                     } else {
-//                         resetUsernameValidator(true);
-//                     }
-//                 }
-//             });
-//             return is_error;
-//         }
-//     }
-// });
-//}
+function setNotification(title, text){
+    Ext.create('widget.uxNotification', {
+            corner: 'br',            
+            //manager: 'instructions',
+            //iconCls: 'notification-icon-information',
+            title: title,
+            html: text,
+            autoDestroyDelay: 4000,
+            slideInDelay: 500,
+            slideDownDelay: 500,
+            slideInAnimation: 'bounceOut',
+            slideDownAnimation: 'easeIn'
+    }).show();
+}

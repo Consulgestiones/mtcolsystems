@@ -1,5 +1,6 @@
 Application({
-    models: ['User', 'Profile']
+    models: ['User', 'Profile'],
+    views: ['user.ModulesWindow', 'util.Notification']
 }, function(){
   
     Ext.QuickTips.init();
@@ -58,7 +59,10 @@ Application({
                     return;
                 
                 var usr = rows[0];
-                alert(usr.get('iduser'));
+                modsWind = Ext.create('Mtc.view.user.ModulesWindow', {
+                    title: usr.get('firstname') + ' ' + usr.get('lastname'),
+                    iduser: usr.get('iduser')
+                }).show();
             }
         }
     ];

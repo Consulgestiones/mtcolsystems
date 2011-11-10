@@ -67,6 +67,7 @@
               <actionMethod actionName="getusers"/>
               <actionMethod actionName="save"/>
               <actionMethod actionName="usernameunique"/>
+              <actionMethod actionName="getapplications"/>
             </controllerFile>
             <controllerFile controllerName="Index">
               <actionMethod actionName="index"/>
@@ -175,6 +176,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Providers">
                 <viewScriptFile forActionName="unasignproduct"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Users">
+                <viewScriptFile forActionName="getapplications"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
