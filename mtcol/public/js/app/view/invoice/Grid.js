@@ -1,7 +1,16 @@
+var invoiceDataStore = Ext.create('Mtc.store.Invoice'); 
+var invoicePagingBar = new Ext.PagingToolbar({  
+    pageSize: AppConfig.gridPageSize,  
+    store: invoiceDataStore,  
+    displayInfo: true  
+});
 Ext.define('Mtc.view.invoice.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.invoicegrid',
-    store: Ext.create('Mtc.store.Invoice'),
+    title:  'Facturas',
+    store: invoiceDataStore,
+    bbar: invoicePagingBar,
+    autoExpandColumn: 'title-col',        
     tbar: [
         {
             text: 'Ingresar Factura',
@@ -23,7 +32,8 @@ Ext.define('Mtc.view.invoice.Grid', {
             },
             {
                 header: 'Fecha',
-                dataIndex: 'dinvoice'
+                dataIndex: 'dinvoice',
+                renderer: Ext.util.Format.dateRenderer('m/d/Y')
             },
             {
                 header: 'Pais',
@@ -42,6 +52,10 @@ Ext.define('Mtc.view.invoice.Grid', {
                 dataIndex: 'invoicestatus'
             },
             {
+                header: 'Método Pago',
+                dataIndex: 'paymentmethod'
+            },
+            {
                 header: 'Subtotal',
                 dataIndex: 'subtotal'
             },
@@ -52,19 +66,6 @@ Ext.define('Mtc.view.invoice.Grid', {
             {
                 header: 'Total',
                 dataIndex: 'total'
-            }
-        ],
-        tbar: [
-            {
-                text: 'Ingresar Factura',
-                iconCls: 'add',
-                handler: function(){
-                    alert(typeof Mtc.model.Invoicexxx);
-                }
-            },
-            {
-                text: 'Modificar Factura',
-                iconCls: 'edit'
             }
         ]
 }); 

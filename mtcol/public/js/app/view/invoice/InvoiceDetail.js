@@ -6,17 +6,24 @@ Ext.define('Mtc.view.invoice.InvoiceDetail', {
     frame: true,
     items: [
         {
-            title: 'Factura',
+            xtype: 'form',
             defaultType: 'textfield',
             layout: {
                 type: 'table',
                 columns: 2
             },
+            defaults: {
+                readOnly: true
+            },
             itemCls: 'left-space',
+            width: '100%',
+            frame: true,
             items: [
                 {
+                    xtype: 'datefield',
                     fieldLabel: 'Fecha',
-                    name: 'dinvoice'
+                    name: 'dinvoice',
+                    format: 'd/m/Y'
                 },
                 {
                     fieldLabel: 'Ciudad',
@@ -47,10 +54,10 @@ Ext.define('Mtc.view.invoice.InvoiceDetail', {
                     name: 'provideremail'
                 }
             ]
-        }/*,
+        },
         {
             xtype: 'invoicedetailgrid',
             id: 'detailGrid'
-        }*/
+        }
     ]
 });

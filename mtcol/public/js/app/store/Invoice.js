@@ -11,6 +11,6 @@ Ext.define('Mtc.store.Invoice', {
                 root: 'data'
             }
         },
-    autoLoad: false
+    autoLoad: true
 });
 

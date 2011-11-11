@@ -10,6 +10,8 @@ Ext.define('Mtc.model.Invoice', {
         {name: 'idprovider', type: 'int'},
         {name: 'provider', type: 'string'},
         {name: 'providernumid', type: 'string'},
+        {name: 'provideremail', type: 'string'},
+        {name: 'providerphone', type: 'string'},
         {name: 'idinvoicestatus', type: 'int'},
         {name: 'invoicestatus', type: 'string'},
         {name: 'productservice', type: 'string'},
@@ -17,6 +19,10 @@ Ext.define('Mtc.model.Invoice', {
         {name: 'subtotal', type: 'float'},
         {name: 'tax', type: 'float'},
         {name: 'total', type: 'float'},
-        {name: 'date', type: 'date'},
+        {name: 'dinvoice', type: 'date'},
+        {name: 'idinvoicestatus', type: 'int'},
+        {name: 'invoicestatus', type: 'string'},
+        {name: 'idpaymentmethod', type: 'int'},
+        {name: 'paymentmethod', type: 'string'},
     ]
 });
