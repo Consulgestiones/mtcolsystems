@@ -59,5 +59,8 @@ Ext.define('Mtc.view.invoice.InvoiceDetail', {
             xtype: 'invoicedetailgrid',
             id: 'detailGrid'
         }
-    ]
+    ],
+    getDetailGrid: function(){
+        return this.items.items[1];
+    }
 });

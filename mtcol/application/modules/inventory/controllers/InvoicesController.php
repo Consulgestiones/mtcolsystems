@@ -60,8 +60,42 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         $this->_helper->json->sendJson($data);
     }
 
+    public function getinvoicedetailAction()
+    {
+        $idinvoice = $this->getRequest()->getParam('idinvoice');
+        
+        $data = array();
+        $msg = 1;
+        try{
+            
+            $model = new Model_InvoiceDetail();
+            
+            $sql = sprintf("SELECT i.item, i.idinvoice, i.quantity, i.unitprice, i.totalprice, p.idproduct, p.product, p.unit
+                            FROM invoice_detail i, product p
+                            WHERE i.idinvoice = %d AND p.idproduct = i.idproduct", $idinvoice);
+            
+            $db = Zend_Registry::get('db');
+            
+            $stmt = $db->query($sql);
+            
+            $data = $stmt->fetchAll();
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        $response = array(
+            'data' => $data,
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
 
 

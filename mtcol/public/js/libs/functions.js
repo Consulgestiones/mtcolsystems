@@ -377,3 +377,14 @@ function setNotification(title, text){
             slideDownAnimation: 'easeIn'
     }).show();
 }
+function currencyFormat(value)
+{    
+    var num = value.toString().replace(/\./g,'');
+    if(!isNaN(num)){
+        num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+        num = num.split('').reverse().join('').replace(/^[\.]/,'');
+    }else{
+        num = value;
+    }
+    return num;    
+}

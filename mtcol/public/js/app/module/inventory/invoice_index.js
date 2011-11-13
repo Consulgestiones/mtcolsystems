@@ -9,7 +9,6 @@ Application({
             {
                 xtype: 'invoicegrid',
                 id: 'invoiceGrid',
-                //columnWidth: 1,
                 width: '100%',
                 height: AppConfig.gridHeight
             },
@@ -18,12 +17,11 @@ Application({
                 id: 'detailPanel',
                 items: [
                     Ext.create('Mtc.view.invoice.InvoiceDetail', {
-                        
+                        id: 'invoiceDetail'
                     })
                 ],
-                height: 300,
+                height: 500,
                 autoScroll: true,
-                //columnWidth: .4,
                 hidden: true
             }
         ],
@@ -39,5 +37,37 @@ Application({
         var rows = invoiceGrid.getSelectionModel().getSelection();
         var record = rows[0];
         form.getForm().loadRecord(record);
+        var ivd = Ext.getCmp('invoiceDetail');
+        var grd = ivd.getDetailGrid();
+        var store = grd.getStore();
+        store.load({
+            params: {
+                idinvoice: record.get('idinvoice')
+            }/*,
+            callback: function(records, operation, success){                
+                var total = 0;
+                var tax = 0;
+                for(var i = 0; i < records.length; i++){
+                    total += records[i].get('totalprice');
+                }
+                tax = total * 0.16;
+                store.add({
+                    item: '',
+                    product: '',
+                    unit: '',
+                    quantity: '',
+                    unitprice: 'IVA',
+                    totalprice: tax
+                });
+                store.add({
+                    item: '',
+                    product: '',
+                    unit: '',
+                    quantity: '',
+                    unitprice: 'TOTAL',
+                    totalprice: total
+                });
+            }*/
+        })
     });
 });

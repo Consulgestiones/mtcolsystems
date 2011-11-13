@@ -199,6 +199,7 @@
             <controllerFile controllerName="Invoices">
               <actionMethod actionName="index"/>
               <actionMethod actionName="getinvoices"/>
+              <actionMethod actionName="getinvoicedetail"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -214,6 +215,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Invoices">
                 <viewScriptFile forActionName="getinvoices"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Invoices">
+                <viewScriptFile forActionName="getinvoicedetail"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
