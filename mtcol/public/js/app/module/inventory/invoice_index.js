@@ -1,8 +1,8 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
-    models: ['Invoice', 'InvoiceDetail'],
-    views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid', 'util.Notification'],
-    stores: ['Invoice', 'InvoiceDetail']
+    models: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod'],
+    views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid', 'util.Notification', 'application.CountryCombo', 'application.CityCombo', 'invoice.InvoiceFormWindow'],
+    stores: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod']
 }, function(){  
     var mainPanel = Ext.create('Mtc.view.invoice.MainPanel', {
         items: [            
@@ -20,7 +20,7 @@ Application({
                         id: 'invoiceDetail'
                     })
                 ],
-                height: 500,
+                height: 300,
                 autoScroll: true,
                 hidden: true
             }
@@ -43,31 +43,7 @@ Application({
         store.load({
             params: {
                 idinvoice: record.get('idinvoice')
-            }/*,
-            callback: function(records, operation, success){                
-                var total = 0;
-                var tax = 0;
-                for(var i = 0; i < records.length; i++){
-                    total += records[i].get('totalprice');
-                }
-                tax = total * 0.16;
-                store.add({
-                    item: '',
-                    product: '',
-                    unit: '',
-                    quantity: '',
-                    unitprice: 'IVA',
-                    totalprice: tax
-                });
-                store.add({
-                    item: '',
-                    product: '',
-                    unit: '',
-                    quantity: '',
-                    unitprice: 'TOTAL',
-                    totalprice: total
-                });
-            }*/
+            }
         })
     });
 });

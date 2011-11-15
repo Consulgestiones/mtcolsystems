@@ -68,9 +68,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         $msg = 1;
         try{
             
-            $model = new Model_InvoiceDetail();
-            
-            $sql = sprintf("SELECT i.item, i.idinvoice, i.quantity, i.unitprice, i.totalprice, p.idproduct, p.product, p.unit
+            $sql = sprintf("SELECT i.item, i.idinvoice, i.quantity, i.unitprice, i.totalprice, (i.totalprice * p.tax / 100) as producttax, (i.totalprice * (concat('1.', p.tax))) as total_tax, p.idproduct, p.product, p.unit
                             FROM invoice_detail i, product p
                             WHERE i.idinvoice = %d AND p.idproduct = i.idproduct", $idinvoice);
             

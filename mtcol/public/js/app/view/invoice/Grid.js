@@ -14,7 +14,12 @@ Ext.define('Mtc.view.invoice.Grid', {
     tbar: [
         {
             text: 'Ingresar Factura',
-            iconCls: 'add'
+            iconCls: 'add',
+            handler: function(){
+                invoiceAddWindow = Ext.create('Mtc.view.invoice.InvoiceFormWindow');
+                invoiceAddWindow.setTitle('Ingresar Factura');
+                invoiceAddWindow.show();
+            }
         },
         {
             text: 'Modificar Factura',

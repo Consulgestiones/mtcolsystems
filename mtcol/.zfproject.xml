@@ -100,6 +100,10 @@
               <actionMethod actionName="getsubcategories"/>
               <actionMethod actionName="savesubcategory"/>
             </controllerFile>
+            <controllerFile controllerName="Paymentmethods">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="getpaymentmethods"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -183,6 +187,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Users">
                 <viewScriptFile forActionName="setapplications"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Paymentmethods">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Paymentmethods">
+                <viewScriptFile forActionName="getpaymentmethods"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
