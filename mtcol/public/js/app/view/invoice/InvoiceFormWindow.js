@@ -209,16 +209,24 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     displayField: 'product',
                     valueField: 'idproduct',
                     disabled: true,
-                    columnWidth: .50
+                    columnWidth: .50,
+                    listeners: {
+                        select: function(cbo, value, options){
+                            var record = value[0];
+                            Ext.getCmp('InvoiceFormWindowTax').setValue(record.get('tax'));
+                        }
+                    }
                 },
                 {
                     name: 'quantity',
                     emptyText: 'Cantidad',
+                    id: 'InvoiceFormWinQuantity',
                     width: 30,
                     columnWidth: .20
                 },
                 {
                     name: 'tax',
+                    id: 'InvoiceFormWindowTax',
                     emptyText: 'IVA %',
                     width: 30,
                     columnWidth: .20
@@ -226,7 +234,12 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     xtype: 'button',
                     iconCls: 'add',
-                    columnWidth: .10
+                    columnWidth: .10,
+                    handler: function(){
+                        var cboprod = Ext.getCmp('InvoiceFormWindowProduct');
+                        var txtquantity = Ext.getCmp('InvoiceFormWinQuantity');
+                        
+                    }
                 }
             ]
         },
