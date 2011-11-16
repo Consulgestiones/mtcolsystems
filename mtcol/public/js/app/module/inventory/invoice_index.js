@@ -1,6 +1,6 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
-    models: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod'],
+    models: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod', 'InvoiceDetailItem'],
     views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid', 'util.Notification', 'application.CountryCombo', 'application.CityCombo', 'invoice.InvoiceFormWindow'],
     stores: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod']
 }, function(){  

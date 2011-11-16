@@ -1,3 +1,77 @@
+//var itemStore = Ext.create('Mtc.store.InvoiceDetailItem');
+//var cm = new Ext.grid.ColumnModel([
+//    {
+//        header: 'item',
+//        dataIndex: 'item'
+//    },
+//    {
+//        header: 'Descripción',
+//        dataIndex: 'product',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    },
+//    {
+//        header: 'Unidad',
+//        dataIndex: 'unit',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    },
+//    {
+//        header: 'Precio Unitario',
+//        dataIndex: 'unitprice',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    },
+//    {
+//        header: 'IVA',
+//        dataIndex: 'tax',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    },
+//    {
+//        header: 'Valor IVA',
+//        dataIndex: 'taxvalue',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    },
+//    {
+//        header: 'Precio Total',
+//        dataIndex: 'totalprice',
+//        editor: {
+//            xtype: 'textfield',
+//            allowBlank: false
+//        }
+//    }
+//]);
+//var grid = new Ext.grid.EditorGridPanel({
+//   store: itemStore,
+//   cm: cm,
+//   clicksToEdit: 1,
+//   width: 540,
+//   height: 500,
+//   tbar: [
+//       {
+//           text: 'Agregar Item',
+//           itemCls: 'add'
+//       },
+//       {
+//           text: 'Eliminar Item',
+//           itemCls: 'delete'
+//       }
+//   ]
+//});
+
+
 Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
     extend: 'Ext.window.Window',    
     height: 600,    
@@ -106,10 +180,10 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     allowBlank: false
                 }
             ]              
-        },
+        },        
         {
             xtype: 'grid',
-            store: Ext.create('Mtc.store.InvoiceDetail'),
+            store: Ext.create('Mtc.store.InvoiceDetailItem'),
             width: 540,
             height: 500,
             plugins: [
@@ -117,7 +191,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     clicksToEdit: 1
                 })
             ],            
-            columns: [
+            columns: [                
                 {
                     header: 'Item',
                     dataIndex: 'item',
@@ -167,40 +241,28 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     width: 80
                 }
             ],
+            id: 'InvoiceFormWindowGrid',
+            selType: 'rowmodel',
+            enableColLock: false,
+            stripeRows: true,
             tbar: [
                 {
                     text: 'Agregar Item',
                     iconCls: 'add',
-                    handler: this.add
+                    handler: function(){
+                        
+                        var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                        var position = grid.getStore().getCount();
+                        var item = new Mtc.model.InvoiceDetailItem({item: (position+1)});
+                        grid.getStore().insert(position, item);
+//                        grid.startEditing(position, 2);
+                    }
                 },
                 {
                     text: 'Eliminar Item',
                     iconCls: 'delete'
                 }
-            ],
-            add: function(){
-                var grid = this;
-                var position = grid.getStore().getCount();
-                var id = Ext.id();
-                var defaultData = {
-                    newRecordId: id
-                };
-//                var Item = grid.getStore().recordType;
-//                var item = new Item(defaultData, id);
-                var item = [
-                    {name: 'item'},
-                    {name: 'product'},
-                    {name: 'unit'},
-                    {name: 'quantity'},
-                    {name: 'unitprice'},
-                    {name: 'tax'},
-                    {name: 'taxvalue'},
-                    {name: 'totalprice'}
-                ];
-                grid.stopEditing();
-                grid.getStore().insert(position, item);
-                grid.startEditing(position, 1);
-            }
+            ]
         }
     ]
 });
