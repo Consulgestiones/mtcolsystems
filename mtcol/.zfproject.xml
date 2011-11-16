@@ -91,6 +91,7 @@
             <controllerFile controllerName="Products">
               <actionMethod actionName="index"/>
               <actionMethod actionName="getproducts"/>
+              <actionMethod actionName="gerprodsfromprovider"/>
             </controllerFile>
             <controllerFile controllerName="Categories">
               <actionMethod actionName="index"/>
@@ -193,6 +194,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Paymentmethods">
                 <viewScriptFile forActionName="getpaymentmethods"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Products">
+                <viewScriptFile forActionName="gerprodsfromprovider"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

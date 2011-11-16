@@ -105,7 +105,16 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
 //                            var selIndex = cbo.store.find('idprovider', value);
 //                            var record = cbo.store.getAt(selIndex);
                             Ext.getCmp('txtproviderphone').setValue(value[0].get('providerphone'));
-                            Ext.getCmp('txtprovideremail').setValue(value[0].get('provideremail'));                            
+                            Ext.getCmp('txtprovideremail').setValue(value[0].get('provideremail'));  
+                            var cboprods = Ext.getCmp('InvoiceFormWindowProduct');
+                            cboprods.store.load({
+                                params: {
+                                    idprovider: value[0].get('idprovider')
+                                },
+                                callback: function(request){
+                                    cboprods.enable();
+                                }
+                            })
                         }
                     }
                 },
@@ -182,9 +191,49 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
             ]              
         },        
         {
+            xtype: 'form',
+            frame: true,
+            width: 550,
+            defaultType: 'textfield',
+            layout: 'column',
+            items: [
+                {
+                    xtype: 'combo',
+                    name: 'idproduct',
+                    id: 'InvoiceFormWindowProduct',
+                    emptyText: 'Producto',
+                    queryMode: 'local',
+                    store: Ext.create('Mtc.store.Product', {
+                        autoLoad: true
+                    }),
+                    displayField: 'product',
+                    valueField: 'idproduct',
+                    disabled: true,
+                    columnWidth: .50
+                },
+                {
+                    name: 'quantity',
+                    emptyText: 'Cantidad',
+                    width: 30,
+                    columnWidth: .20
+                },
+                {
+                    name: 'tax',
+                    emptyText: 'IVA %',
+                    width: 30,
+                    columnWidth: .20
+                },
+                {
+                    xtype: 'button',
+                    iconCls: 'add',
+                    columnWidth: .10
+                }
+            ]
+        },
+        {
             xtype: 'grid',
             store: Ext.create('Mtc.store.InvoiceDetailItem'),
-            width: 540,
+            width: 550,
             height: 500,
             plugins: [
                 Ext.create('Ext.grid.plugin.RowEditing', {
@@ -213,38 +262,62 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     header: 'Unidad',
                     dataIndex: 'unit',
-                    width: 50
+                    width: 50,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 },
                 {
                     header: 'Cantidad',
                     dataIndex: 'quantity',
-                    width: 50
+                    width: 50,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 },
                 {
                     header: 'Valor Unitario',
                     dataIndex: 'unitprice',
-                    width: 60
+                    width: 60,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 },
                 {
                     header: 'IVA',
                     dataIndex: 'tax',
-                    width: 30
+                    width: 30,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 },
                 {
                     header: 'Valor IVA',
                     dataIndex: 'taxvalue',
-                    width: 70
+                    width: 70,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 },
                 {
                     header: 'Valor Total',
                     dataIndex: 'totalprice',
-                    width: 80
+                    width: 80,
+                    editor: {
+                        xtype:'textfield',
+                        allowBlank:false
+                    }
                 }
             ],
             id: 'InvoiceFormWindowGrid',
             selType: 'rowmodel',
             enableColLock: false,
-            stripeRows: true,
+            stripeRows: true/*,
             tbar: [
                 {
                     text: 'Agregar Item',
@@ -262,7 +335,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     text: 'Eliminar Item',
                     iconCls: 'delete'
                 }
-            ]
+            ]*/
         }
     ]
 });

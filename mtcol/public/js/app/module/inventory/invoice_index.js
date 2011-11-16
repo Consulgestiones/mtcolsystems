@@ -1,8 +1,8 @@
 //loadModels(['InvoiceHeader', 'TypeId'], 'invoice_index');
 Application({
-    models: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod', 'InvoiceDetailItem'],
+    models: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod', 'InvoiceDetailItem', 'Product'],
     views: ['invoice.Grid', 'invoice.InvoiceDetail', 'invoice.InvoiceDetailGrid', 'util.Notification', 'application.CountryCombo', 'application.CityCombo', 'invoice.InvoiceFormWindow'],
-    stores: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod']
+    stores: ['Invoice', 'InvoiceDetail', 'Provider', 'Country', 'City', 'PaymentMethod', 'Product']
 }, function(){  
     var mainPanel = Ext.create('Mtc.view.invoice.MainPanel', {
         items: [            

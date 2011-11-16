@@ -53,8 +53,41 @@ class Admin_ProductsController extends Zend_Controller_Action
         $this->_helper->json->sendJson($data);
     }
 
+    public function getprodsfromproviderAction()
+    {
+        $idprovider = $this->getRequest()->getParam('idprovider');
+        
+        $data = array();
+        $msg = 1;
+        try{
+            $sql = sprintf("SELECT p.idproduct, p.product, p.description, p.tax, p.inactive, CASE p.inactive WHEN 0 THEN 'SI' ELSE 'NO' END AS active,
+                            pc.idproductcategory, pc.productcategory, ps.idproductsubcategory, ps.productsubcategory, p.unit
+                            FROM product p, product_category pc, product_subcategory ps, product_provider pp
+                            WHERE pp.idprovider = 1 AND p.idproduct = pp.idproduct 
+                            AND pc.idproductcategory = p.idproductcategory 
+                            AND ps.idproductcategory = p.idproductcategory 
+                            AND ps.idproductsubcategory = p.idproductsubcategory", $idprovider);
+            
+            $db = Zend_Registry::get('db');
+            $stmt = $db->query($sql);
+            $data = $stmt->fetchAll();
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
 
 
