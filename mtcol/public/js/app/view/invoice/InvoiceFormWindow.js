@@ -1,80 +1,6 @@
-//var itemStore = Ext.create('Mtc.store.InvoiceDetailItem');
-//var cm = new Ext.grid.ColumnModel([
-//    {
-//        header: 'item',
-//        dataIndex: 'item'
-//    },
-//    {
-//        header: 'Descripción',
-//        dataIndex: 'product',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    },
-//    {
-//        header: 'Unidad',
-//        dataIndex: 'unit',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    },
-//    {
-//        header: 'Precio Unitario',
-//        dataIndex: 'unitprice',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    },
-//    {
-//        header: 'IVA',
-//        dataIndex: 'tax',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    },
-//    {
-//        header: 'Valor IVA',
-//        dataIndex: 'taxvalue',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    },
-//    {
-//        header: 'Precio Total',
-//        dataIndex: 'totalprice',
-//        editor: {
-//            xtype: 'textfield',
-//            allowBlank: false
-//        }
-//    }
-//]);
-//var grid = new Ext.grid.EditorGridPanel({
-//   store: itemStore,
-//   cm: cm,
-//   clicksToEdit: 1,
-//   width: 540,
-//   height: 500,
-//   tbar: [
-//       {
-//           text: 'Agregar Item',
-//           itemCls: 'add'
-//       },
-//       {
-//           text: 'Eliminar Item',
-//           itemCls: 'delete'
-//       }
-//   ]
-//});
-
-
 Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
     extend: 'Ext.window.Window',    
-    height: 600,    
+    height: 540,    
     layout: 'vbox',
     modal: true,
     items: [
@@ -84,6 +10,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
             bodyStyle: 'padding: 10px;',
             itemCls: 'left-space',
             frame: true,
+            width: 750,
             layout: {
                 type: 'table',
                 columns: 2
@@ -102,8 +29,6 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     queryMode: 'local',
                     listeners: {
                         select: function(cbo, value, options){
-//                            var selIndex = cbo.store.find('idprovider', value);
-//                            var record = cbo.store.getAt(selIndex);
                             Ext.getCmp('txtproviderphone').setValue(value[0].get('providerphone'));
                             Ext.getCmp('txtprovideremail').setValue(value[0].get('provideremail'));  
                             var cboprods = Ext.getCmp('InvoiceFormWindowProduct');
@@ -114,7 +39,9 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                                 callback: function(request){
                                     cboprods.enable();
                                 }
-                            })
+                            });
+                            var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                            grid.getStore().removeAll(false);
                         }
                     }
                 },
@@ -193,7 +120,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
         {
             xtype: 'form',
             frame: true,
-            width: 550,
+            width: 750,
             defaultType: 'textfield',
             layout: 'column',
             items: [
@@ -209,36 +136,81 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     displayField: 'product',
                     valueField: 'idproduct',
                     disabled: true,
-                    columnWidth: .50,
+                    columnWidth: .30,
                     listeners: {
                         select: function(cbo, value, options){
                             var record = value[0];
                             Ext.getCmp('InvoiceFormWindowTax').setValue(record.get('tax'));
                         }
-                    }
+                    },
+                    allowBlank: false
                 },
                 {
                     name: 'quantity',
                     emptyText: 'Cantidad',
                     id: 'InvoiceFormWinQuantity',
                     width: 30,
-                    columnWidth: .20
+                    columnWidth: .15,
+                    allowBlank: false
                 },
                 {
                     name: 'tax',
                     id: 'InvoiceFormWindowTax',
                     emptyText: 'IVA %',
-                    width: 30,
-                    columnWidth: .20
+                    width: 25,
+                    columnWidth: .15,
+                    allowBlank: false
+                },
+                {
+                    name: 'unitprice',
+                    id: 'InvoiceFormWinUnitPrice',
+                    emptyText: 'Valor unitario',
+                    width: 25,
+                    columnWidth: .30,
+                    allowBlank: false
                 },
                 {
                     xtype: 'button',
+                    text: 'Item',
                     iconCls: 'add',
                     columnWidth: .10,
                     handler: function(){
+                        
+                        var form = this.up('form');
+                        if(!form.getForm().isValid())return;
+                        
                         var cboprod = Ext.getCmp('InvoiceFormWindowProduct');
                         var txtquantity = Ext.getCmp('InvoiceFormWinQuantity');
+                        var txttax = Ext.getCmp('InvoiceFormWindowTax');                        
+                        var txtunitprice = Ext.getCmp('InvoiceFormWinUnitPrice');                        
                         
+                        var index = cboprod.store.find('idproduct', cboprod.getValue());
+                        var product = cboprod.store.data.items[index].get('product');
+                        var unit = cboprod.store.data.items[index].get('unit');
+                        var taxvalue = (parseFloat(txtunitprice.getValue()) * parseFloat(txttax.getValue()) / 100) * parseFloat(txtquantity.getValue());
+                        var itemvalue = parseFloat(txtunitprice.getValue()) * parseFloat(txtquantity.getValue());
+                        
+                        var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                        
+                        var item = grid.getStore().getCount()+1;
+
+                        var row = {
+                            item: item,
+                            product: product,
+                            unit: unit,
+                            quantity: txtquantity.getValue(),
+                            unitprice: txtunitprice.getValue(),
+                            tax: txttax.getValue(),
+                            itemvalue: itemvalue,
+                            taxvalue: taxvalue,
+                            totalprice: (itemvalue + taxvalue)
+                        };
+                        grid.getStore().add(row);
+                        
+                        cboprod.reset();
+                        txtquantity.reset();
+                        txttax.reset();
+                        txtunitprice.reset();
                     }
                 }
             ]
@@ -246,109 +218,123 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
         {
             xtype: 'grid',
             store: Ext.create('Mtc.store.InvoiceDetailItem'),
-            width: 550,
-            height: 500,
-            plugins: [
-                Ext.create('Ext.grid.plugin.RowEditing', {
-                    clicksToEdit: 1
-                })
-            ],            
+            width: 750,
+            height: 300,
+            features: [{
+                ftype: 'summary'
+            }],
+//            plugins: [
+//                Ext.create('Ext.grid.plugin.RowEditing', {
+//                    clicksToEdit: 1
+//                })
+//            ],            
             columns: [                
                 {
                     header: 'Item',
                     dataIndex: 'item',
-                    width: 30,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
-                    }
+                    width: 30
                 },
                 {
                     header: 'Descripción',
                     dataIndex: 'product',
-                    width: 150,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
-                    }
+                    width: 150
                 },
                 {
                     header: 'Unidad',
                     dataIndex: 'unit',
-                    width: 50,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
-                    }
+                    width: 50
                 },
                 {
                     header: 'Cantidad',
                     dataIndex: 'quantity',
-                    width: 50,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
-                    }
+                    width: 55,
+                    renderer: function(value){
+                        return currencyFormat(value);
+                    },
+                    align: 'right'
                 },
                 {
                     header: 'Valor Unitario',
                     dataIndex: 'unitprice',
-                    width: 60,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
-                    }
+                    width: 80,
+                    renderer: function(value){
+                        return currencyFormat(value);
+                    },
+                    align: 'right'
                 },
                 {
                     header: 'IVA',
                     dataIndex: 'tax',
-                    width: 30,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
+                    width: 30
+                },
+                {
+                    header: 'Valor',
+                    dataIndex: 'itemvalue',
+                    width: 110,
+                    renderer: function(value){
+                        return currencyFormat(value);
+                    },
+                    align: 'right',
+                    summaryType: 'sum',
+                    summaryRenderer: function(value, summaryData, dataIndex){
+                        return Ext.String.format('Subtotal {0}', currencyFormat(value));
                     }
                 },
                 {
                     header: 'Valor IVA',
                     dataIndex: 'taxvalue',
-                    width: 70,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
+                    width: 110,
+                    renderer: function(value){
+                        return currencyFormat(value);
+                    },
+                    align: 'right',
+                    summaryType: 'sum',
+                    summaryRenderer: function(value, summaryData, dataIndex){
+                        return Ext.String.format('IVA {0}', currencyFormat(value));
                     }
                 },
                 {
                     header: 'Valor Total',
                     dataIndex: 'totalprice',
-                    width: 80,
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank:false
+                    width: 130,
+                    renderer: function(value){
+                        return currencyFormat(value);
+                    },
+                    align: 'right',
+                    summaryType: 'sum',
+                    summaryRenderer: function(value, summaryData, dataIndex){
+                        return Ext.String.format('TOTAL {0}', currencyFormat(value));
                     }
                 }
             ],
             id: 'InvoiceFormWindowGrid',
             selType: 'rowmodel',
             enableColLock: false,
-            stripeRows: true/*,
-            tbar: [
-                {
-                    text: 'Agregar Item',
-                    iconCls: 'add',
-                    handler: function(){
-                        
-                        var grid = Ext.getCmp('InvoiceFormWindowGrid');
-                        var position = grid.getStore().getCount();
-                        var item = new Mtc.model.InvoiceDetailItem({item: (position+1)});
-                        grid.getStore().insert(position, item);
-//                        grid.startEditing(position, 2);
-                    }
-                },
+            stripeRows: true,
+            bbar: [
                 {
                     text: 'Eliminar Item',
-                    iconCls: 'delete'
+                    iconCls: 'delete',
+                    handler: function(){
+                        var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                        var rows = grid.getSelectionModel().getSelection();
+                        if(rows.length === 0)return;
+                        
+                        var record = rows[0];
+                        grid.getStore().remove(record);
+                    }
                 }
-            ]*/
+            ]
+        }
+    ],
+    buttons: [
+        {
+            text: 'Cancelar',
+            iconCls: 'btn-cancel'
+        },
+        {
+            text: 'Ingresar',
+            iconCls: 'btn-save'
         }
     ]
 });
