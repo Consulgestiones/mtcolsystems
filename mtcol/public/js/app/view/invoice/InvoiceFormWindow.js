@@ -1,12 +1,13 @@
 Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
     extend: 'Ext.window.Window',    
-    height: 540,    
+    height: 565,    
     layout: 'vbox',
     modal: true,
     items: [
         {
             xtype: 'form',
             name: 'form1',
+            id: 'InvoiceFormWinHeader',
             bodyStyle: 'padding: 10px;',
             itemCls: 'left-space',
             frame: true,
@@ -20,6 +21,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     xtype: 'combo',
                     fieldLabel: 'Proveedor',
+                    name: 'idprovider',
                     id: 'invoice_form_provider',
                     store: Ext.create('Mtc.store.Provider', {
                         autoLoad: true
@@ -46,10 +48,20 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     }
                 },
                 {
+                    fieldLabel: 'Factura No',
+                    name: 'invoicenumber'
+                },
+                {
                     xtype: 'datefield',
-                    fieldLabel: 'Fecha',
+                    name: 'dinvoice',
+                    fieldLabel: 'Fecha Factura',
                     id: 'invoice_form_date',
                     format: 'd/m/Y'
+                },
+                {
+                    fieldLabel: 'Entrega',
+                    allowBlank: false,
+                    name: 'productservice'
                 },
                 {
                     xtype: 'combo',
@@ -86,12 +98,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     displayField: 'city',
                     name: 'idcity',
                     store: Ext.create('Mtc.store.City')
-                },
-                {
-                    fieldLabel: 'Entrega',
-                    allowBlank: false,
-                    name: 'productservice'
-                },
+                },                
                 {
                     fieldLabel: 'Teléfono',
                     id: 'txtproviderphone',
@@ -114,6 +121,17 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     id: 'txtprovideremail',
                     name: 'provideremail',
                     allowBlank: false
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'instock',
+                    inputValue: 1,
+                    boxLabel: 'En Stock'
+                },
+                {
+                    xtype: 'hidden',
+                    name: 'artifact',
+                    value: 'IV'
                 }
             ]              
         },        
@@ -185,6 +203,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                         var txtunitprice = Ext.getCmp('InvoiceFormWinUnitPrice');                        
                         
                         var index = cboprod.store.find('idproduct', cboprod.getValue());
+                        var idproduct = cboprod.store.data.items[index].get('idproduct');
                         var product = cboprod.store.data.items[index].get('product');
                         var unit = cboprod.store.data.items[index].get('unit');
                         var taxvalue = (parseFloat(txtunitprice.getValue()) * parseFloat(txttax.getValue()) / 100) * parseFloat(txtquantity.getValue());
@@ -196,6 +215,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
 
                         var row = {
                             item: item,
+                            idproduct: idproduct,
                             product: product,
                             unit: unit,
                             quantity: txtquantity.getValue(),
@@ -330,11 +350,42 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
     buttons: [
         {
             text: 'Cancelar',
-            iconCls: 'btn-cancel'
+            iconCls: 'btn-cancel',
+            handler: function(){
+                var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                grid.close();
+            }
         },
         {
             text: 'Ingresar',
-            iconCls: 'btn-save'
+            iconCls: 'btn-save',
+            handler: function(){
+                var win = this.up('window');
+                win.el.mask('Saving…', 'x-mask-loading');
+                
+                var form = Ext.getCmp('InvoiceFormWinHeader');
+                var grid = Ext.getCmp('InvoiceFormWindowGrid');
+                var formData = form.getForm().getValues();
+                var gridData = new Array();                
+                grid.getStore().each(function(record){
+                    var row = new Object();
+                    record.fields.each(function(f){                        
+                        row[f.name] = record.get(f.name);
+                    });
+                    gridData.push(row);
+                });
+                Ext.Ajax.request({
+                    url: '/inventory/invoices/addinvoice',
+                    method: 'POST',
+                    params: {
+                        header: Ext.encode(formData),
+                        detail: Ext.encode(gridData)
+                    },
+                    success: function(response){
+                        win.el.unmask();
+                    }
+                })
+            }
         }
     ]
 });

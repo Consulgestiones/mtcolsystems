@@ -214,6 +214,7 @@
               <actionMethod actionName="index"/>
               <actionMethod actionName="getinvoices"/>
               <actionMethod actionName="getinvoicedetail"/>
+              <actionMethod actionName="addinvoice"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -232,6 +233,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Invoices">
                 <viewScriptFile forActionName="getinvoicedetail"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Invoices">
+                <viewScriptFile forActionName="addinvoice"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

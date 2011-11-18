@@ -90,8 +90,75 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
+    public function addinvoiceAction()
+    {        
+        $header = json_decode(stripslashes($this->getRequest()->getParam('header')));
+        
+        $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
+        
+        $data = array();
+        $msg = 1;
+        
+        try{
+            
+            $db = Zend_Registry::get('db');
+            
+            $db->beginTransaction();
+            
+            $minvoice = new Model_Invoice();
+            
+            //agregar datos que no vienen desde el cliente
+            $header->createdby = 'Juan Carlos Giraldo';
+            $header->dcreate = time();
+            
+            $hdata = get_object_vars($header);
+            
+            
+            
+            $minvoice->insert($hdata);
+            
+            $data['idinvoice'] = $minvoice->lastInsertId();
+            
+//            $sql = sprintf("INSERT INTO invoice_header (invoicenumber, idcity, idcountry, idprovider, idinvoicestatus, productservice, idpaymentmethod, createdby, subtotal, tax, total, dinvoice, dcreate, dlastmodification) 
+//                            VALUES ('%s', %d, %d, %d, %d, '%s', %d, '%s', %f, %f, %f, '%s', now(), NULL);",
+//                    $header->invoicenumber,
+//                    $header->idcity,
+//                    $header->idcountry,
+//                    $header->idprovider,
+//                    $header->idinvoicestatus,
+//                    $header->productservice,
+//                    $header->idpaymentmethod,
+//                    'Juan Carlos Giraldo',
+//                    $header->subtotal,
+//                    $header->tax,
+//                    $header->total,
+//                    $header->dinvoice                    
+//                    );
+            
+            
+            
+            $db->commit();
+            $success = true;
+        }catch(Exception $e){
+            $db->rollBack();
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        
+        $this->_helper->json->sendJson($response);
+        
+    }
+
 
 }
+
+
 
 
 
