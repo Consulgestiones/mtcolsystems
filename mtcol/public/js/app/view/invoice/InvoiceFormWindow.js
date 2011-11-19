@@ -123,10 +123,15 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     allowBlank: false
                 },
                 {
-                    xtype: 'checkbox',
-                    name: 'instock',
-                    inputValue: 1,
-                    boxLabel: 'En Stock'
+                    xtype: 'combo',
+                    name: 'idinvoicestatus',
+                    fieldLabel: 'Estado',
+                    displayField: 'invoicestatus',
+                    valueField: 'idinvoicestatus',
+                    store: Ext.create('Mtc.store.InvoiceStatus', {
+                        autoLoad: true
+                    }),                    
+                    queryMode: 'local'
                 },
                 {
                     xtype: 'hidden',

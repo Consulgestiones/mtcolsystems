@@ -215,6 +215,8 @@
               <actionMethod actionName="getinvoices"/>
               <actionMethod actionName="getinvoicedetail"/>
               <actionMethod actionName="addinvoice"/>
+              <actionMethod actionName="getinvoiceheader"/>
+              <actionMethod actionName="getstatus"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -236,6 +238,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Invoices">
                 <viewScriptFile forActionName="addinvoice"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Invoices">
+                <viewScriptFile forActionName="getinvoiceheader"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Invoices">
+                <viewScriptFile forActionName="getstatus"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

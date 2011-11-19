@@ -91,53 +91,95 @@ class Inventory_InvoicesController extends Zend_Controller_Action
     }
 
     public function addinvoiceAction()
-    {        
+    {
         $header = json_decode(stripslashes($this->getRequest()->getParam('header')));
         
         $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
         
         $data = array();
         $msg = 1;
-        
-        try{
-            
-            $db = Zend_Registry::get('db');
-            
+        //Obtener base de datos
+        $db = Zend_Registry::get('db');
+        try{      
+            //iniciar transaccion protegida
             $db->beginTransaction();
-            
-            $minvoice = new Model_Invoice();
             
             //agregar datos que no vienen desde el cliente
             $header->createdby = 'Juan Carlos Giraldo';
             $header->dcreate = time();
             
-            $hdata = get_object_vars($header);
+            //Obtener datos del objeto header en forma de array
+            $hdata = get_object_vars($header);                        
             
+            //Instancia del formulario InvoiceHeader
+            /* @var $fInvoiceHeader Zend_Form */
+            $fInvoiceHeader = new Form_InvoiceHeader();
             
+            //Valida datos recibidos por medio del formulario
+            if(!$fInvoiceHeader->isValid($hdata))
+                    throw new Exception(json_encode($fInvoiceHeader->getMessages()));
             
-            $minvoice->insert($hdata);
+            $fields = $fInvoiceHeader->getElements();
             
-            $data['idinvoice'] = $minvoice->lastInsertId();
+            $ihData = $fInvoiceHeader->getValidValues($hdata);
             
-//            $sql = sprintf("INSERT INTO invoice_header (invoicenumber, idcity, idcountry, idprovider, idinvoicestatus, productservice, idpaymentmethod, createdby, subtotal, tax, total, dinvoice, dcreate, dlastmodification) 
-//                            VALUES ('%s', %d, %d, %d, %d, '%s', %d, '%s', %f, %f, %f, '%s', now(), NULL);",
-//                    $header->invoicenumber,
-//                    $header->idcity,
-//                    $header->idcountry,
-//                    $header->idprovider,
-//                    $header->idinvoicestatus,
-//                    $header->productservice,
-//                    $header->idpaymentmethod,
-//                    'Juan Carlos Giraldo',
-//                    $header->subtotal,
-//                    $header->tax,
-//                    $header->total,
-//                    $header->dinvoice                    
-//                    );
+            print_r($ihData);
+
+            //Instanciar modelo invoice header
+            $mInvoice = new Model_Invoice();                        
             
+            //insertar datos en la tabla invoice_header
+            $mInvoice->insert($ihData);
             
+            //obtener ultimo id insertado
+            $idinvoice = $minvoice->lastInsertId();
             
+            //datos de la factura que no vienen en el encabezado
+            $subtotal = 0;
+            $tax = 0;
+            $total = 0;
+            
+            $detailData = array();
+            
+            //instancia de formulario de detalle de factura para validar los datos
+            $fInvoiceDetail = new Form_InvoiceDetail();
+            
+            //tabla de detalle de factura
+            $mInvoiceDetail = new Model_InvoiceDetail();
+            
+            //procesar detalle de la factura            
+            $nItem = 1;
+            foreach($detail as $item){
+                $iData = get_object_vars($item);
+                $iData['idinvoice'] = $idinvoice;
+                $iData['item'] = $nItem;
+                $detailData[] = $iData;
+                $subtotal += $iData['unitprice'];
+                $tax += $iData['taxvalue'];
+                $total += $iData['totalprice'];        
+                if(!$fInvoiceDetail->isValid($iData))
+                    throw new Exception(json_encode($fInvoiceDetail->getMessages()));
+                
+                if(!$mInvoiceDetail->insert($iData))
+                    throw new Exception('Error al ingresar el detalle de la factura');
+                
+                $nItem++;
+            }
+            
+            $dUpdate = array(
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total
+            );
+            
+            if(!$mInvoice->update($dUpdate, "idinvoice = ".$idinvoice))
+                throw  new Exception ('Error al actualizar la información de la factura');
+
+            //confirmar transaccion
             $db->commit();
+            
+            $data = $this->getinvoiceheaderAction($idinvoice);
+            
             $success = true;
         }catch(Exception $e){
             $db->rollBack();
@@ -155,8 +197,58 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         
     }
 
+    public function getinvoiceheaderAction($idinvoice)
+    {
+        try{
+            $sql = sprintf("SELECT i.idinvoice, i.invoicenumber, i.dinvoice, i.productservice, i.createdby,
+                            i.subtotal, i.tax, i.total, c.idcity, c.city, ct.idcountry, ct.country,
+                            p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone, x.idinvoicestatus, x.invoicestatus,
+                            pm.idpaymentmethod, pm.paymentmethod
+                            FROM invoice_header i, provider p, city c, country ct, invoice_status x, payment_method pm
+                            WHERE i.idinvoice = %d
+                            AND p.idprovider = i.idprovider AND c.idcity = i.idcity 
+                                            AND c.idcountry = i.idcountry AND ct.idcountry = c.idcountry
+                                            AND x.idinvoicestatus = i.idinvoicestatus
+                                            AND pm.idpaymentmethod = i.idpaymentmethod", $idinvoice);
+            
+            $db = Zend_Registry::get('db');
+            
+            $stmt = $db->query($sql);
+            
+            $invoice = $stmt->fetchRow();
+            
+        }catch(Exception $e){
+            $invoice = null;
+        }
+        return $invoice;
+    }
+
+    public function getstatusAction()
+    {
+        $mInvStatus = new Model_InvoiceStatus();
+        $status = array();
+        $objstatus = $mInvStatus->fetchAll();
+        if($objstatus){
+            $success = true;
+            $status = $objstatus->toArray();
+        }else{
+            $success = false;
+        }       
+        
+        $response = array(
+            'success' => $success,
+            'data' => $status
+        );
+        
+        $this->_helper->json->sendJson($response);                
+    }
+
 
 }
+
+
+
+
 
 
 
