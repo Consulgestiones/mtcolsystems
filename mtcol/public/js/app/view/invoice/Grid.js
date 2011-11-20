@@ -7,7 +7,7 @@ var invoicePagingBar = new Ext.PagingToolbar({
 Ext.define('Mtc.view.invoice.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.invoicegrid',
-    title:  'Facturas',
+//    title:  'Facturas / Ordenes de Compra',
     store: invoiceDataStore,
     bbar: invoicePagingBar,
     autoExpandColumn: 'title-col',        
@@ -53,6 +53,10 @@ Ext.define('Mtc.view.invoice.Grid', {
                 dataIndex: 'city'
             },
             {
+                header: 'Tipo Documento',
+                dataIndex: 'doctype'
+            },
+            {
                 header: 'Estado',
                 dataIndex: 'invoicestatus'
             },
@@ -62,15 +66,27 @@ Ext.define('Mtc.view.invoice.Grid', {
             },
             {
                 header: 'Subtotal',
-                dataIndex: 'subtotal'
+                dataIndex: 'subtotal',
+                align: 'right',
+                renderer: function(value){
+                    return currencyFormat(value);
+                }
             },
             {
                 header: 'Impuesto',
-                dataIndex: 'tax'
+                dataIndex: 'tax',
+                align: 'right',
+                renderer: function(value){
+                    return currencyFormat(value);
+                }                
             },
             {
                 header: 'Total',
-                dataIndex: 'total'
+                dataIndex: 'total',
+                align: 'right',
+                renderer: function(value){
+                    return currencyFormat(value);
+                }
             }
         ]
 }); 

@@ -1,31 +1,39 @@
 <?php
 class Form_InvoiceDetail extends Zend_Form {
     public function init(){
-        $this->addElement('hiddent', 'item', array(
+        $this->addElement('hidden', 'item', array(
             'required' => true,
             'validators' => array('Digits')
         ));
-        $this->addElement('hiddent', 'idinvoice', array(
+        $this->addElement('hidden', 'idinvoice', array(
             'required' => true,
             'validators' => array('Digits')
         ));
-        $this->addElement('hiddent', 'idproduct', array(
+        $this->addElement('hidden', 'idproduct', array(
             'required' => true,
             'validators' => array('Digits')
         ));
-        $this->addElement('hiddent', 'quantity', array(
+        $this->addElement('hidden', 'quantity', array(
             'required' => true,
             'validators' => array('Float')
         ));
-        $this->addElement('hiddent', 'unitprice', array(
+        $this->addElement('hidden', 'unitprice', array(
             'required' => true,
             'validators' => array('Float')
         ));
-        $this->addElement('hiddent', 'tax', array(
+        $this->addElement('hidden', 'tax', array(
             'required' => true,
             'validators' => array('Float')
         ));
-        $this->addElement('hiddent', 'totalprice', array(
+        $this->addElement('hidden', 'totalprice', array(
+            'required' => true,
+            'validators' => array('Float')
+        ));
+        $this->addElement('hidden', 'itemprice', array(
+            'required' => true,
+            'validators' => array('Float')
+        ));
+        $this->addElement('hidden', 'taxvalue', array(
             'required' => true,
             'validators' => array('Float')
         ));

@@ -11,7 +11,11 @@ class Form_InvoiceHeader extends Zend_Form {
         ));
         $this->addElement('hidden', 'dinvoice', array(
             'required' => true,
-            'validators' => array(array('validator' => 'Date', 'options' => array('format' => 'd/m/Y')))
+            'validators' => array(array('validator' => 'Date', 'options' => array('format' => 'Y-m-d')))
+        ));
+        $this->addElement('hidden', 'dcreate', array(
+            'required' => true,
+            'validators' => array(array('validator' => 'Date', 'options' => array('format' => 'Y-m-d')))
         ));
         $this->addElement('hidden', 'productservice', array(
             'required' => true,
@@ -36,6 +40,20 @@ class Form_InvoiceHeader extends Zend_Form {
         $this->addElement('hidden', 'provideremail', array(
             'required' => true,
             'validators' => array('EmailAddress')
+        ));
+        $this->addElement('hidden', 'idinvoicestatus', array(
+            'required' => true,
+            'validators' => array('Digits')
+        ));
+        $this->addElement('hidden', 'idcity', array(
+            'required' => true,
+            'validators' => array('Digits')
+        ));
+        $this->addElement('hidden', 'createdby', array(
+            'required' => true
+        ));
+        $this->addElement('hidden', 'artifact', array(
+            'required' => true
         ));
     }
 }

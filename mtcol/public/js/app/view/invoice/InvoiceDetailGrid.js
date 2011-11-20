@@ -38,7 +38,7 @@ Ext.define('Mtc.view.invoice.InvoiceDetailGrid', {
         },
         {
             header: 'Precio Total',
-            dataIndex: 'totalprice',
+            dataIndex: 'itemprice',
             summaryType: 'sum',
             summaryRenderer: function(value, summaryData, dataIndex) {
                 return Ext.String.format('Subtotal {0}', currencyFormat(value)); 
@@ -52,7 +52,7 @@ Ext.define('Mtc.view.invoice.InvoiceDetailGrid', {
         },
         {
             header: 'IVA',
-            dataIndex: 'producttax',
+            dataIndex: 'taxvalue',
             summaryType: 'sum',
             summaryRenderer: function(value, summaryData, dataIndex){
                 return Ext.String.format('IVA {0}', currencyFormat(value));
@@ -66,7 +66,7 @@ Ext.define('Mtc.view.invoice.InvoiceDetailGrid', {
         },
         {
             header: 'Total + IVA',
-            dataIndex: 'total_tax',
+            dataIndex: 'totalprice',
             summaryType: 'sum',
             summaryRenderer: function(value, summaryData, dataIndex){
                 return Ext.String.format('TOTAL {0}', currencyFormat(value));

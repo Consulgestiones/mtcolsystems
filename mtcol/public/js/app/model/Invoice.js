@@ -24,5 +24,7 @@ Ext.define('Mtc.model.Invoice', {
         {name: 'invoicestatus', type: 'string'},
         {name: 'idpaymentmethod', type: 'int'},
         {name: 'paymentmethod', type: 'string'},
+        {name: 'artifact', type: 'string'},
+        {name: 'doctype', type: 'string'}
     ]
 });

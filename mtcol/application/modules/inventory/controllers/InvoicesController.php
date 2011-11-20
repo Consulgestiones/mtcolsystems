@@ -26,7 +26,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS i.idinvoice, i.invoicenumber, i.dinvoice, i.productservice, i.createdby,
                             i.subtotal, i.tax, i.total, c.idcity, c.city, ct.idcountry, ct.country,
                             p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone, x.idinvoicestatus, x.invoicestatus,
-                            pm.idpaymentmethod, pm.paymentmethod
+                            pm.idpaymentmethod, pm.paymentmethod, i.artifact, CASE i.artifact WHEN 'IV' THEN 'Factura' ELSE 'Orden de Compra' END as doctype 
                             FROM invoice_header i, provider p, city c, country ct, invoice_status x, payment_method pm
                             WHERE p.idprovider = i.idprovider AND c.idcity = i.idcity 
                                             AND c.idcountry = i.idcountry AND ct.idcountry = c.idcountry
@@ -68,7 +68,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         $msg = 1;
         try{
             
-            $sql = sprintf("SELECT i.item, i.idinvoice, i.quantity, i.unitprice, i.totalprice, (i.totalprice * p.tax / 100) as producttax, (i.totalprice * (concat('1.', p.tax))) as total_tax, p.idproduct, p.product, p.unit
+            $sql = sprintf("SELECT i.item, i.idinvoice, i.quantity, i.unitprice, i.itemprice, i.taxvalue, i.totalprice, (i.totalprice * p.tax / 100) as producttax, (i.totalprice * (concat('1.', p.tax))) as total_tax, p.idproduct, p.product, p.unit
                             FROM invoice_detail i, product p
                             WHERE i.idinvoice = %d AND p.idproduct = i.idproduct", $idinvoice);
             
@@ -106,10 +106,12 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             
             //agregar datos que no vienen desde el cliente
             $header->createdby = 'Juan Carlos Giraldo';
-            $header->dcreate = time();
+            $header->dcreate = Functions::getCurrentTime();
             
             //Obtener datos del objeto header en forma de array
-            $hdata = get_object_vars($header);                        
+            $hdata = get_object_vars($header);                  
+            
+            $hdata['dinvoice'] = Functions::toMySqlDate($hdata['dinvoice']);
             
             //Instancia del formulario InvoiceHeader
             /* @var $fInvoiceHeader Zend_Form */
@@ -119,20 +121,18 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             if(!$fInvoiceHeader->isValid($hdata))
                     throw new Exception(json_encode($fInvoiceHeader->getMessages()));
             
-            $fields = $fInvoiceHeader->getElements();
+
             
-            $ihData = $fInvoiceHeader->getValidValues($hdata);
-            
-            print_r($ihData);
+            $ihData = $fInvoiceHeader->getValues($hdata);           
 
             //Instanciar modelo invoice header
             $mInvoice = new Model_Invoice();                        
             
             //insertar datos en la tabla invoice_header
-            $mInvoice->insert($ihData);
+            $idinvoice = $mInvoice->insert($ihData);
             
             //obtener ultimo id insertado
-            $idinvoice = $minvoice->lastInsertId();
+//            $idinvoice = $minvoice->lastInsertId();
             
             //datos de la factura que no vienen en el encabezado
             $subtotal = 0;
@@ -147,20 +147,32 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             //tabla de detalle de factura
             $mInvoiceDetail = new Model_InvoiceDetail();
             
+            //Obtener campos de la tabla invoice detail para filtrar los datos
+            //que vienen en el detalle de la factura
+            $fields = $fInvoiceDetail->getElements();
+            $kFields = array();
+            foreach($fields as $k => $field){
+                $kFields[$k] = true;
+            }                        
+            
             //procesar detalle de la factura            
             $nItem = 1;
             foreach($detail as $item){
                 $iData = get_object_vars($item);
                 $iData['idinvoice'] = $idinvoice;
                 $iData['item'] = $nItem;
-                $detailData[] = $iData;
-                $subtotal += $iData['unitprice'];
+                
+                //filtrar campos de la tabla invoice detail
+                $clearData = array_intersect_key($iData, $kFields);
+                
+                $detailData[] = $clearData;
+                $subtotal += ($iData['unitprice']*$iData['quantity']);
                 $tax += $iData['taxvalue'];
                 $total += $iData['totalprice'];        
-                if(!$fInvoiceDetail->isValid($iData))
+                if(!$fInvoiceDetail->isValid($clearData))
                     throw new Exception(json_encode($fInvoiceDetail->getMessages()));
                 
-                if(!$mInvoiceDetail->insert($iData))
+                if(!$mInvoiceDetail->insert($clearData))
                     throw new Exception('Error al ingresar el detalle de la factura');
                 
                 $nItem++;
@@ -203,7 +215,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             $sql = sprintf("SELECT i.idinvoice, i.invoicenumber, i.dinvoice, i.productservice, i.createdby,
                             i.subtotal, i.tax, i.total, c.idcity, c.city, ct.idcountry, ct.country,
                             p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone, x.idinvoicestatus, x.invoicestatus,
-                            pm.idpaymentmethod, pm.paymentmethod
+                            pm.idpaymentmethod, pm.paymentmethod, i.artifact, CASE i.artifact WHEN 'IV' THEN 'Factura' ELSE 'Orden de Compra' END as doctype
                             FROM invoice_header i, provider p, city c, country ct, invoice_status x, payment_method pm
                             WHERE i.idinvoice = %d
                             AND p.idprovider = i.idprovider AND c.idcity = i.idcity 
@@ -215,7 +227,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             
             $stmt = $db->query($sql);
             
-            $invoice = $stmt->fetchRow();
+            $invoice = $stmt->fetch();
             
         }catch(Exception $e){
             $invoice = null;
@@ -227,17 +239,20 @@ class Inventory_InvoicesController extends Zend_Controller_Action
     {
         $mInvStatus = new Model_InvoiceStatus();
         $status = array();
+        $total = 0;
         $objstatus = $mInvStatus->fetchAll();
         if($objstatus){
             $success = true;
             $status = $objstatus->toArray();
+            $total = count($status);
         }else{
             $success = false;
         }       
         
         $response = array(
             'success' => $success,
-            'data' => $status
+            'data' => $status,
+            'total' => $total
         );
         
         $this->_helper->json->sendJson($response);                
@@ -245,14 +260,3 @@ class Inventory_InvoicesController extends Zend_Controller_Action
 
 
 }
-
-
-
-
-
-
-
-
-
-
-

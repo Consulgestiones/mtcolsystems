@@ -11,7 +11,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
     protected function _initAutoloader() {
         $autoloader = Zend_Loader_Autoloader::getInstance();
-//        $autoloader->registerNamespace('')->setFallbackAutoloader(true);
+//        $autoloader->registerNamespace('My_')->setFallbackAutoloader(true);
  
         $resourceAutoloader = new Zend_Loader_Autoloader_Resource(
         array(
@@ -30,7 +30,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $this->bootstrap("view");
         $view = $this->getResource('view');        
-        $view->addHelperPath('My/View/Helper','My_View_Helper');
+        $view->addHelperPath('My/View/Helper','My_View_Helper');        
     }
     protected function _initMyDb() {
         $this->bootstrap('db');
@@ -38,6 +38,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $db = $resource->getDbAdapter();
         $db->query('SET CHARACTER SET \'UTF8\'');
         Zend_Registry::set('db', $db);
+    }
+    protected function _initFunctions(){
+        try{
+            Zend_Loader::loadClass('Functions', array(
+                APPLICATION_PATH.'/../library/My/'
+            ));            
+        }catch(Exception $e){
+            
+        }        
     }
 }
 

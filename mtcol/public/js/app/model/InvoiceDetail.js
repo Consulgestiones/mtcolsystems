@@ -9,7 +9,9 @@ Ext.define('Mtc.model.InvoiceDetail', {
         {name: 'quantity', type: 'double'},
         {name: 'unitprice', type: 'float'},
         {name: 'tax', type: 'double'},
+        {name: 'taxvalue', type: 'float'},
         {name: 'unit', type: 'string'},
+        {name: 'itemprice', type: 'float'},
         {name: 'totalprice', type: 'float'},        
         {name: 'producttax', type: 'float'},        
         {name: 'total_tax', type: 'float'}
