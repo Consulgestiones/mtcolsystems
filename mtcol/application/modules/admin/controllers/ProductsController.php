@@ -29,7 +29,7 @@ class Admin_ProductsController extends Zend_Controller_Action
         $db = Zend_Registry::get('db');
         
         $products = array();
-        
+        $msg = 1;
         try{
             $stmt = $db->query($select);
             $products = $stmt->fetchAll();
