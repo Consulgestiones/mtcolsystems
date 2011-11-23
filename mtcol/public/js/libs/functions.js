@@ -206,8 +206,9 @@ function loadViews(views, fn){
     }, 1000);
 }
 
-function Application(conf, fn){
+function Application(conf, fn, scope){
     conf = conf || {};
+    scope = scope || window;
     var cmodels = conf.models || [];
     var cviews = conf.views || [];
     var cstores = conf.stores || [];    
@@ -334,7 +335,8 @@ function Application(conf, fn){
                         if(_scripts[this.k].readyState == 'complete' || _scripts[this.k].readyState == 'loaded'){
                             nviews++;
                             if(nviews == cviews.length){
-                                (fn)();
+//                                (fn)(); habilitar para dejar como estaba
+                                fn.call(scope);
                             }
                         }
                     };
@@ -343,7 +345,8 @@ function Application(conf, fn){
                         nviews++;
                         if(nviews == cviews.length){
                             rloaded = true;                            
-                            (fn)();
+//                            (fn)(); habilitar para dejar como estaba
+                            fn.call(scope);
                         }
                     },false);
                 }
