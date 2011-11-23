@@ -54,7 +54,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     }
                 },
                 {
-                    fieldLabel: 'Factura No',
+                    fieldLabel: 'No',
                     name: 'invoicenumber',
                     allowBlank: false
                 },
@@ -210,14 +210,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     width: 25,
                     columnWidth: .15,
                     allowBlank: false
-                },
-                {
-                    xtype: 'checkbox',
-                    name: 'hastax',
-                    boxLabel: 'Incluye IVA',
-                    inputValue: 1,
-                    id: 'InvoiceFormWinItemHasTax'
-                },
+                },                
                 {
                     name: 'unitprice',
                     id: 'InvoiceFormWinUnitPrice',
@@ -225,6 +218,13 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     width: 25,
                     columnWidth: .30,
                     allowBlank: false
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'hastax',
+                    boxLabel: 'Incluye IVA',
+                    inputValue: 1,
+                    id: 'InvoiceFormWinItemHasTax'
                 },
                 {
                     xtype: 'button',
@@ -447,6 +447,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                             Ext.getCmp('invoiceGrid').getStore().insert(0, obj.data);
                             var grid = Ext.getCmp('InvoiceFormWindow');
                             grid.close();
+                            setNotification('Orden de compra creada', 'La orden de compra se ha creado satisfactoriamente');
                         }else{
                             Ext.MessageBox.show({
                                 title: 'Error!!!',

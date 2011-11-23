@@ -17,7 +17,7 @@ Ext.define('Mtc.view.invoice.Grid', {
             iconCls: 'add',
             handler: function(){
                 invoiceAddWindow = Ext.create('Mtc.view.invoice.InvoiceFormWindow');
-                invoiceAddWindow.setTitle('Ingresar Factura');
+                invoiceAddWindow.setTitle('Ingresar Orden de Compra');
                 invoiceAddWindow.show();
             }
         },
@@ -28,7 +28,7 @@ Ext.define('Mtc.view.invoice.Grid', {
     ],
     columns: [
             {
-                header: 'Factura No',
+                header: 'No',
                 dataIndex: 'invoicenumber'
             },
             {

@@ -6,6 +6,7 @@ Ext.Loader.setConfig({
     }
 );
 Ext.ns('Mtc');
+Ext.BLANK_IMAGE_URL = '../ext-2.2/resources/images/default/s.gif';
 Ext.define('AppConfig', {
     singleton: true,
     gridPageSize: 15,
