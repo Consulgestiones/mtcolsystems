@@ -55,6 +55,9 @@ class Form_InvoiceHeader extends Zend_Form {
         $this->addElement('hidden', 'artifact', array(
             'required' => true
         ));
+        $this->addElement('hidden', 'title', array(
+            'required' => false
+        ));
     }
 }
 ?>

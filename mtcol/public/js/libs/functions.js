@@ -379,6 +379,7 @@ function setNotification(title, text){
 }
 function currencyFormat(value)
 {    
+    value = value.toFixed(0);
     var num = value.toString().replace(/\./g,'');
     if(!isNaN(num)){
         num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');

@@ -20,6 +20,11 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
             defaultType: 'textfield',
             items: [
                 {
+                    colspan: 3,
+                    fieldLabel: 'Titulo',
+                    width: 785
+                },
+                {
                     xtype: 'combo',
                     fieldLabel: 'Proveedor',
                     name: 'idprovider',
@@ -66,7 +71,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     allowBlank: false,
                     name: 'productservice'
                 },
-                {
+                /*{
                     xtype: 'combo',
                     fieldLabel: 'Pais',
                     store: Ext.create('Mtc.store.Country', {
@@ -103,7 +108,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     name: 'idcity',
                     store: Ext.create('Mtc.store.City'),
                     allowBlank: false
-                },                
+                },    */            
                 {
                     fieldLabel: 'Teléfono',
                     id: 'txtproviderphone',
@@ -165,6 +170,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
             xtype: 'form',
             frame: true,
             width: 850,
+            itemCls: 'left-space',
             defaultType: 'textfield',
             layout: 'column',
             items: [
@@ -206,6 +212,13 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     allowBlank: false
                 },
                 {
+                    xtype: 'checkbox',
+                    name: 'hastax',
+                    boxLabel: 'Incluye IVA',
+                    inputValue: 1,
+                    id: 'InvoiceFormWinItemHasTax'
+                },
+                {
                     name: 'unitprice',
                     id: 'InvoiceFormWinUnitPrice',
                     emptyText: 'Valor unitario',
@@ -223,17 +236,32 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                         var form = this.up('form');
                         if(!form.getForm().isValid())return;
                         
+                        var hastax = Ext.getCmp('InvoiceFormWinItemHasTax');
+                        
                         var cboprod = Ext.getCmp('InvoiceFormWindowProduct');
                         var txtquantity = Ext.getCmp('InvoiceFormWinQuantity');
                         var txttax = Ext.getCmp('InvoiceFormWindowTax');                        
-                        var txtunitprice = Ext.getCmp('InvoiceFormWinUnitPrice');                        
+                        var txtunitprice = Ext.getCmp('InvoiceFormWinUnitPrice'); 
+                        
+                        var unitprice = parseFloat(txtunitprice.getValue());
+                        var tax = parseFloat(txttax.getValue());
+                        var quantity = parseFloat(txtquantity.getValue());
                         
                         var index = cboprod.store.find('idproduct', cboprod.getValue());
                         var idproduct = cboprod.store.data.items[index].get('idproduct');
                         var product = cboprod.store.data.items[index].get('product');
                         var unit = cboprod.store.data.items[index].get('unit');
-                        var taxvalue = (parseFloat(txtunitprice.getValue()) * parseFloat(txttax.getValue()) / 100) * parseFloat(txtquantity.getValue());
-                        var itemprice = parseFloat(txtunitprice.getValue()) * parseFloat(txtquantity.getValue());
+                        
+                        var taxvalue = 0;
+                        var itemprice = 0;
+                        
+                        if(hastax.getValue() == 1){
+                            taxvalue = (unitprice - (unitprice / (tax / 100 + 1))) * quantity;
+                            itemprice = ((unitprice / (tax/100+1)) * quantity);
+                        }else{
+                            taxvalue = ((unitprice * (tax / 100))) * quantity;
+                            itemprice = unitprice * quantity;
+                        }
                         
                         var grid = Ext.getCmp('InvoiceFormWindowGrid');
                         
@@ -244,9 +272,10 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                             idproduct: idproduct,
                             product: product,
                             unit: unit,
-                            quantity: txtquantity.getValue(),
-                            unitprice: txtunitprice.getValue(),
-                            tax: txttax.getValue(),
+                            quantity: quantity,
+                            unitprice: unitprice,
+                            hastax: (hastax.getValue() == 1)?'Si':'No',
+                            tax: tax,
                             itemprice: itemprice,
                             taxvalue: taxvalue,
                             totalprice: (itemprice + taxvalue)
@@ -278,7 +307,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     header: 'Item',
                     dataIndex: 'item',
-                    width: 30
+                    width: 40
                 },
                 {
                     header: 'Descripción',
@@ -307,6 +336,11 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                         return currencyFormat(value);
                     },
                     align: 'right'
+                },
+                {
+                    header: 'Incluye IVA',
+                    dataIndex: 'hastax',
+                    width: 70
                 },
                 {
                     header: 'IVA',
