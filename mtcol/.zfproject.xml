@@ -105,6 +105,13 @@
               <actionMethod actionName="index"/>
               <actionMethod actionName="getpaymentmethods"/>
             </controllerFile>
+            <controllerFile controllerName="Companies">
+              <actionMethod actionName="index"/>
+            </controllerFile>
+            <controllerFile controllerName="Transpcompanies">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="getcompanies"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -197,6 +204,15 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Products">
                 <viewScriptFile forActionName="gerprodsfromprovider"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Companies">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transpcompanies">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transpcompanies">
+                <viewScriptFile forActionName="getcompanies"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

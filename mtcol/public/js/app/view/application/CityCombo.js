@@ -1,5 +1,6 @@
 Ext.define('Mtc.view.application.CityCombo', {
     extend: 'Ext.form.field.ComboBox',
+    requires: ['Mtc.store.City'],
     queryMode: 'local',
     id: 'cbocity',
     name: 'idcity',
@@ -9,7 +10,7 @@ Ext.define('Mtc.view.application.CityCombo', {
     triggerAction: 'all',
     valueField: 'idcity',
     fieldLabel: 'Ciudad',
-    editable: false,
+    editable: true,
     frame: true,
     store: Ext.create('Mtc.store.City'),
     constructor: function(){

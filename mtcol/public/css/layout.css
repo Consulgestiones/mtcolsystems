@@ -57,6 +57,9 @@
 .puzzle {
     background-image:url(/images/icons/plugin.png) !important;
 }
+.car {
+    background-image:url(/images/icons/car.png) !important;
+}
 .align-right {
     text-align: right;    
 }

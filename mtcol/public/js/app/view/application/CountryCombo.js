@@ -1,11 +1,12 @@
 Ext.define('Mtc.view.application.CountryCombo', {
     extend: 'Ext.form.field.ComboBox',
+    requires: ['Mtc.store.Country'],
     queryMode: 'local',    
     emptyText: 'Seleccione',
     alias: 'widget.country',
     displayField: 'country',
     valueField: 'idcountry',    
-    editable: false,
+    editable: true,
     triggerAction: 'all',    
     store: Ext.create('Mtc.store.Country')/*,
     constructor: function(){
