@@ -17,6 +17,8 @@ class Admin_TranspcompaniesController extends Zend_Controller_Action
     {
         $limit = $this->getRequest()->getParam('limit');
         $start = $this->getRequest()->getParam('start');
+        $status = $this->getRequest()->getParam('status');        
+        
         
         $data = array();
         $msg = 1;
@@ -24,12 +26,14 @@ class Admin_TranspcompaniesController extends Zend_Controller_Action
         $db = Zend_Registry::get('db');
         try{
             
+            $where = (!empty($status))?"AND t.inactive != ".($status == 'active')?1:0:"";
+            
             $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS t.idtranspcompany, t.transpcompany, t.phone, t.email, t.address,
-                            c.idcountry, c.country, ci.idcity, ci.city
+                            c.idcountry, c.country, ci.idcity, ci.city, t.inactive, CASE t.inactive WHEN 0 THEN 'Activo' ELSE 'Inactivo' END as active
                             FROM transp_company t, country c, city ci
-                            WHERE c.idcountry = t.idcountry AND ci.idcountry = t.idcountry AND ci.idcity = t.idcity
+                            WHERE c.idcountry = t.idcountry %s AND ci.idcountry = t.idcountry AND ci.idcity = t.idcity
                             ORDER BY t.transpcompany
-                            LIMIT %d, %d", $start, $limit);
+                            LIMIT %d, %d", $where, $start, $limit);
             
             $stmt = $db->query($sql);
             $data = $stmt->fetchAll();
@@ -119,8 +123,37 @@ class Admin_TranspcompaniesController extends Zend_Controller_Action
         return ($company)?$company:NULL;
     }
 
+    public function activeinactiveAction()
+    {
+        $idtranspcompany = $this->getRequest()->getParam('idtranspcompany');
+        $msg = 1;
+        try{
+            
+            $sql = sprintf("UPDATE transp_company t SET t.inactive = CASE t.inactive WHEN 1 THEN 0 ELSE 1 END
+                        WHERE t.idtranspcompany = %d", $idtranspcompany);
+            /* @var $db Zend_Db_Adapter */
+            $db = Zend_Registry::get('db');
+            
+            $db->query($sql);
+            
+            $success = true;
+            
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }                
+        
+        $response = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
 
 

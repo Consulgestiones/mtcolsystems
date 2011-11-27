@@ -35,6 +35,11 @@ Ext.define('Mtc.view.transpcompany.List', {
             header: 'Dirección',
             dataIndex: 'address',
             width: 150
+        },
+        {
+            header: 'Activo',
+            dataIndex: 'active',
+            width: 100
         }
     ],
     bbar: new Ext.PagingToolbar({  
@@ -98,7 +103,34 @@ Ext.define('Mtc.view.transpcompany.List', {
         },
         {
             text: 'Inactivar',
-            iconCls: 'delete'
+            iconCls: 'delete',
+            handler: function(){
+                var grid = Ext.getCmp('transpCompanyList');
+                var rows = grid.getSelectionModel().getSelection();
+                
+                if(rows.length === 0)return;
+                
+                var record = rows[0];
+                
+                var nextstate = (record.get('inactive') == 1)?'Active':'Inactive';
+                var inactive = (record.get('inactive') == 1)?0:1;
+                
+                Ext.Ajax.request({
+                    url: '/admin/transpcompanies/activeinactive',
+                    method: 'POST',
+                    params: {
+                        idtranspcompany: record.get('idtranspcompany')
+                    },
+                    success: function(response){
+                        var obj = Ext.decode(response.responseText);
+                        if(obj.success){
+                            record.set('active', nextstate);
+                            record.set('inactive', inactive);
+                            record.commit();
+                        }
+                    }
+                })
+            }
         }
     ],
     store: Mtc.transCompanyDS,

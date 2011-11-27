@@ -9,6 +9,8 @@ Ext.define('Mtc.model.TranspCompany', {
         {name: 'transpcompany', type: 'string'},
         {name: 'phone', type: 'string'},
         {name: 'email', type: 'string'},
-        {name: 'address', type: 'string'}
+        {name: 'address', type: 'string'},
+        {name: 'inactive', type: 'int'},
+        {name: 'active', type: 'string'}
     ]
 });
