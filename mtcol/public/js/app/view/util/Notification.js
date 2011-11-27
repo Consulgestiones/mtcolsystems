@@ -13,7 +13,8 @@
  *	Last changed date: 2011-09-13
  */
 
-Ext.define('Ext.ux.window.Notification', {
+//Ext.define('Ext.ux.window.Notification', {
+Ext.define('Mtc.view.util.Notification', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.uxNotification',
 

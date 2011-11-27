@@ -367,7 +367,8 @@ function Application(conf, fn, scope){
 }
     
 function setNotification(title, text){
-    Ext.create('widget.uxNotification', {
+//    Ext.create('widget.uxNotification', {
+    Ext.create('Mtc.view.util.Notification', {
             corner: 'br',            
             //manager: 'instructions',
             //iconCls: 'notification-icon-information',

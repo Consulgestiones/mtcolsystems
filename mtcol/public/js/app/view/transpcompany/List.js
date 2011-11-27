@@ -2,9 +2,10 @@ Mtc.transCompanyDS = Ext.create('Mtc.store.TranspCompany', {
     autoLoad: true
 });
 Ext.define('Mtc.view.transpcompany.List', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Ext.grid.Panel',    
     requires: ['Mtc.store.TranspCompany'],
     columns: [
+        Ext.create('Ext.grid.RowNumberer'),
         {
             header: 'Nombre',
             dataIndex: 'transpcompany',
@@ -55,12 +56,53 @@ Ext.define('Mtc.view.transpcompany.List', {
         },
         {
             text: 'Editar',
-            iconCls: 'edit'
+            iconCls: 'edit',
+            handler: function(){
+                
+                var grid = Ext.getCmp('transpCompanyList');
+                var rows = grid.getSelectionModel().getSelection();
+                
+                if(rows.length === 0)return;
+                
+                var record = rows[0];
+                
+                var w = Ext.create('Mtc.view.transpcompany.FormWindow');
+                w.setTitle('Editar Compañia de Transporte');
+                var form = w.down('form').getForm();
+                form.reset();
+                
+                var cbocountry = Ext.getCmp('cbocountry');
+                cbocountry.store.on('load', function(cbo, opts){
+                    cbocountry.setValue(record.get('idcountry'));
+                });
+//                cbocountry.setValue(record.get('idcountry'));
+                var cbocity = Ext.getCmp('cbocity');
+                if(cbocity.store.getCount() === 0){
+                    cbocity.store.load({
+                        params: {
+                            idcountry: record.get('idcountry')
+                        },
+                        callback: function(){
+                            cbocity.setValue(record.get('idcity'));
+                        }
+                    });
+                }else{
+                    cbocity.setValue(record.get('idcity'));
+                }
+                cbocity.enable();
+                
+                form.loadRecord(record);
+                                
+                w.show();
+            }
         },
         {
             text: 'Inactivar',
             iconCls: 'delete'
         }
     ],
-    store: Mtc.transCompanyDS    
+    store: Mtc.transCompanyDS,
+    enableColLock: false,
+    height: AppConfig.gridHeight,
+    stripeRows: true
 });

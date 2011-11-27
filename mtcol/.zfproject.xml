@@ -111,6 +111,8 @@
             <controllerFile controllerName="Transpcompanies">
               <actionMethod actionName="index"/>
               <actionMethod actionName="getcompanies"/>
+              <actionMethod actionName="savecompany"/>
+              <actionMethod actionName="getcompany"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -213,6 +215,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Transpcompanies">
                 <viewScriptFile forActionName="getcompanies"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transpcompanies">
+                <viewScriptFile forActionName="savecompany"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transpcompanies">
+                <viewScriptFile forActionName="getcompany"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
