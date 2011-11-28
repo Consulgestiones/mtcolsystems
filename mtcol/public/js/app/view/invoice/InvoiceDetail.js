@@ -20,6 +20,12 @@ Ext.define('Mtc.view.invoice.InvoiceDetail', {
             frame: true,
             items: [
                 {
+                    fieldLabel: 'Tiltulo',
+                    name: 'title',
+                    colspan: 2,
+                    width: 525
+                },
+                {
                     xtype: 'datefield',
                     fieldLabel: 'Fecha',
                     name: 'dinvoice',
@@ -39,7 +45,7 @@ Ext.define('Mtc.view.invoice.InvoiceDetail', {
                 },
                 {
                     fieldLabel: 'Entrega',
-                    name: 'productservice'
+                    name: 'delivery'
                 },
                 {
                     fieldLabel: 'Teléfono',

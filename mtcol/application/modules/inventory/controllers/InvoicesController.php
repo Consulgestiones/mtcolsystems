@@ -2,10 +2,10 @@
 
 class Inventory_InvoicesController extends Zend_Controller_Action
 {
-
+    private $session;
     public function init()
     {
-        /* Initialize action controller here */
+        $this->session = new Zend_Session_Namespace('Default');
     }
 
     public function indexAction()
@@ -23,14 +23,13 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             
             $db = Zend_Registry::get('db');
             
-            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS i.idinvoice, i.invoicenumber, i.dinvoice, i.productservice, i.createdby,
+            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS i.idinvoice, i.invoicenumber, i.title, i.dinvoice, i.delivery, i.createdby,
                             i.subtotal, i.tax, i.total, c.idcity, c.city, ct.idcountry, ct.country,
-                            p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone, x.idinvoicestatus, x.invoicestatus,
+                            p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone,
                             pm.idpaymentmethod, pm.paymentmethod, i.artifact, CASE i.artifact WHEN 'IV' THEN 'Factura' ELSE 'Orden de Compra' END as doctype 
-                            FROM invoice_header i, provider p, city c, country ct, invoice_status x, payment_method pm
-                            WHERE p.idprovider = i.idprovider AND c.idcity = i.idcity 
-                                            AND c.idcountry = i.idcountry AND ct.idcountry = c.idcountry
-                                            AND x.idinvoicestatus = i.idinvoicestatus
+                            FROM invoice_header i, provider p, city c, country ct, payment_method pm
+                            WHERE p.idprovider = i.idprovider AND c.idcity = p.idcity 
+                                            AND c.idcountry = p.idcountry AND ct.idcountry = p.idcountry                                            
                                             AND pm.idpaymentmethod = i.idpaymentmethod
                             ORDER BY i.dinvoice DESC
                             LIMIT %d, %d", $start, $limit);
@@ -96,6 +95,11 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         
         $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
         
+        $user = $this->session->user;
+        
+//        echo $user['iduser'];
+//        die();
+        
         $data = array();
         $msg = 1;
         //Obtener base de datos
@@ -107,6 +111,7 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             //agregar datos que no vienen desde el cliente
             $header->createdby = 'Juan Carlos Giraldo';
             $header->dcreate = Functions::getCurrentTime();
+            $header->iduser = $user['iduser'];
             
             //Obtener datos del objeto header en forma de array
             $hdata = get_object_vars($header);                  
@@ -212,15 +217,14 @@ class Inventory_InvoicesController extends Zend_Controller_Action
     public function getinvoiceheaderAction($idinvoice)
     {
         try{
-            $sql = sprintf("SELECT i.idinvoice, i.invoicenumber, i.dinvoice, i.productservice, i.createdby,
+            $sql = sprintf("SELECT i.idinvoice, i.invoicenumber, i.title, i.dinvoice, i.delivery, i.createdby,
                             i.subtotal, i.tax, i.total, c.idcity, c.city, ct.idcountry, ct.country,
-                            p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone, x.idinvoicestatus, x.invoicestatus,
+                            p.idprovider, p.provider, p.providernumid, p.provideremail, p.providerphone,
                             pm.idpaymentmethod, pm.paymentmethod, i.artifact, CASE i.artifact WHEN 'IV' THEN 'Factura' ELSE 'Orden de Compra' END as doctype
-                            FROM invoice_header i, provider p, city c, country ct, invoice_status x, payment_method pm
+                            FROM invoice_header i, provider p, city c, country ct, payment_method pm
                             WHERE i.idinvoice = %d
-                            AND p.idprovider = i.idprovider AND c.idcity = i.idcity 
-                                            AND c.idcountry = i.idcountry AND ct.idcountry = c.idcountry
-                                            AND x.idinvoicestatus = i.idinvoicestatus
+                            AND p.idprovider = i.idprovider AND c.idcity = p.idcity 
+                                            AND c.idcountry = p.idcountry AND ct.idcountry = p.idcountry                                            
                                             AND pm.idpaymentmethod = i.idpaymentmethod", $idinvoice);
             
             $db = Zend_Registry::get('db');

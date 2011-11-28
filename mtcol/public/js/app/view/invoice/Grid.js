@@ -13,7 +13,7 @@ Ext.define('Mtc.view.invoice.Grid', {
     autoExpandColumn: 'title-col',        
     tbar: [
         {
-            text: 'Ingresar Factura',
+            text: 'Ingresar',
             iconCls: 'add',
             handler: function(){
                 invoiceAddWindow = Ext.create('Mtc.view.invoice.InvoiceFormWindow');
@@ -22,7 +22,7 @@ Ext.define('Mtc.view.invoice.Grid', {
             }
         },
         {
-            text: 'Modificar Factura',
+            text: 'Modificar',
             iconCls: 'edit'
         }
     ],
@@ -30,6 +30,11 @@ Ext.define('Mtc.view.invoice.Grid', {
             {
                 header: 'No',
                 dataIndex: 'invoicenumber'
+            },
+            {
+                header: 'Titulo',
+                dataIndex: 'title',
+                width: 250
             },
             {
                 header: 'Proveedor',
@@ -56,10 +61,10 @@ Ext.define('Mtc.view.invoice.Grid', {
                 header: 'Tipo Documento',
                 dataIndex: 'doctype'
             },
-            {
-                header: 'Estado',
-                dataIndex: 'invoicestatus'
-            },
+//            {
+//                header: 'Estado',
+//                dataIndex: 'invoicestatus'
+//            },
             {
                 header: 'Método Pago',
                 dataIndex: 'paymentmethod'

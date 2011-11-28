@@ -108,6 +108,7 @@ class IndexController extends Zend_Controller_Action
             $objuser->setMenu($menu);
 
             $this->session->user = $objuser->toArray();
+            Zend_Registry::set('user', $objuser);
             
             $data = array(
                 'user' => $objuser->toArray(),

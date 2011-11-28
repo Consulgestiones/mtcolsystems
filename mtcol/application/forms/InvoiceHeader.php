@@ -1,7 +1,14 @@
 <?php
 class Form_InvoiceHeader extends Zend_Form {
     public function init(){
+        $this->addElement('hidden', 'title', array(
+            'required' => true
+        ));
         $this->addElement('hidden', 'idprovider', array(
+            'required' => true,
+            'validators' => array('Digits')
+        ));
+        $this->addElement('hidden', 'iduser', array(
             'required' => true,
             'validators' => array('Digits')
         ));
@@ -17,16 +24,16 @@ class Form_InvoiceHeader extends Zend_Form {
             'required' => true,
             'validators' => array(array('validator' => 'Date', 'options' => array('format' => 'Y-m-d')))
         ));
-        $this->addElement('hidden', 'productservice', array(
+        $this->addElement('hidden', 'delivery', array(
             'required' => true,
             'validators' => array(
                 array('validator' => 'alnum', 'options' => array('allowWhiteSpace' => true))
             )
         ));
-        $this->addElement('hidden', 'idcountry', array(
-            'required' => true,
-            'validators' => array('Digits')
-        ));
+//        $this->addElement('hidden', 'idcountry', array(
+//            'required' => true,
+//            'validators' => array('Digits')
+//        ));
         $this->addElement('hidden', 'providerphone', array(
             'required' => true,
             'validators' => array(
@@ -41,14 +48,14 @@ class Form_InvoiceHeader extends Zend_Form {
             'required' => true,
             'validators' => array('EmailAddress')
         ));
-        $this->addElement('hidden', 'idinvoicestatus', array(
-            'required' => true,
-            'validators' => array('Digits')
-        ));
-        $this->addElement('hidden', 'idcity', array(
-            'required' => true,
-            'validators' => array('Digits')
-        ));
+//        $this->addElement('hidden', 'idinvoicestatus', array(
+//            'required' => true,
+//            'validators' => array('Digits')
+//        ));
+//        $this->addElement('hidden', 'idcity', array(
+//            'required' => true,
+//            'validators' => array('Digits')
+//        ));
         $this->addElement('hidden', 'createdby', array(
             'required' => true
         ));

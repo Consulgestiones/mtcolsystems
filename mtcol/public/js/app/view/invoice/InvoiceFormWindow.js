@@ -22,6 +22,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     colspan: 3,
                     fieldLabel: 'Titulo',
+                    name: 'title',
                     width: 785
                 },
                 {
@@ -61,7 +62,7 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     xtype: 'datefield',
                     name: 'dinvoice',
-                    fieldLabel: 'Fecha Factura',
+                    fieldLabel: 'Fecha Orden',
                     id: 'invoice_form_date',
                     format: 'd/m/Y',
                     allowBlank: false
@@ -69,46 +70,8 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                 {
                     fieldLabel: 'Entrega',
                     allowBlank: false,
-                    name: 'productservice'
-                },
-                /*{
-                    xtype: 'combo',
-                    fieldLabel: 'Pais',
-                    store: Ext.create('Mtc.store.Country', {
-                        autoLoad: true
-                    }),
-                    name: 'idcountry',
-                    queryMode: 'local',
-                    valueField: 'idcountry',
-                    displayField: 'country',
-                    listeners: {
-                        select: function(){
-                            var cbocity = Ext.getCmp('cbocity');                            
-                            cbocity.clearValue();
-                            cbocity.store.load({
-                                params: {
-                                    idcountry: this.getValue()
-                                },
-                                callback: function(){
-                                    cbocity.enable();
-                                }
-                            });
-                        }
-                    },
-                    allowBlank: false
-                },
-                {
-                    xtype: 'combo',
-                    id: 'cbocity',
-                    fieldLabel: 'Ciudad',
-                    disabled: true,
-                    queryMode: 'local',
-                    valueField: 'idcity',
-                    displayField: 'city',
-                    name: 'idcity',
-                    store: Ext.create('Mtc.store.City'),
-                    allowBlank: false
-                },    */            
+                    name: 'delivery'
+                },               
                 {
                     fieldLabel: 'Teléfono',
                     id: 'txtproviderphone',
@@ -135,34 +98,9 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                     allowBlank: false
                 },
                 {
-                    xtype: 'combo',
-                    name: 'idinvoicestatus',
-                    fieldLabel: 'Estado',
-                    displayField: 'invoicestatus',
-                    valueField: 'idinvoicestatus',
-                    store: Ext.create('Mtc.store.InvoiceStatus', {
-                        autoLoad: true
-                    }),                    
-                    queryMode: 'local',
-                    allowBlank: false
-                },
-                {
-                    xtype: 'combo',
+                    xtype: 'hidden',
                     name: 'artifact',
-                    fieldLabel: 'Tipo Entrada',
-                    queryMode: 'local',
-                    store: new Ext.data.SimpleStore({
-                        fields: ['artifact', 'item'],
-                        data: [
-                            ['IV', 'Factura'],
-                            ['PO', 'Orden de Compra']
-                        ]
-                    }),
-                    displayField: 'item',
-                    valueField: 'artifact',
-                    typeAhead: true,
-                    triggerAction: 'all',
-                    selectOnFocus: true
+                    value: 'PO'
                 }
             ]              
         },        
@@ -298,11 +236,6 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
             features: [{
                 ftype: 'summary'
             }],
-//            plugins: [
-//                Ext.create('Ext.grid.plugin.RowEditing', {
-//                    clicksToEdit: 1
-//                })
-//            ],            
             columns: [                
                 {
                     header: 'Item',
@@ -451,10 +384,13 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                         }else{
                             Ext.MessageBox.show({
                                 title: 'Error!!!',
-                                msg: 'Ocurrio un error al ingresar el documento, por favor intente de nuevo mas tarde'
-                            });
-                            win.el.unmask();
-                        }                        
+                                msg: 'Ocurrio un error al ingresar el documento, por favor intente de nuevo mas tarde',
+                                icon: Ext.Msg.ERROR,
+                                buttons: Ext.Msg.OK
+                            }, this);
+                            
+                        }       
+                        win.el.unmask();
                     }
                 })
             }

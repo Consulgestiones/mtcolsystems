@@ -3,7 +3,7 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initSessionStart(){        
-        Zend_Session::start();
+        Zend_Session::start();        
     }
     protected function _initTimezone()
     {
