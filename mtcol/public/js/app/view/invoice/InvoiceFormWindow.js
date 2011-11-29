@@ -378,8 +378,9 @@ Ext.define('Mtc.view.invoice.InvoiceFormWindow', {
                         var obj = Ext.decode(response.responseText);
                         if(obj.success){
                             Ext.getCmp('invoiceGrid').getStore().insert(0, obj.data);
-                            var grid = Ext.getCmp('InvoiceFormWindow');
-                            grid.close();
+                            var win1 = Ext.getCmp('InvoiceFormWindow');
+                            win1.close();
+                            grid.getStore().removeAll(false);
                             setNotification('Orden de compra creada', 'La orden de compra se ha creado satisfactoriamente');
                         }else{
                             Ext.MessageBox.show({

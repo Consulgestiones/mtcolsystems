@@ -103,6 +103,8 @@ class Inventory_InvoicesController extends Zend_Controller_Action
         $data = array();
         $msg = 1;
         //Obtener base de datos
+        
+        /* @var $db Zend_Db_Adapter */
         $db = Zend_Registry::get('db');
         try{      
             //iniciar transaccion protegida
@@ -162,6 +164,15 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             
             //procesar detalle de la factura            
             $nItem = 1;
+            $txvalues = "";
+            $stvalues = "";
+            
+            
+            //Tipo de transaccion
+            $codType = 'COM';
+            //Estado del stock
+            $codStatus = 'OCP';
+            
             foreach($detail as $item){
                 $iData = get_object_vars($item);
                 $iData['idinvoice'] = $idinvoice;
@@ -180,8 +191,21 @@ class Inventory_InvoicesController extends Zend_Controller_Action
                 if(!$mInvoiceDetail->insert($clearData))
                     throw new Exception('Error al ingresar el detalle de la factura');
                 
+                $txvalues .= sprintf("('%s', %d, %f, %f, %f, %f, NOW())", $codType, $item->idproduct, $item->unitprice, $item->quantity, $item->itemprice, ($item->unitprice  + ($item->unitprice * $item->tax / 100)));
+                $txvalues .= ',';
+                
+                $stvalues .= sprintf("('%s', %d, %f, %f, %f, %f)", $codStatus, $item->idproduct, $item->unitprice, $item->quantity, $item->itemprice, ($item->unitprice + ($item->unitprice * $item->tax / 100)));
+                $stvalues .= ',';
+                
+                
+                
+                
+
                 $nItem++;
             }
+            
+            $txvalues = substr($txvalues, 0, -1);            
+            $stvalues = substr($stvalues, 0, -1);            
             
             $dUpdate = array(
                 'subtotal' => $subtotal,
@@ -191,7 +215,30 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             
             if(!$mInvoice->update($dUpdate, "idinvoice = ".$idinvoice))
                 throw  new Exception ('Error al actualizar la información de la factura');
+            
+            
+            
+            
+            /**
+             * Alimetar movimientos y stock
+             */
+                $sqltx = sprintf("INSERT INTO transaction (codtype, idproduct, unitprice, quantity, totalprice, unitpricetax, dtransaction)
+                    VALUES %s", $txvalues);                
+                
+                $stmt = $db->query($sqltx);       
+                
+                $sqlst = sprintf("INSERT INTO stock (codstatus, idproduct, unitprice, quantity, totalprice, unitpricetax)
+                    VALUES %s", $stvalues);                
+                
+                $stmt = $db->query($sqlst);                                
 
+
+                    /**
+             * /Alimetar movimientos y stock
+             */
+            
+            
+            
             //confirmar transaccion
             $db->commit();
             
