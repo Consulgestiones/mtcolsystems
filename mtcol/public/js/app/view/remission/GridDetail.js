@@ -1,6 +1,22 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
+Ext.define('Mtc.view.remission.GridDetail', {
+    extend: 'Ext.grid.Panel',
+    store: Ext.create('Mtc.store.RemissionDetail'),
+    columns: [
+        {
+            header: 'Item',
+            dataIndex: 'item'
+        },
+        {
+            header: 'Descripción',
+            dataIndex: 'product'            
+        },
+        {
+            header: 'Cantidad',
+            dataIndex: 'quantity'
+        },
+        {
+            header: 'Pedido',
+            dataIndex: 'itemprice'
+        }
+    ]
+});

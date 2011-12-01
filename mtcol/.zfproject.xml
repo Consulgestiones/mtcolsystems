@@ -246,6 +246,10 @@
               <actionMethod actionName="getinvoiceheader"/>
               <actionMethod actionName="getstatus"/>
             </controllerFile>
+            <controllerFile controllerName="Remissions">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="getheaders"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -272,6 +276,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Invoices">
                 <viewScriptFile forActionName="getstatus"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="getheaders"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

@@ -17,14 +17,17 @@ class Admin_ProductsController extends Zend_Controller_Action
     {
         $start = $this->getRequest()->getParam('start');
         $limit = $this->getRequest()->getParam('limit');
+        $query = $this->getRequest()->getParam('query');
+        
+        $filter = (!empty($query))?"lower(p.product) LIKE '".$query."%' AND ":"";
         
         $select = sprintf("SELECT SQL_CALC_FOUND_ROWS p.idproduct, p.product, p.description, p.tax,
                     p.inactive, CASE p.inactive WHEN 0 THEN 'SI' ELSE 'NO' END AS active,
                     pc.productcategory, pc.productcategory, ps.idproductsubcategory, ps.productsubcategory
                     FROM product p, product_category pc, product_subcategory ps
-                    WHERE ps.idproductcategory = p.idproductcategory AND ps.idproductsubcategory = p.idproductsubcategory AND pc.idproductcategory = ps.idproductcategory
+                    WHERE %s ps.idproductcategory = p.idproductcategory AND ps.idproductsubcategory = p.idproductsubcategory AND pc.idproductcategory = ps.idproductcategory
                     ORDER BY p.product, pc.productcategory, ps.productsubcategory
-                    LIMIT %d, %d", $start, $limit);
+                    LIMIT %d, %d", $filter, $start, $limit);
         
         $db = Zend_Registry::get('db');
         

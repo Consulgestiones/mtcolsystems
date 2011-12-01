@@ -5,14 +5,9 @@ Mtc.RemissionController = {
             title: 'Remisiones',
             id: 'RemissionPanel',
             items: [
-                {
-                    xtype: 'button',
-                    text: 'Probar',
-                    handler: function(){
-                        var win = Ext.create('Mtc.view.remission.WindowForm');
-                        win.show();
-                    }
-                }
+                Ext.create('Mtc.view.remission.GridHeaders', {
+                    id: 'grdRemissionHeader'
+                })
             ],
             renderTo: Ext.get('slot1')
         });
