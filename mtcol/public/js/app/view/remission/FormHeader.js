@@ -1,5 +1,6 @@
 Ext.define('Mtc.view.remission.FormHeader', {
     extend: 'Ext.form.Panel',
+    alias: 'widget.remformheader',
     id: 'FormHeader',
     requires: ['Mtc.view.transpcompany.ComboTranspCompany'],
     defaultType: 'textfield',

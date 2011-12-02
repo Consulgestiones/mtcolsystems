@@ -32,7 +32,10 @@ Ext.define('Mtc.view.remission.FormItem', {
         {
             xtype: 'button',
             text: 'Item',
-            iconCls: 'add'
+            iconCls: 'add',
+            handler: function(){
+                
+            }
         }
     ]
 });
