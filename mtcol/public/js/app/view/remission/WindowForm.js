@@ -5,7 +5,9 @@ Ext.define('Mtc.view.remission.WindowForm', {
     items: [
         Ext.create('Mtc.view.remission.FormHeader'),
         Ext.create('Mtc.view.remission.FormItem'),
-        Ext.create('Mtc.view.remission.GridDetail')
+        Ext.create('Mtc.view.remission.GridDetail', {
+            id: 'GridDetail'
+        })
     ],
     buttons: [
         {

@@ -2,6 +2,7 @@ Ext.define('Mtc.view.remission.FormItem', {
     extend: 'Ext.form.Panel',
     defaultType: 'textfield',
     bodyStyle: 'padding: 10px;',
+    url: '/inventory/remissions/putitem',
     frame: true,
     layout: {
         type: 'table',
@@ -12,6 +13,7 @@ Ext.define('Mtc.view.remission.FormItem', {
         {
             xtype: 'combo',
             name: 'idproduct',
+            id: 'cboproduct',
             fieldLabel: 'Producto',
             displayField: 'product',
             valueField: 'idproduct',
@@ -27,14 +29,59 @@ Ext.define('Mtc.view.remission.FormItem', {
         },
         {
             fieldLabel: 'Cantidad',
-            name: 'quantity'
+            name: 'quantity',
+            id: 'txtquantity'
         },
         {
             xtype: 'button',
             text: 'Item',
             iconCls: 'add',
             handler: function(){
-                
+                var form = this.up('form').getForm();
+                if(form.isValid()){
+                    
+                    var values = form.getValues();
+                    
+                    Ext.Ajax.request({
+                        url: '/inventory/remissions/putitem',
+                        method: 'POST',
+                        params: {
+                            idproduct: values.idproduct,
+                            quantity: values.quantity
+                        },
+                        success: function(response){
+                            var obj = Ext.decode(response.responseText);
+                            if(obj.success){
+                                var grid = Ext.getCmp('GridDetail');
+                                
+                                var cboprod = Ext.getCmp('cboproduct');
+                                var idproduct = cboprod.getValue();
+                                var index = cboprod.store.find('idproduct', idproduct);
+                                var product = cboprod.store.data.items[index].get('product');
+                                var cant = Ext.getCmp('txtquantity').getValue();
+                                var item = grid.getStore().getCount()+1;
+                                
+                                var row = {
+                                    item: item,
+                                    product: product,
+                                    quantity: cant,
+                                    itemprice: obj.value
+                                }
+                                grid.getStore().add(row);
+                                
+                                
+                            }else{
+                                Ext.Msg.show({
+                                    title: 'Error',
+                                    msg: obj.msg,
+                                    icon: Ext.Msg.ERROR,
+                                    buttons: Ext.Msg.OK
+                                });
+                            }
+                        }
+                    });
+                    
+                }
             }
         }
     ]

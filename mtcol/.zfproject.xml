@@ -249,6 +249,8 @@
             <controllerFile controllerName="Remissions">
               <actionMethod actionName="index"/>
               <actionMethod actionName="getheaders"/>
+              <actionMethod actionName="putitem"/>
+              <actionMethod actionName="gettotalitem"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -282,6 +284,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Remissions">
                 <viewScriptFile forActionName="getheaders"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="putitem"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="gettotalitem"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
