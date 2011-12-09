@@ -13,6 +13,10 @@ Ext.define('Mtc.view.remission.GridDetail', {
             dataIndex: 'product'            
         },
         {
+            header: 'Unidad',
+            dataIndex: 'unit'
+        },
+        {
             header: 'Cantidad',
             dataIndex: 'quantity'
         },

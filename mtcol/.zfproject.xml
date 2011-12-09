@@ -251,6 +251,7 @@
               <actionMethod actionName="getheaders"/>
               <actionMethod actionName="putitem"/>
               <actionMethod actionName="gettotalitem"/>
+              <actionMethod actionName="addremission"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
@@ -290,6 +291,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Remissions">
                 <viewScriptFile forActionName="gettotalitem"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="addremission"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

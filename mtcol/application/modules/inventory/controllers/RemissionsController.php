@@ -2,10 +2,11 @@
 
 class Inventory_RemissionsController extends Zend_Controller_Action
 {
-
+    private $db;
+    private $idstocks;
     public function init()
     {
-        /* Initialize action controller here */
+        $this->db = Zend_Registry::get('db');
     }
 
     public function indexAction()
@@ -68,7 +69,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
             
             /* @var $db Zend_Db_Adapter */
             
-            $total = $this->gettotalitemAction($idproduct);
+            $total = $this->getTotalItem($idproduct);
             if(((float)$total) < ((float)$quantity))
                 throw new Exception('No se cuenta con la cantidad de items solicitada');
             
@@ -111,12 +112,12 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
-    public function gettotalitemAction($idproduct)
+    private function getTotalItem($idproduct, $status = 'OCP')
     {
         try{
             $sql = sprintf("SELECT SUM(s.quantity) AS total
                             FROM stock s
-                            WHERE s.idproduct = %d AND s.codstatus = 'OCP'", $idproduct);
+                            WHERE s.idproduct = %d AND s.codstatus = '%s'", $idproduct, $status);
             
             $db = Zend_Registry::get('db');
             $stmt = $db->query($sql);
@@ -128,8 +129,114 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         return $total;
     }
 
+    public function addremissionAction()
+    {
+        $headerData = json_decode(stripslashes($this->getRequest()->getParam('headerData')), true);
+        $detailData = json_decode(stripslashes($this->getRequest()->getParam('detailData')), true);
+        
+        $this->idstocks = array();
+        
+        $data = array();
+        $msg = 1;
+        try{
+            
+            $this->db->beginTransaction();
+            
+            $formHeader = new Form_RemissionHeader();
+            
+            $headerData['dremission'] = toMySqlDate($headerData['dremission']);
+            
+            if(!$formHeader->isValid($headerData)){
+                throw new Exception($e->getMessage());
+            }
+            
+            
+            //insertar el header y procesar el detail
+            $remHeader = $formHeader->getValues(true);
+            
+            
+            
+            $this->db->commit();
+            $success = true;
+        }catch(Exception $e){
+            $this->db->rollback();
+            $success = false;
+            $msg = $e->getMessage();
+        }
+        
+    }
+    private function processRemProduct($idproduct, $quantity){
+        
+        $msg = 1;
+        try{
+            
+            //validar si se cuenta con la cantidad suficiente del producto en stock
+            $totalItem = $this->getTotalItem($idproduct);
+            
+            if($totalItem < $quantity)
+                throw new Exception('No se cuenta con la catidad suficiente');
+            
+            
+        
+            //Obtener el stock disponible del producto
+            $prodStock = $this->getProductStock($idproduct);
+            
+            $acum = (float)$quantity;
+            $cont = 0;
+            $nrows = count($prodStock);
+            $idstocks = array();
+            
+            $mStock = new Model_Stock();
+            
+            while($cont < $nrows && $acum){
+                $row = $prodStock[$cont];
+                $q = ((float)$row['quantity']);
+                if($q > $acum){
+                    
+                    $new = clone $row;
+                    $new['idstock'] = null;
+                    $new['quantity'] = $acum;
+                    $new['codstatus'] = 'TRN';
+                    
+                    $row['quantity'] = ($q - $acum);
+                    
+                    $this->idstocks[$idproduct][] = $mStock->insert($new);
+                    $mStock->update($row, 'idstock = '.$row['idstock']);
+                    
+                }else{
+                    
+                    $row['codstatus'] = 'TRN';
+                    $mStock->update($row, 'idstock = '.$row['idstock']);  
+                    $this->idstocks[$idproduct][] = $row['idstock'];
+                    
+                }
+                $acum -= min($q, $acum);
+                $cont++;
+            }
+            
+            
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+            $idstocks = null;
+        }
+        return $idstocks;
+    }
+    private function getProductStock($idproduct, $status = 'OCP'){
+        $sql = sprintf("SELECT s.idstock, s.codstatus, s.idproduct, s.quantity, s.unitprice, s.totalprice, s.unitpricetax
+                        FROM stock s
+                        WHERE s.idproduct = %d AND s.codstatus = '%s'
+                        ORDER BY s.idstock", $idproduct, $status);
+        $stmt = $this->db->query($sql);
+        $prodStock = $stmt->fetchAll();
+        return $prodStock;
+    }
+
 
 }
+
+
 
 
 
