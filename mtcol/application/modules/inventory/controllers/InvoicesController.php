@@ -191,15 +191,15 @@ class Inventory_InvoicesController extends Zend_Controller_Action
                 if(!$mInvoiceDetail->insert($clearData))
                     throw new Exception('Error al ingresar el detalle de la factura');
                 
-                $txvalues .= sprintf("('%s', %d, %f, %f, %f, %f, NOW())", $codType, $item->idproduct, $item->unitprice, $item->quantity, $item->itemprice, ($item->unitprice  + ($item->unitprice * $item->tax / 100)));
-                $txvalues .= ',';
                 
-                $stvalues .= sprintf("('%s', %d, %f, %f, %f, %f)", $codStatus, $item->idproduct, $item->unitprice, $item->quantity, $item->itemprice, ($item->unitprice + ($item->unitprice * $item->tax / 100)));
+                $itempricetax = ($item->unitprice  + ($item->unitprice * $item->tax / 100));
+                $totalprice = ((float)$item->quantity) * $itempricetax;
+                
+//                $txvalues .= sprintf("('%s', %d, %f, %f, %f, %f, NOW())", $codType, $item->idproduct, $item->unitprice, $item->quantity, $totalprice, $itempricetax);
+//                $txvalues .= ',';
+                
+                $stvalues .= sprintf("('%s', %d, %f, %f, %f, %f)", $codStatus, $item->idproduct, $item->unitprice, $item->quantity, $totalprice, $itempricetax);
                 $stvalues .= ',';
-                
-                
-                
-                
 
                 $nItem++;
             }
@@ -222,15 +222,16 @@ class Inventory_InvoicesController extends Zend_Controller_Action
             /**
              * Alimetar movimientos y stock
              */
-                $sqltx = sprintf("INSERT INTO transaction (codtype, idproduct, unitprice, quantity, totalprice, unitpricetax, dtransaction)
-                    VALUES %s", $txvalues);                
+//                $sqltx = sprintf("INSERT INTO transaction (codtype, idproduct, unitprice, quantity, totalprice, unitpricetax, dtransaction)
+//                    VALUES %s", $txvalues);                
                 
-                $stmt = $db->query($sqltx);       
+//                $stmt = $db->query($sqltx);       
                 
                 $sqlst = sprintf("INSERT INTO stock (codstatus, idproduct, unitprice, quantity, totalprice, unitpricetax)
                     VALUES %s", $stvalues);                
                 
-                $stmt = $db->query($sqlst);                                
+                $stmt = $db->query($sqlst);       
+                Functions::addTransaction('COM', $total, $user['iduser']);
 
 
                     /**

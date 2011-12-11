@@ -3,6 +3,9 @@ Ext.define('Mtc.view.remission.GridDetail', {
     store: Ext.create('Mtc.store.RemissionDetail'),
     height: 250,
     alias: 'widget.remdetailgrid',
+    features: [{
+        ftype: 'summary'
+    }],
     columns: [
         {
             header: 'Item',
@@ -22,7 +25,12 @@ Ext.define('Mtc.view.remission.GridDetail', {
         },
         {
             header: 'Pedido',
-            dataIndex: 'itemprice'
+            dataIndex: 'itemvalue',
+            align: 'right',
+            renderer: function(value){        
+                var x = currencyFormat(value);
+                return x;
+            }
         }
     ]
 });

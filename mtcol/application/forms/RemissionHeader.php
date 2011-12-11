@@ -14,6 +14,13 @@ class Form_RemissionHeader extends Zend_Form {
         $this->addElement('hidden', 'vehicleplate', array(
             'required' => true
         ));
+        $this->addElement('hidden', 'title', array(
+            'required' => false
+        ));
+        $this->addElement('hidden', 'drivernumid', array(
+            'required' => true,
+            'validators' => array('Digits')
+        ));
     }
 }
 ?>

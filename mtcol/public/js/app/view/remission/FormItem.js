@@ -89,7 +89,7 @@ Ext.define('Mtc.view.remission.FormItem', {
                                     product: product,
                                     unit: unit,
                                     quantity: cant,
-                                    itemprice: obj.value
+                                    itemvalue: obj.value
                                 }
                                 grid.getStore().add(row);
                                 form.reset();

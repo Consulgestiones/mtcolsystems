@@ -4,9 +4,14 @@ class Inventory_RemissionsController extends Zend_Controller_Action
 {
     private $db;
     private $idstocks;
+    private $user;
+    private $session;
     public function init()
     {
+        $this->session = new Zend_Session_Namespace('Default');
         $this->db = Zend_Registry::get('db');
+        $this->user = $this->session->user;
+                
     }
 
     public function indexAction()
@@ -130,9 +135,9 @@ class Inventory_RemissionsController extends Zend_Controller_Action
     }
 
     public function addremissionAction()
-    {
-        $headerData = json_decode(stripslashes($this->getRequest()->getParam('headerData')), true);
-        $detailData = json_decode(stripslashes($this->getRequest()->getParam('detailData')), true);
+    {                
+        $headerData = json_decode(stripslashes($this->getRequest()->getParam('remHeader')), true);
+        $detailData = json_decode(stripslashes($this->getRequest()->getParam('remDetail')), true);        
         
         $this->idstocks = array();
         
@@ -144,15 +149,64 @@ class Inventory_RemissionsController extends Zend_Controller_Action
             
             $formHeader = new Form_RemissionHeader();
             
-            $headerData['dremission'] = toMySqlDate($headerData['dremission']);
+            $headerData['dremission'] = Functions::toMySqlDate($headerData['dremission']);
             
             if(!$formHeader->isValid($headerData)){
-                throw new Exception($e->getMessage());
+                throw new Exception(json_encode($formHeader->getMessages()));
             }
             
             
             //insertar el header y procesar el detail
             $remHeader = $formHeader->getValues(true);
+            
+            $remNumber = $this->getNextRemission();
+            
+            if(!$remNumber)
+                throw new Exception('Error al generar la nueva remisión');
+            
+            $remHeader['remissionnumber'] = $remNumber;
+            $remHeader['status'] = 'REM'; // Estado de la remision REM = REMITIDA
+            $remHeader['title'] = (!empty($remHeader['title']))?$remHeader['title']:'Remisión '.$remNumber;
+            $remHeader['iduser'] = $this->user['iduser'];
+            $remHeader['dcreate'] = Functions::getCurrentTime();
+            
+            //Instanciar modelo de encabezado de remision para insertar
+            $mHeaderDetail = new Model_RemissionHeader();
+            
+            //Insertar encabezado de la remision
+            $idremission = $mHeaderDetail->insert($remHeader);
+            
+            //Instanciar modelo de detalle para insersiones
+            $mRemDetail = new Model_RemissionDetail();
+            
+            //instanciar formulario de detalle para validar la informacion de cada item
+            $fRemDetail = new Form_RemissionDetail();
+            
+            //Procesar detalle
+                        
+            $itempricetax = 0;
+            foreach($detailData as $item){
+                $item['unitvalue'] = ((float)$item['itemvalue'])/((float)$item['quantity']);
+                $item['idremission'] = $idremission;
+                if(!$fRemDetail->isValid($item))
+                    throw new Exception(json_encode($fRemDetail->getMessages()));
+//                    throw new Exception('Error en el detalle de la remisión');
+                
+                $itemData = $fRemDetail->getValues(true);
+                $mRemDetail->insert($itemData);
+                $this->processRemProduct($item['idproduct'], $item['quantity']);
+                
+                $itempricetax += ((float)$item['itemvalue']);
+                
+            }
+            
+            //Registrar los stocks que va a manejar la remision
+            if(!$this->crossRemStock($idremission)){
+                throw new Exception('Error al asociar el stock');
+            }
+            
+            Functions::addTransaction('REM', $itempricetax, $this->user['iduser']);
+            
             
             
             
@@ -163,6 +217,12 @@ class Inventory_RemissionsController extends Zend_Controller_Action
             $success = false;
             $msg = $e->getMessage();
         }
+        $response = array(
+            'data' => $data,
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
         
     }
     private function processRemProduct($idproduct, $quantity){
@@ -193,12 +253,16 @@ class Inventory_RemissionsController extends Zend_Controller_Action
                 $q = ((float)$row['quantity']);
                 if($q > $acum){
                     
-                    $new = clone $row;
+                    $new = $row;
+                    //Actualizar informacion del nuevo registro
                     $new['idstock'] = null;
                     $new['quantity'] = $acum;
                     $new['codstatus'] = 'TRN';
+                    $new['totalprice'] = ((float)$new['quantity']) * ((float)$new['unitpricetax']);
                     
+                    //Actualizar registro actual
                     $row['quantity'] = ($q - $acum);
+                    $row['totalprice'] = ((float)$row['quantity']) * ((float)$row['unitpricetax']);
                     
                     $this->idstocks[$idproduct][] = $mStock->insert($new);
                     $mStock->update($row, 'idstock = '.$row['idstock']);
@@ -221,7 +285,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
             $msg = $e->getMessage();
             $idstocks = null;
         }
-        return $idstocks;
+//        return $idstocks;
     }
     private function getProductStock($idproduct, $status = 'OCP'){
         $sql = sprintf("SELECT s.idstock, s.codstatus, s.idproduct, s.quantity, s.unitprice, s.totalprice, s.unitpricetax
@@ -232,8 +296,37 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $prodStock = $stmt->fetchAll();
         return $prodStock;
     }
-
-
+    private function getNextRemission(){
+        try{
+            $sql = "SELECT IFNULL(MAX(r.remissionnumber), 0) + 1 AS nextremission
+                    FROM remission_header r";
+            
+            $stmt = $this->db->query($sql);
+            $nextremission = $stmt->fetchColumn();
+        }catch(Exception $e){
+            $nextremission = 0;
+        }
+        return $nextremission;
+    }
+    
+    private function crossRemStock($idremission){
+        try{
+            $model = new Model_RemissionStock();
+            foreach($this->idstocks as $idproduct => $stocks){
+                foreach($stocks as $idstock){
+                    $model->insert(array(
+                        'idremission' => $idremission,
+                        'idproduct' => $idproduct,
+                        'idstock' => $idstock
+                    ));
+                }                
+            }
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+        }
+        return $success;
+    }
 }
 
 

@@ -253,6 +253,10 @@
               <actionMethod actionName="gettotalitem"/>
               <actionMethod actionName="addremission"/>
             </controllerFile>
+            <controllerFile controllerName="Transactions">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="addtransaction"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -294,6 +298,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Remissions">
                 <viewScriptFile forActionName="addremission"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transactions">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Transactions">
+                <viewScriptFile forActionName="addtransaction"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
