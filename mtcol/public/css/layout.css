@@ -60,6 +60,9 @@
 .car {
     background-image:url(/images/icons/car.png) !important;
 }
+.in {
+    background-image:url(/images/icons/page_go.png) !important;
+}
 .align-right {
     text-align: right;    
 }

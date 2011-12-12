@@ -32,5 +32,20 @@ Ext.define('Mtc.view.remission.GridDetail', {
                 return x;
             }
         }
+    ],
+    bbar: [
+        {
+            text: 'Eliminar Item',
+            iconCls: 'delete',     
+            id: 'RemDetailDelButton',
+            handler: function(){                
+                var grid = Ext.getCmp('GridDetail');
+                var rows = grid.getSelectionModel().getSelection();
+                if(rows.length > 0){
+                    var record = rows[0];
+                    grid.getStore().remove(record);
+                }                
+            }
+        }
     ]
 });

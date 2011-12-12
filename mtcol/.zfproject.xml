@@ -252,6 +252,7 @@
               <actionMethod actionName="putitem"/>
               <actionMethod actionName="gettotalitem"/>
               <actionMethod actionName="addremission"/>
+              <actionMethod actionName="getdetail"/>
             </controllerFile>
             <controllerFile controllerName="Transactions">
               <actionMethod actionName="index"/>
@@ -305,6 +306,9 @@
               <viewControllerScriptsDirectory forControllerName="Transactions">
                 <viewScriptFile forActionName="addtransaction"/>
               </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="getdetail"/>
+              </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
             <viewFiltersDirectory/>
@@ -338,6 +342,31 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Users">
                 <viewScriptFile forActionName="uniqueusername"/>
+              </viewControllerScriptsDirectory>
+            </viewScriptsDirectory>
+            <viewHelpersDirectory/>
+            <viewFiltersDirectory/>
+          </viewsDirectory>
+        </moduleDirectory>
+        <moduleDirectory moduleName="report">
+          <apisDirectory enabled="false"/>
+          <configsDirectory enabled="false"/>
+          <controllersDirectory>
+            <controllerFile controllerName="Generals">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="stockdistribution"/>
+            </controllerFile>
+          </controllersDirectory>
+          <formsDirectory enabled="false"/>
+          <layoutsDirectory enabled="false"/>
+          <modelsDirectory/>
+          <viewsDirectory>
+            <viewScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Generals">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Generals">
+                <viewScriptFile forActionName="stockdistribution"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

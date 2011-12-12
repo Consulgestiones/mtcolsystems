@@ -1,5 +1,6 @@
 Ext.define('Mtc.view.remission.RemissionView', {
     extend: 'Ext.panel.Panel',
+    frame: true,
     requires: ['Mtc.view.remission.FormHeader', 'Mtc.view.remission.GridDetail'],
     items: [
         {

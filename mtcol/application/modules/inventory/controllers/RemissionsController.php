@@ -2,10 +2,15 @@
 
 class Inventory_RemissionsController extends Zend_Controller_Action
 {
-    private $db;
-    private $idstocks;
-    private $user;
-    private $session;
+
+    private $db = null;
+
+    private $idstocks = null;
+
+    private $user = null;
+
+    private $session = null;
+
     public function init()
     {
         $this->session = new Zend_Session_Namespace('Default');
@@ -135,7 +140,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
     }
 
     public function addremissionAction()
-    {                
+    {
         $headerData = json_decode(stripslashes($this->getRequest()->getParam('remHeader')), true);
         $detailData = json_decode(stripslashes($this->getRequest()->getParam('remDetail')), true);        
         
@@ -225,7 +230,9 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
         
     }
-    private function processRemProduct($idproduct, $quantity){
+
+    private function processRemProduct($idproduct, $quantity)
+    {
         
         $msg = 1;
         try{
@@ -287,7 +294,9 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         }
 //        return $idstocks;
     }
-    private function getProductStock($idproduct, $status = 'OCP'){
+
+    private function getProductStock($idproduct, $status = 'OCP')
+    {
         $sql = sprintf("SELECT s.idstock, s.codstatus, s.idproduct, s.quantity, s.unitprice, s.totalprice, s.unitpricetax
                         FROM stock s
                         WHERE s.idproduct = %d AND s.codstatus = '%s'
@@ -296,7 +305,9 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $prodStock = $stmt->fetchAll();
         return $prodStock;
     }
-    private function getNextRemission(){
+
+    private function getNextRemission()
+    {
         try{
             $sql = "SELECT IFNULL(MAX(r.remissionnumber), 0) + 1 AS nextremission
                     FROM remission_header r";
@@ -308,8 +319,9 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         }
         return $nextremission;
     }
-    
-    private function crossRemStock($idremission){
+
+    private function crossRemStock($idremission)
+    {
         try{
             $model = new Model_RemissionStock();
             foreach($this->idstocks as $idproduct => $stocks){
@@ -327,7 +339,33 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         }
         return $success;
     }
+
+    public function getdetailAction()
+    {
+        $idremission = $this->getRequest()->getParam('idremission');
+        $model = new Model_RemissionDetail();
+        $detail = $model->getDetail($idremission);
+        if($detail != null){
+            $msg = 1;
+            $data = $detail;
+            $success = true;
+        }else{
+            $success = false;
+            $data = array();
+            $msg = 'Error al consultar el detalle de la remisión';
+        }
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
+
 }
+
+
 
 
 
