@@ -48,9 +48,15 @@ Ext.define('Mtc.view.remission.GridHeaders', {
                                 {
                                     text: 'Volver',
                                     iconCls: 'back',
-                                    handler: function(){                                        
-                                        Ext.getCmp('RemissionPanel').removeAll(true);                                        
-                                        Ext.getCmp('RemissionPanel').add(Mtc.header);
+                                    handler: function(){           
+                                        var remPanel = Ext.getCmp('RemissionPanel');
+                                        remPanel.removeAll(true);                                        
+//                                        Ext.apply(remPanel, {
+//                                            items: [
+//                                                Mtc.header
+//                                            ]
+//                                        });
+                                        remPanel.add(Mtc.header);
                                     }
                                 }
                             ],
@@ -59,7 +65,7 @@ Ext.define('Mtc.view.remission.GridHeaders', {
                             ]
                         });
                         
-                        Ext.getCmp('RemissionPanel').removeAll(true);
+                        Ext.getCmp('RemissionPanel').removeAll();
                         Ext.getCmp('RemissionPanel').add(viewPanel);
                     });                    
                 }

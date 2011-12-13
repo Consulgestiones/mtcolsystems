@@ -33,6 +33,9 @@ Mtc.RemissionController = {
         header.loadRecord(rem);        
         Ext.getCmp('RemDetailDelButton').hide();
         Ext.getCmp('RemissionPanel').removeAll();
+        Ext.getCmp('grdRemissionHeader').apply(this, {
+            flex: 0.5
+        });
         Ext.getCmp('RemissionPanel').add(remView);
     }
 }

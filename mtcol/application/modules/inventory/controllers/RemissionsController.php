@@ -38,7 +38,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
             $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS r.idremission, r.remissionnumber, r.title, r.dremission, r.dcreate, r.status, 
                             r.drivername, r.drivernumid, r.vehicleplate, u.iduser, u.username, t.idtranspcompany,
                             t.transpcompany
-                            FROM remission_header r, USER u, transp_company t
+                            FROM remission_header r, user u, transp_company t
                             WHERE u.iduser = r.iduser AND t.idtranspcompany = r.idtranspcompany
                             ORDER BY r.dremission DESC
                             LIMIT %d, %d", $start, $limit);
