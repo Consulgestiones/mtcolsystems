@@ -22,16 +22,22 @@ Ext.define('Mtc.view.remission.GridHeaders', {
         {
             text: 'Ver',
             iconCls: 'in',
-            handler: function(){
-                Mtc.header = Ext.getCmp('grdRemissionHeader');
+            handler: function(){                
                 var grid = Ext.getCmp('grdRemissionHeader');
+                grid.hide();
                 var rows = grid.getSelectionModel().getSelection();
                 if(rows.length > 0){
                     var record = rows[0];
-                    Ext.require('Mtc.view.remission.RemissionView', function(){
+                    Ext.require('Mtc.view.remission.RemissionView', function(grid){
                         var view = Ext.create('Mtc.view.remission.RemissionView');
                         var header = view.getHeaderForm();
                         header.loadRecord(record);
+                        
+                        //Setear combo de compañia de transporte
+                        var cbo = Ext.getCmp('cbotranspcompany');
+                        cbo.setValue(record.get('idtranspcompany'));
+                        
+                        
                         header.items.each(function(f){
                             f.readOnly = true;
                         });
@@ -50,13 +56,8 @@ Ext.define('Mtc.view.remission.GridHeaders', {
                                     iconCls: 'back',
                                     handler: function(){           
                                         var remPanel = Ext.getCmp('RemissionPanel');
-                                        remPanel.removeAll(true);                                        
-//                                        Ext.apply(remPanel, {
-//                                            items: [
-//                                                Mtc.header
-//                                            ]
-//                                        });
-                                        remPanel.add(Mtc.header);
+                                        remPanel.remove(this.up('panel'));
+                                        Ext.getCmp('grdRemissionHeader').show();
                                     }
                                 }
                             ],
@@ -65,7 +66,7 @@ Ext.define('Mtc.view.remission.GridHeaders', {
                             ]
                         });
                         
-                        Ext.getCmp('RemissionPanel').removeAll();
+                        Ext.getCmp('RemissionPanel').remove(grid);
                         Ext.getCmp('RemissionPanel').add(viewPanel);
                     });                    
                 }
