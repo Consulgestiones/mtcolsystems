@@ -104,5 +104,8 @@ Ext.define('Mtc.view.remission.GridHeaders', {
         }
     ],
     stripeRows: true,
-    height: AppConfig.gridHeight
+    height: AppConfig.gridHeight,
+    construct: function(conf){
+        
+    }
 });
