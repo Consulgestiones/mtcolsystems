@@ -63,6 +63,9 @@
 .in {
     background-image:url(/images/icons/page_go.png) !important;
 }
+.deposit {
+    background-image:url(/images/icons/basket_put.png) !important;
+}
 .align-right {
     text-align: right;    
 }

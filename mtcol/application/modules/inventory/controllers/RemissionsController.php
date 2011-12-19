@@ -362,8 +362,51 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
+    public function getreceiveremheadersAction()
+    {
+        $model = new Inventory_Model_Remission();
+        $data = $model->getReceiveRemHeaders();
+        if($data != null){
+            $success = true;
+            $msg = 1;
+        }else{
+            $success = false;
+            $msg = 'Error al consultar las remisiones';
+        }
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
+    public function getreceivedetailAction()
+    {
+        $idremission = $this->getRequest()->getParam('idremission');
+        $model = new Inventory_Model_Remission();
+        $data = $model->getReceiveDetail($idremission);
+        if($data){
+            $success = true;
+            $msg = 1;            
+        }else{
+            $success = false;
+            $msg = 'Error al consultar el detalle de la remisión';
+        }
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
+
+
 
 
 

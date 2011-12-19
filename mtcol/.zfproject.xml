@@ -11,6 +11,7 @@
         <controllerFile controllerName="Index">
           <actionMethod actionName="index"/>
           <actionMethod actionName="login"/>
+          <actionMethod actionName="getreceiveremheaders"/>
         </controllerFile>
         <controllerFile controllerName="Error"/>
         <controllerFile controllerName="Applications">
@@ -253,6 +254,8 @@
               <actionMethod actionName="gettotalitem"/>
               <actionMethod actionName="addremission"/>
               <actionMethod actionName="getdetail"/>
+              <actionMethod actionName="getreceiveremheaders"/>
+              <actionMethod actionName="getreceivedeteail"/>
             </controllerFile>
             <controllerFile controllerName="Transactions">
               <actionMethod actionName="index"/>
@@ -308,6 +311,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Remissions">
                 <viewScriptFile forActionName="getdetail"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="getreceiveremheaders"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="getreceivedeteail"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
@@ -411,6 +420,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Cities">
             <viewScriptFile forActionName="read"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="getreceiveremheaders"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

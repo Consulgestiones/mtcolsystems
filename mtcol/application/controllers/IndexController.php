@@ -2,13 +2,16 @@
 
 class IndexController extends Zend_Controller_Action
 {
+
     /**
      * Accesando a nuestras variables de sesion
      * @var Zend_Session_Namespace 
+     *
      */
-    protected $session;
-    
-    public function preDispatch() {
+    protected $session = null;
+
+    public function preDispatch()
+    {
         $this->session = new Zend_Session_Namespace('Default');
     }
 
@@ -127,6 +130,8 @@ class IndexController extends Zend_Controller_Action
 
 
 }
+
+
 
 
 
