@@ -45,6 +45,10 @@ Ext.define('Mtc.view.remission.ReceiveFormHeader', {
         {
             fieldLabel: 'Creador por',
             name: 'user'
-        }        
+        },
+        {
+            xtype: 'hidden',
+            name: 'idremission'
+        }
     ]
 });

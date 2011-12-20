@@ -401,8 +401,62 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
+    public function receiveAction()
+    {
+        $idremission = $this->getRequest()->getParam('idremission');
+        $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
+        
+        
+        
+    }
+    /**
+     * Función que procesa cada uno de los registros del detalle para
+     * ingresar o rechazar el stock
+     * @param Object $record objeto con los valores necesarios para organizar el stock
+     */
+    private function receiveItem($record){
+        $msg = 1;
+        try{
+            
+            $model = new Inventory_Model_Stock();
+            if(strtoupper($record->complete) == 'SI'){
+
+                $udpate = $model->receiveStock($record->idstock, $record->quantity);
+                if(!$update)
+                    throw new Exception('Error al actualizar el stock');
+
+            }else{
+
+                $dif = ((float)$record->quantity) - ((float)$record->quantityreceive);
+                if($dif > 0){
+
+                    $qreceive = ((float)$record->quantity) - $dif;
+
+                    $update = $model->receiveStock($record->idstock, $qreceive);
+                    if(!$update)
+                        throw new Exception('Error al actualizar el stock');
+
+                    $idstock = $model->rejectStock($record->idstock, $dif);
+
+
+                }else{
+                    $update = $model->receiveStock($record->idstock, $record->quantity, 'INC');
+                    if(!$update)
+                        throw new Exception('Error al actualizar el stock');
+                }
+
+            }
+            $success = true;
+        }catch(Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+        }
+    }
+
 
 }
+
+
 
 
 

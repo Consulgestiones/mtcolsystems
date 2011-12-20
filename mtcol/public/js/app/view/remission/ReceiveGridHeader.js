@@ -88,6 +88,71 @@ Ext.define('Mtc.view.remission.ReceiveGridHeader', {
                     items: [
                         formHeader,
                         detail
+                    ],
+                    buttons: [
+                        {
+                            text: 'Cancelar',
+                            iconCls: 'btn-cancel',
+                            handler: function(){
+                                this.up('window').close();
+                            }
+                        },
+                        {
+                            text: 'Recibir',
+                            iconCls: 'btn-save',
+                            handler: function(){
+                                
+                                var grid = Ext.getCmp('ReceiveGridDetail');
+                                var store = grid.getStore();
+                                var detailData = new Array();
+                                var row;
+                                store.each(function(record){
+                                    row = new Object();
+                                    if(record.get('complete') == ''){
+                                        Ext.Msg.show({
+                                            title: 'Incompleto',
+                                            msg: 'Debe confirmata todos y cada uno de los items',
+                                            icon: Ext.Msg.ERROR,
+                                            buttons: Ext.Msg.OK
+                                        });
+                                        return;
+                                    }else{
+                                        record.fields.each(function(field){
+                                            row[field.name] = record.get(field.name);
+                                        });
+                                        detailData.push(row);
+                                    }
+                                });
+                                
+                                var header = Ext.getCmp('ReceiveFormHeader');
+                                var form = header.getForm();
+                                var headerData = form.getValues();
+                                var idremission = headerData.idremission;
+                                                                                               
+                                Ext.Ajax.request({
+                                    method: 'POST',
+                                    url: '/inventory/remissions/receive',
+                                    params: {
+                                        idremission: idremission,
+                                        detail: Ext.encode(detailData)
+                                    },
+                                    callback: function(response){
+                                        var obj = Ext.decode(response.responseText);
+                                        if(obj.success){
+                                            
+                                        }else{
+                                            Ext.Msg.show({
+                                                title: 'Error!!!',
+                                                msg: obj.msg,
+                                                icon: Ext.Msg.ERROR,
+                                                buttons: Ext.Msg.OK
+                                            });
+                                        }
+                                    }
+                                });
+                                
+                            }
+                        }
                     ]
                 }).show();
             }

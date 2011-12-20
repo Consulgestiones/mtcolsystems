@@ -256,6 +256,7 @@
               <actionMethod actionName="getdetail"/>
               <actionMethod actionName="getreceiveremheaders"/>
               <actionMethod actionName="getreceivedeteail"/>
+              <actionMethod actionName="receive"/>
             </controllerFile>
             <controllerFile controllerName="Transactions">
               <actionMethod actionName="index"/>
@@ -317,6 +318,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Remissions">
                 <viewScriptFile forActionName="getreceivedeteail"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Remissions">
+                <viewScriptFile forActionName="receive"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
