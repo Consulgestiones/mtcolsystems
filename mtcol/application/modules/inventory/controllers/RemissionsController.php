@@ -16,7 +16,6 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $this->session = new Zend_Session_Namespace('Default');
         $this->db = Zend_Registry::get('db');
         $this->user = $this->session->user;
-                
     }
 
     public function indexAction()
@@ -406,6 +405,21 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $idremission = $this->getRequest()->getParam('idremission');
         $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
         
+        try{
+            
+            
+            
+            //Registrar movimiento
+            $tx = array(
+                'iduser' => $this->user['iduser'],
+                'codtype' => 'REC',
+                'dtransaction' => Functions::getCurrentTime(),
+                'totalpricetax' => $totalpricetax
+            );
+            
+        }catch(Exception $e){
+            
+        }
         
         
     }
