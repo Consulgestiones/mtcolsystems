@@ -34,13 +34,14 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         
         try{
             
-            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS r.idremission, r.remissionnumber, r.title, r.dremission, r.dcreate, r.status, 
+            $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS r.idremission, r.remissionnumber, r.title, r.dremission, r.dcreate, r.codstatus, 
                             r.drivername, r.drivernumid, r.vehicleplate, u.iduser, u.username, t.idtranspcompany,
                             t.transpcompany
                             FROM remission_header r, user u, transp_company t
                             WHERE u.iduser = r.iduser AND t.idtranspcompany = r.idtranspcompany
                             ORDER BY r.dremission DESC
-                            LIMIT %d, %d", $start, $limit);
+                            LIMIT %d, %d", $start, $limit);           
+            
             
             $db = Zend_Registry::get('db');
             $stmt = $db->query($sql);
@@ -169,7 +170,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
                 throw new Exception('Error al generar la nueva remisión');
             
             $remHeader['remissionnumber'] = $remNumber;
-            $remHeader['status'] = 'REM'; // Estado de la remision REM = REMITIDA
+            $remHeader['codstatus'] = 'REM'; // Estado de la remision REM = REMITIDA
             $remHeader['title'] = (!empty($remHeader['title']))?$remHeader['title']:'Remisión '.$remNumber;
             $remHeader['iduser'] = $this->user['iduser'];
             $remHeader['dcreate'] = Functions::getCurrentTime();
@@ -385,7 +386,7 @@ class Inventory_RemissionsController extends Zend_Controller_Action
         $idremission = $this->getRequest()->getParam('idremission');
         $model = new Inventory_Model_Remission();
         $data = $model->getReceiveDetail($idremission);
-        if($data){
+        if(is_array($data)){
             $success = true;
             $msg = 1;            
         }else{
@@ -404,24 +405,50 @@ class Inventory_RemissionsController extends Zend_Controller_Action
     {
         $idremission = $this->getRequest()->getParam('idremission');
         $detail = json_decode(stripslashes($this->getRequest()->getParam('detail')));
-        
+        $msg = 1;
         try{
             
-            
+            $mtx = new Inventory_Model_Transaction();
+            $db = $mtx->getDefaultAdapter();
+            $db->beginTransaction();
+                        
+            $totalpricetax = Functions::arraySum($detail, 'itemvalue');
             
             //Registrar movimiento
             $tx = array(
                 'iduser' => $this->user['iduser'],
                 'codtype' => 'REC',
+                'totalprice' => 0,
                 'dtransaction' => Functions::getCurrentTime(),
                 'totalpricetax' => $totalpricetax
             );
+            $mtx->insert($tx);
             
+            //Procesar detalle
+            foreach($detail as $record){
+                $this->receiveItem($record);
+            }
+            
+            //Cambiar estado de la remisión a recibida
+            $data = array(
+                'codstatus' => 'REC'
+            );
+            $mremission = new Inventory_Model_Remission();
+            $mremission->update($data, 'idremission = '.$idremission);
+            
+            //confirmar transacción
+            $db->commit();
+            $success = true;
         }catch(Exception $e){
-            
+            $db->rollBack();
+            $success = false;
+            $msg = $e->getMessage();
         }
-        
-        
+        $response = array(
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
     }
     /**
      * Función que procesa cada uno de los registros del detalle para

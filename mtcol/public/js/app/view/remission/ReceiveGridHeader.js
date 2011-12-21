@@ -106,16 +106,17 @@ Ext.define('Mtc.view.remission.ReceiveGridHeader', {
                                 var store = grid.getStore();
                                 var detailData = new Array();
                                 var row;
+                                var confirmed = true;
                                 store.each(function(record){
                                     row = new Object();
                                     if(record.get('complete') == ''){
                                         Ext.Msg.show({
                                             title: 'Incompleto',
-                                            msg: 'Debe confirmata todos y cada uno de los items',
+                                            msg: 'Debe confirmar todos y cada uno de los items',
                                             icon: Ext.Msg.ERROR,
                                             buttons: Ext.Msg.OK
                                         });
-                                        return;
+                                        confirmed = false;
                                     }else{
                                         record.fields.each(function(field){
                                             row[field.name] = record.get(field.name);
@@ -123,6 +124,9 @@ Ext.define('Mtc.view.remission.ReceiveGridHeader', {
                                         detailData.push(row);
                                     }
                                 });
+                                
+                                if(!confirmed)
+                                    return;
                                 
                                 var header = Ext.getCmp('ReceiveFormHeader');
                                 var form = header.getForm();
@@ -136,10 +140,11 @@ Ext.define('Mtc.view.remission.ReceiveGridHeader', {
                                         idremission: idremission,
                                         detail: Ext.encode(detailData)
                                     },
-                                    callback: function(response){
+                                    success: function(response){
                                         var obj = Ext.decode(response.responseText);
                                         if(obj.success){
-                                            
+                                            setNotification('Confirmación', 'El proceso se llevó a cabo satisfactoriamente');
+                                            win.close();
                                         }else{
                                             Ext.Msg.show({
                                                 title: 'Error!!!',

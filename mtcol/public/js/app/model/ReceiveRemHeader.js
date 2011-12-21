@@ -10,7 +10,7 @@ Ext.define('Mtc.model.ReceiveRemHeader', {
         {name: 'title', type: 'string'},
         {name: 'dremission', type: 'string'},
         {name: 'dcreate', type: 'string'},
-        {name: 'status', type: 'string'},
+        {name: 'codstatus', type: 'string'},
         {name: 'drivername', type: 'string'},
         {name: 'vehicleplate', type: 'string'}
     ]

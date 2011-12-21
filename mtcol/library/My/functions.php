@@ -27,5 +27,16 @@ class Functions {
         }
         return $success;
     }
+    public static function arraySum($arr, $key){        
+        if(is_array($arr) || is_object($arr)){
+            $sum = 0;
+            for($i = 0; $i < count($arr); $i++){
+                $sum += (is_array($arr[$i]))?$arr[$i][$key]:$arr[$i]->$key;
+            }        
+        }else{
+            $sum = null;
+        }
+        return $sum;
+    }    
 }
 ?>
