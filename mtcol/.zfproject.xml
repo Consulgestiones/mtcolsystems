@@ -88,6 +88,7 @@
               <actionMethod actionName="getasigned"/>
               <actionMethod actionName="asignproduct"/>
               <actionMethod actionName="unasignproduct"/>
+              <actionMethod actionName="getregimens"/>
             </controllerFile>
             <controllerFile controllerName="Products">
               <actionMethod actionName="index"/>
@@ -226,6 +227,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Transpcompanies">
                 <viewScriptFile forActionName="activeinactive"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Providers">
+                <viewScriptFile forActionName="getregimens"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

@@ -20,9 +20,11 @@ class Admin_ProvidersController extends Zend_Controller_Action
         
         $db = Zend_Registry::get('db');
 
-        $select = "SELECT SQL_CALC_FOUND_ROWS p.idprovider, p.provider, p.providernumid, p.providerphone, p.provideremail, p.provideraddress, p.contact, p.contacttitle, p.contactphonehome, p.contactphonework, p.contactphonemobile, p.contactphoneworkext, c.idcity, c.city, ct.idcountry, ct.country, t.idtypeid, t.typeid
-                    FROM provider p, city c, country ct, typeid t
-                    WHERE c.idcity = p.idcity AND c.idcountry = p.idcountry AND ct.idcountry = c.idcountry AND t.idtypeid = p.idtypeid";
+        $select = "SELECT SQL_CALC_FOUND_ROWS p.idprovider, p.provider, p.providernumid, p.providerphone, p.provideremail, p.provideraddress, p.contact, p.contacttitle, p.contactphonehome, p.contactphonework, p.contactphonemobile, p.contactphoneworkext, c.idcity, c.city, ct.idcountry, ct.country, t.idtypeid, t.typeid,
+                    rp.idregimenprovider, rp.regimenprovider
+                    FROM provider p, city c, country ct, typeid t, regimen_provider rp
+                    WHERE c.idcity = p.idcity AND c.idcountry = p.idcountry AND ct.idcountry = c.idcountry AND t.idtypeid = p.idtypeid
+                    AND rp.idregimenprovider = p.idregimenprovider";
         
         $providers = array();
         
@@ -57,6 +59,8 @@ class Admin_ProvidersController extends Zend_Controller_Action
         $model = new Model_Provider();
         $msg = '';
         try{
+//            print_r($data);
+//            die();
             if($form->isValid($data)){
                 if($data['idprovider'] == 0){//Crear
                     $data['idprovider'] = null;
@@ -84,7 +88,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
                 $db = Zend_Registry::get('db');
                 $select = $db->select()
                         ->from(array('c' => 'city'), array('c.city'))
-                        ->join(array('p' => 'country'), 'p.idcountry = c.idcountry', array('country'))
+                        ->join(array('p' => 'country'), 'p.idcountry = c.idcountry', array('country'))                        
                         ->where('c.idcity = ?', $data['idcity'])
                         ->where('c.idcountry = ?', $data['idcountry']);
                 $stmt = $db->query($select);
@@ -257,8 +261,30 @@ class Admin_ProvidersController extends Zend_Controller_Action
         $this->_helper->json->sendJson($data);
     }
 
+    public function getregimensAction()
+    {
+        $model = new Model_RegimenProvider();
+        $data = array();
+        $msg = 1;
+        try{
+            $data = $model->fetchAll()->toArray();                    
+            $success = true;
+        }catch(Exception $e){
+            $msg = $e->getMessage();
+            $success = false;
+        }
+        $response = array(
+            'data' => $data,
+            'success' => $success,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
 
 

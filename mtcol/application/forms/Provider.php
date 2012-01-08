@@ -13,6 +13,10 @@ class Form_Provider extends Zend_Form {
             'required' => true,
             'validators' => array('Digits')
         ));
+        $this->addElement('hidden', 'idregimenprovider', array(
+            'required' => true,
+            'validators' => array('Digits')
+        ));
         $this->addElement('hidden', 'idcountry', array(
             'required' => true,
             'validators' => array('Digits')

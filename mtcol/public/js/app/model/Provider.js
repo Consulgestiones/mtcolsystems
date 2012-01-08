@@ -20,5 +20,7 @@ Ext.define('Mtc.model.Provider', {
         {name: 'contactphonework', type: 'string'},
         {name: 'contactphonemobile', type: 'string'},
         {name: 'contactphoneworkext', type: 'string'},
+        {name: 'idregimenprovider', type: 'int'},
+        {name: 'regimenprovider', type: 'string'}
     ]
 });

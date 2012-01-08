@@ -1,5 +1,7 @@
 Application({
-    models: ['TypeId', 'Provider']
+    models: ['TypeId', 'Provider', 'RegimenProvider'],
+    stores: ['RegimenProvider'],
+    views: ['application.RegimenProviderCombo']
 }, function(){
 
     providerProxy = new Ext.data.proxy.Ajax({
@@ -79,6 +81,10 @@ Application({
                 width: 60
             },
             {
+                header: 'Regimen',
+                dataIndex: 'regimenprovider'
+            },
+            {
                 header: 'Ciudad', 
                 dataIndex: 'city',
                 width: 80
@@ -144,6 +150,7 @@ Application({
     providerForm = Ext.create('Ext.form.Panel', {
         id: 'providerForm',
         defaultType: 'fieldset',
+        requires: ['Mtc.view.application.RegimenProviderCombo'],
         url: '/admin/providers/save',
         frame: true,
         items: [
@@ -202,6 +209,10 @@ Application({
                     {
                         xtype: 'city',
                         disabled: true
+                    },
+                    {
+                        xtype: 'regimenprovider',
+                        name: 'idregimenprovider'
                     }
                 ]
             },
