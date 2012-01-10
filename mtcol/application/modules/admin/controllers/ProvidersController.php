@@ -91,6 +91,7 @@ class Admin_ProvidersController extends Zend_Controller_Action
                         ->join(array('p' => 'country'), 'p.idcountry = c.idcountry', array('country'))                        
                         ->where('c.idcity = ?', $data['idcity'])
                         ->where('c.idcountry = ?', $data['idcountry']);
+                
                 $stmt = $db->query($select);
                 $info = $stmt->fetch();
                 $data['country'] = $info['country'];

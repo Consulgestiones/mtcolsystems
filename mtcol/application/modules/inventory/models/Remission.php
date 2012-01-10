@@ -7,7 +7,7 @@ class Inventory_Model_Remission extends Zend_Db_Table_Abstract {
         
         try{
             $db = $this->getDefaultAdapter();
-        
+            $data = array();
             $sql = "SELECT r.idremission, u.iduser, CONCAT(u.firstname, ' ', u.lastname) AS 'user', t.idtranspcompany, t.transpcompany, 
                     r.idremission, r.remissionnumber, r.title, date_format(r.dcreate, '%d/%m/%Y') as dcreate, date_format(r.dremission, '%d/%m/%Y') as dremission, r.codstatus, r.drivername,
                     r.drivernumid, r.vehicleplate

@@ -364,9 +364,11 @@ class Inventory_RemissionsController extends Zend_Controller_Action
 
     public function getreceiveremheadersAction()
     {
-        $model = new Inventory_Model_Remission();
+//        $model = new Inventory_Model_Remission();
+        $model = new Model_RemissionHeader();
         $data = $model->getReceiveRemHeaders();
-        if($data != null){
+        
+        if(is_array($data)){
             $success = true;
             $msg = 1;
         }else{

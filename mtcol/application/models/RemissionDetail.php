@@ -18,5 +18,6 @@ class Model_RemissionDetail extends Zend_Db_Table_Abstract {
         }            
         return $data;
     }
+    
 }
 ?>
