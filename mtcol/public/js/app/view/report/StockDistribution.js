@@ -47,3 +47,6 @@ Ext.define('Mtc.view.report.StockDistribution', {
         }        
     ]
 });
+/**
+ * para borrar
+ */
