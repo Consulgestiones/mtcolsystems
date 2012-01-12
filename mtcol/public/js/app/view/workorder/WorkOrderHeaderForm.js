@@ -6,19 +6,23 @@ Ext.define('Mtc.view.workorder.WorkOrderHeaderForm', {
     defaultType: 'textfield',
     items: [
         {
-            fieldLabel: '',
+            fieldLabel: 'Titulo',
             name: 'title'
         },
         {
             xtype: 'minecombo',
+            fieldLabel: 'Clavada',
             name: 'idmine'
         },
         {
             xtype: 'sectioncombo',
+            fieldLabel: 'Sección',
             name: 'idsection'
         },
         {
-            
+            xtype: 'datefield',
+            fieldLabel: 'Fecha',
+            name: 'dworkorder'
         }
     ]
 });
