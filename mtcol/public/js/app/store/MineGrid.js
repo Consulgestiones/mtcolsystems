@@ -11,4 +11,4 @@ Ext.define('Mtc.store,MineGrid',{
             root: 'data'
         }
     }
-})
+});
