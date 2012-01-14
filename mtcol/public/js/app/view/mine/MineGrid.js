@@ -2,7 +2,7 @@ Ext.define('Mtc.view.mine.MineGrid',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.minegrid',
     title: 'Minas',
-   // queyMode: 'local',
+    queyMode: 'local',
     store: Ext.create('Mtc.store.MineGrid',{
         autoload: true
     }),
