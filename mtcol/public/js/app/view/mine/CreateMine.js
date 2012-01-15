@@ -1,0 +1,36 @@
+Ext.define('Mtc.view.mine.CreateMine',{
+    extend: 'Ext.form.Panel',
+    defaultType: 'textfield',
+    layout: {
+        type: 'table',
+        columns: 2
+    },
+    frame: true,
+    itemCls: 'left-space',
+    bodyStyle: 'padding: 10px;',
+    items:[
+        {
+            fieldLabel: 'Nombre Mina',
+            name: 'mine',
+            allowBlank: false        
+        },
+        {
+            fieldLabel: 'Descripción',
+            name: 'description',
+            allowBlank: false        
+        },
+    ],
+    buttons: [
+        {
+            text: 'Cancelar',
+            iconCls: 'btn-cancel'
+        },
+        {
+            text: 'Guardar',
+            iconCls: 'btn-save'
+        }
+           
+    ]
+    
+});
+

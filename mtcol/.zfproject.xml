@@ -33,6 +33,10 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="read"/>
         </controllerFile>
+        <controllerFile controllerName="Mine">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="getmine"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
@@ -441,6 +445,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Index">
             <viewScriptFile forActionName="getreceiveremheaders"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Mine">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Mine">
+            <viewScriptFile forActionName="getmine"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
