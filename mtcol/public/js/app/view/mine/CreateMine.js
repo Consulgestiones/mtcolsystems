@@ -3,7 +3,7 @@ Ext.define('Mtc.view.mine.CreateMine',{
     defaultType: 'textfield',
     layout: {
         type: 'table',
-        columns: 2
+        columns: 1
     },
     frame: true,
     itemCls: 'left-space',
@@ -15,6 +15,7 @@ Ext.define('Mtc.view.mine.CreateMine',{
             allowBlank: false        
         },
         {
+            xtype: 'textarea',
             fieldLabel: 'Descripción',
             name: 'description',
             allowBlank: false        
@@ -37,4 +38,3 @@ Ext.define('Mtc.view.mine.CreateMine',{
     ]
     
 });
-

@@ -6,7 +6,7 @@ class Model_MineDetail extends Zend_Db_Table_Abstract
         $data= array();
         $limit = ($limit != 0)?'LIMIT '.$start.', '.$limit:'';
         
-        $sql = sprintf("SELECT * FROM MINE",$limit);
+        $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS * FROM MINE %s",$limit);
         
         $db = $this->getDefaultAdapter();
         $stmt = $db->query($sql);

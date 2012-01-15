@@ -17,12 +17,18 @@ Ext.define('Mtc.view.workorder.WorkOrderHeaderForm', {
         {
             xtype: 'sectioncombo',
             fieldLabel: 'Sección',
-            name: 'idsection'
+            name: 'idsection',
+            disabled: true
         },
         {
             xtype: 'datefield',
             fieldLabel: 'Fecha',
             name: 'dworkorder'
+        },
+        {
+            xtype: 'textarea',
+            fieldLabel: 'Descripción',
+            name: 'description'
         }
     ]
 });

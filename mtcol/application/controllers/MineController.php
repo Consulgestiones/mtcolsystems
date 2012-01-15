@@ -19,8 +19,8 @@ class MineController extends Zend_Controller_Action
       $limit = $this->getRequest()->getParam('limit');
         
       $model = new Model_MineDetail();
-      $data = $model->getMine($start, $limit);
-      
+      $data = $model->getMine($start, $limit);     
+            
       if(is_array($data['data'])){
             $msg = 1;
             $success = true;
