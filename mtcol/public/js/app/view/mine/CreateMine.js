@@ -23,7 +23,11 @@ Ext.define('Mtc.view.mine.CreateMine',{
     buttons: [
         {
             text: 'Cancelar',
-            iconCls: 'btn-cancel'
+            iconCls: 'btn-cancel',
+            handler: function(){
+                var w = this.up('window');
+                w.hide();
+            }
         },
         {
             text: 'Guardar',
