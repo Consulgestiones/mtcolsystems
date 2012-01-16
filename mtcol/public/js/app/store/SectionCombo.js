@@ -4,7 +4,7 @@ Ext.define('Mtc.store.SectionCombo', {
     proxy: {
         type: 'ajax',
         method: 'POST',
-        url: '/admin/mines/getsections',
+        url: '/default/mine/getsections',
         reader: {
             type: 'json',
             root: 'data'

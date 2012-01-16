@@ -4,7 +4,48 @@ Ext.define('Mtc.view.workorder.WorkOrdersGrid', {
         {
             text: 'Crear Orden de Trabajo',
             iconCls: 'add',
-            handler:  this.showAddForm
+            handler: function(){
+                
+                var header = Ext.create('Mtc.view.workorder.WorkOrderHeaderForm', {
+                    id: 'WorkOrderHeaderForm'
+                });
+                var detail = Ext.create('Mtc.view.workorder.WorkOrderDetailGrid', {
+                    id: 'WorkOrderDetailGrid',
+                    store: Ext.create('Mtc.store.WorkOrderDetailGrid', {
+                        storeId: 'WorkOrderDetailGridDS',
+                        autoLoad: false
+                    })
+                });
+                var w = Ext.create('Ext.window.Window', {
+                    id: 'WorkOrderAddWindow',
+                    modal: true,
+                    width: 600,
+                    height: 500,
+                    title: 'Orden de Trabajo',
+                    items: [
+//                        header,
+                        detail
+                    ],
+                    buttons: [
+                        {
+                            text: 'Cancelar',
+                            iconCls: 'btn-cancel',                
+                            handler: function(){
+                                this.up('window').close();
+                            }
+                        },
+                        {
+                            text: 'Crear',
+                            iconCls: 'btn-save',
+                            handler: function(){
+
+                            }
+                        }
+                    ]
+                });
+                w.show();
+                
+            }
         }
     ],
     columns: [
@@ -36,39 +77,3 @@ Ext.define('Mtc.view.workorder.WorkOrdersGrid', {
     stripeRows: true,
     height: AppConfig.gridHeight
 });
-
-this.showAddForm = function(){
-    var header = Ext.create('Mtc.view.workorder.WorkOrderHeaderForm', {
-        id: 'WorkOrderHeaderForm'
-    });
-    var detail = Ext.create('Mtc.view.workorder.WorkOrderDetailGrid', {
-        id: 'WorkOrderDetailGrid',
-        store: Ext.create('Mtc.store.WorkOrderDetailGrid', {
-            storeId: 'WorkOrderDetailGridDS',
-            autoLoad: false
-        })
-    });
-    var w = Ext.create('Ext.window.Window', {
-        id: 'WorkOrderAddWindow',
-        items: [
-            header,
-            detail
-        ],
-        buttons: [
-            {
-                text: 'Cancelar',
-                iconCls: 'btn-calcel',                
-                handler: function(){
-                    this.up('window').close();
-                }
-            },
-            {
-                text: 'Crear',
-                iconCls: 'btn-save',
-                handler: function(){
-                    
-                }
-            }
-        ]
-    });
-}

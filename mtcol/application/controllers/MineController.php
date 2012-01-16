@@ -39,8 +39,30 @@ class MineController extends Zend_Controller_Action
       
     }
 
+    public function getsectionsAction()
+    {
+        $model = new Model_Section();
+        $data = $model->fetchAll()->toArray();
+        $msg = 1;
+        if(is_array($data)){
+            $success = true;
+        }else{
+            $success = false;
+            $data = array();
+            $msg = 'Error al consultar las secciones';
+        }
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg
+        );
+        $this->_helper->json->sendJson($response);
+    }
+
 
 }
+
+
 
 
 

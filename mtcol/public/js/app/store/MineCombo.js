@@ -4,7 +4,8 @@ Ext.define('Mtc.store.MineCombo', {
     proxy: {
         type: 'ajax',
         method: 'POST',
-        url: '/admin/mines/getmines',
+//        url: '/admin/mines/getmines',
+        url: '/default/mine/getmine',
         reader: {
             type: 'json',
             root: 'data'
