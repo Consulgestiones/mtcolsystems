@@ -1,4 +1,4 @@
-Ext.define('Mtc.view.workorder.SectionCombo', {
+Ext.define('Mtc.view.section.SectionCombo', {
     extend: 'Ext.form.field.ComboBox',
     requires: ['Mtc.store.SectionCombo'],
     alias: 'widget.sectioncombo',
@@ -7,5 +7,6 @@ Ext.define('Mtc.view.workorder.SectionCombo', {
         autoLoad: true
     }),
     displayField: 'section',
-    valueField: 'idsection'
+    valueField: 'idsection',
+    emptyText: 'Seleccione'
 });

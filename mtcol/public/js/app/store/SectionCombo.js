@@ -1,6 +1,7 @@
 Ext.define('Mtc.store.SectionCombo', {
     extend: 'Ext.data.Store',
-    model: 'Ext.model.SectionCombo',
+    requires: ['Mtc.model.SectionCombo'],
+    model: 'Mtc.model.SectionCombo',
     proxy: {
         type: 'ajax',
         method: 'POST',

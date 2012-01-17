@@ -82,19 +82,19 @@ class MineController extends Zend_Controller_Action
                 $idmine = (!is_nan($mMineSave->update($data, "idmine = ".$post['idmine'])))?$post['idmine']:NULL;
                 $action = 'update';                
             }                                 
-    }catch (Exception $e){
-        $success = false;
-        $msg = $e->getMessage();
-        
-    }
+        }catch (Exception $e){
+            $success = false;
+            $msg = $e->getMessage();
+
+        }
     
-    $response = array(
-        'success' => $success,
-        'data' => $data,
-        'msg' => $msg,
-        'action' => $action
-        
-    );
+        $response = array(
+            'success' => $success,
+            'data' => $data,
+            'msg' => $msg,
+            'action' => $action
+
+        );
         
         $this->_helper->json->sendJson($response);
         

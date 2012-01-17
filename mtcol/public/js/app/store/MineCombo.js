@@ -1,6 +1,7 @@
 Ext.define('Mtc.store.MineCombo', {
     extend: 'Ext.data.Store',
-    model: 'Ext.model.MineCombo',
+    requires: ['Mtc.model.MineCombo'],
+    model: 'Mtc.model.MineCombo',
     proxy: {
         type: 'ajax',
         method: 'POST',

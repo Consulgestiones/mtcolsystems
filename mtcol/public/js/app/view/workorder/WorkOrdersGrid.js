@@ -9,6 +9,8 @@ Ext.define('Mtc.view.workorder.WorkOrdersGrid', {
                 var header = Ext.create('Mtc.view.workorder.WorkOrderHeaderForm', {
                     id: 'WorkOrderHeaderForm'
                 });
+//                var temp = Ext.create('Mtc.view.section.SectionCombo');
+                
                 var detail = Ext.create('Mtc.view.workorder.WorkOrderDetailGrid', {
                     id: 'WorkOrderDetailGrid',
                     store: Ext.create('Mtc.store.WorkOrderDetailGrid', {
@@ -23,7 +25,7 @@ Ext.define('Mtc.view.workorder.WorkOrdersGrid', {
                     height: 500,
                     title: 'Orden de Trabajo',
                     items: [
-//                        header,
+                        header,
                         detail
                     ],
                     buttons: [

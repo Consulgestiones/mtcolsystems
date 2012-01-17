@@ -1,12 +1,11 @@
 Ext.define('Mtc.view.workorder.WorkOrderHeaderForm', {
     extend: 'Ext.form.Panel',
-    requires: ['Mtc.view.mine.MineCombo', 'Mtc.view.section.SectionCombo'],
-//    defaults: {
-//        labelWidth: 100,
-//        anchor: '100%'
-//    },
-//    bodyStyle: 'padding: 5px;',
-//    frame: true,
+    requires: ['Mtc.view.mine.MineCombo', 'Mtc.view.section.SectionCombo'],    
+    defaults: {
+        labelWidth: 100,
+        anchor: '100%'
+    },    
+    frame: true,
     defaultType: 'textfield',
     layout: {
         type: 'table',
@@ -18,7 +17,9 @@ Ext.define('Mtc.view.workorder.WorkOrderHeaderForm', {
     items: [
         {
             fieldLabel: 'Titulo',
-            name: 'title'
+            name: 'title',
+            colspan: 2,
+            width: 500
         },
         {
             xtype: 'minecombo',
