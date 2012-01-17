@@ -61,7 +61,7 @@ class MineController extends Zend_Controller_Action
 
     public function savemineAction()
     {
-        $post = json_decode(stripcslashes($this->getRequest()->getParam('params')), true);
+        $post = json_decode(stripslashes($this->getRequest()->getParam('params')), true);
         $smine = new Form_MineSave();
         $data = array();
         $msg = 1;
