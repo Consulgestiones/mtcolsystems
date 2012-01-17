@@ -32,9 +32,46 @@ Ext.define('Mtc.view.mine.CreateMine',{
         },
         {
             text: 'Guardar',
-            iconCls: 'btn-save'
+            iconCls: 'btn-save',
+            formBind: true,
+            handler: function(){
+                var form = this.up('form').getForm();
+                if(form.isValid()){
+                    var win = this.up('window');
+                    win.el.mask('Guardando…', 'x-mask-loading');
+                    var formData = form.getValues();
+                    Ext.Ajax.request({
+                      url: '/Mine/savemine',  
+                      method: 'POST',
+                      params: {
+                            params: Ext.encode(formData)
+                      },
+                    success: function(response){
+                            var obj = Ext.decode(response.responseText);
+                           // var grid = Ext.getCmp('transpCompanyList');
+                            
+                            
+                            win.el.unmask();
+                            if(obj.success){
+                                if(obj.action == 'create'){
+                                    grid.getStore().insert(0, obj.data);
+                                }else{
+                                    var index = grid.getStore().find('idmine', formData['idmine']);
+                                    if(index != -1){
+                                        var rec = grid.getStore().getAt(index);
+                                        rec.set(obj.data);
+                                        rec.commit();
+                                    }                                    
+                                }
+                                form.reset();
+                                win.hide();
+                                setNotification('Mina creada', 'La Mina ha sido creada en el sistema');
+                            }
+                        }
+                    });
+                }
+            }
         }
-           
     ]
     
 });

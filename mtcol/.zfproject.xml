@@ -37,6 +37,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="getmine"/>
           <actionMethod actionName="getsections"/>
+          <actionMethod actionName="savemine"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -457,6 +458,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Mine">
             <viewScriptFile forActionName="getsections"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Mine">
+            <viewScriptFile forActionName="savemine"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

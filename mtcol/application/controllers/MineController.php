@@ -59,8 +59,51 @@ class MineController extends Zend_Controller_Action
         $this->_helper->json->sendJson($response);
     }
 
+    public function savemineAction()
+    {
+        $post = json_decode(stripcslashes($this->getRequest()->getParam('params')), true);
+        $smine = new Form_MineSave();
+        $data = array();
+        $msg = 1;
+        $action = '';
+        try{
+            
+            if(!$smine->isValid($post))
+                    throw new Exception(json_encode($smine->getMessages()));
+            
+            $data = $smine->getValues();
+            
+            $mMineSave = new Model_MineSave();
+            
+            if($post['idmine'] == 0){
+                $idmine = $mMineSave->insert($data);
+                $action = 'create';
+            }else{
+                $idmine = (!is_nan($mMineSave->update($data, "idmine = ".$post['idmine'])))?$post['idmine']:NULL;
+                $action = 'update';                
+            }                                 
+    }catch (Exception $e){
+        $success = false;
+        $msg = $e->getMessage();
+        
+    }
+    
+    $response = array(
+        'success' => $success,
+        'data' => $data,
+        'msg' => $msg,
+        'action' => $action
+        
+    );
+        
+        $this->_helper->json->sendJson($response);
+        
+    }
+
 
 }
+
+
 
 
 
