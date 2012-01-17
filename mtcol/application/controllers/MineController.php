@@ -100,8 +100,15 @@ class MineController extends Zend_Controller_Action
         
     }
 
+    public function editmineAction()
+    {
+        // action body
+    }
+
 
 }
+
+
 
 
 

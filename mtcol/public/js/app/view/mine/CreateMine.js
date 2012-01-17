@@ -35,9 +35,10 @@ Ext.define('Mtc.view.mine.CreateMine',{
             iconCls: 'btn-save',
             formBind: true,
             handler: function(){
+                var win = this.up('window');
+                win.hide();
                 var form = this.up('form').getForm();
                 if(form.isValid()){
-                    var win = this.up('window');
                     win.el.mask('Guardando…', 'x-mask-loading');
                     var formData = form.getValues();
                     Ext.Ajax.request({
@@ -48,9 +49,6 @@ Ext.define('Mtc.view.mine.CreateMine',{
                       },
                     success: function(response){
                             var obj = Ext.decode(response.responseText);
-                           // var grid = Ext.getCmp('transpCompanyList');
-                            
-                            
                             win.el.unmask();
                             if(obj.success){
                                 if(obj.action == 'create'){
@@ -63,10 +61,8 @@ Ext.define('Mtc.view.mine.CreateMine',{
                                         rec.commit();
                                     }                                    
                                 }
-                                form.reset();
-                                win.hide();
-                                setNotification('Mina creada', 'La Mina ha sido creada en el sistema');
-                            }
+                            form.reset();                                                              
+                            }                           
                         }
                     });
                 }
