@@ -13,6 +13,17 @@ Ext.define('Mtc.view.mine.SectionsGrid',{
             dataIndex: '',
             width: 150
         }
+    ],
+    tbar: [
+        {
+            text: 'Agregar',
+            iconCls: 'add'
+        },
+        {
+            text: 'Editar',
+            iconCls: 'edit'
+        }
+        
     ]
     
 });
