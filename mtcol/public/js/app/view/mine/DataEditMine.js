@@ -33,7 +33,13 @@ Ext.define('Mtc.view.mine.DataEditMine',{
             handler: function(){
                 var w = this.up('window');
                 w.hide();
-                               
+                
+                var grid = Ext.getCmp('idmine');
+                var rows = grid.getSelectionModel().getSelection();
+                
+                if(rows.length === 0)return;
+                
+                var record = rows[0];                         
             }      
         }
     ]

@@ -7,12 +7,12 @@ class MenuController extends Zend_Controller_Action
      * Accediendo a variables de sesion
      * @var Zend_Session_Namespace
      */
-    protected $session;
+    /*protected $session;
     
     public function preDispatch() {
         $this->session = new Zend_Session_Namespace('Default');               
     }
-
+*/
 
     public function init()
     {
