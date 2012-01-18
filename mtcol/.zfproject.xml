@@ -40,6 +40,9 @@
           <actionMethod actionName="savemine"/>
           <actionMethod actionName="editmine"/>
         </controllerFile>
+        <controllerFile controllerName="Sections">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
@@ -465,6 +468,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Mine">
             <viewScriptFile forActionName="editmine"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Sections">
+            <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

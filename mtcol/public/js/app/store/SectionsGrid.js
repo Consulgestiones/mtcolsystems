@@ -5,7 +5,7 @@ Ext.define('Mtc.store.SectionsGrid',{
     proxy: {
         type: 'ajax',
         method: 'POST',
-        url: '',
+        url: '/mine/getsections',
         reader: {
             type: 'json',
             root: 'data'

@@ -102,7 +102,7 @@ class MineController extends Zend_Controller_Action
 
     public function editmineAction()
     {
-       $idmine = $this->getRequest()->getParam('idtranspcompany');
+       $idmine = $this->getRequest()->getParam('idmineedit');
        $msg = 1;
        try{
            $sql = sprintf("update mine set mine='Prueba mina 1', description='Mina 1'
