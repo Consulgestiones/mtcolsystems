@@ -20,6 +20,10 @@ Ext.define('Mtc.view.mine.CreateMine',{
             name: 'description',
             allowBlank: false        
         },
+        {
+            xtype: 'hidden',
+            name: 'idmine'
+        }
     ],
     buttons: [
         {
@@ -27,7 +31,7 @@ Ext.define('Mtc.view.mine.CreateMine',{
             iconCls: 'btn-cancel',
             handler: function(){
                 var w = this.up('window');
-                w.hide();
+                w.close();
             }
         },
         {
@@ -35,8 +39,8 @@ Ext.define('Mtc.view.mine.CreateMine',{
             iconCls: 'btn-save',
             formBind: true,
             handler: function(){
-                var win = this.up('window');
-                win.hide();
+                var grid = Ext.getCmp('MineGrid');
+                var win = this.up('window');                
                 var form = this.up('form').getForm();
                 if(form.isValid()){
                     win.el.mask('Guardando…', 'x-mask-loading');
@@ -48,6 +52,7 @@ Ext.define('Mtc.view.mine.CreateMine',{
                             params: Ext.encode(formData)
                       },
                     success: function(response){
+                            win.close();
                             var obj = Ext.decode(response.responseText);
                             win.el.unmask();
                             if(obj.success){

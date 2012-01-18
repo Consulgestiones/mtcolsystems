@@ -73,15 +73,18 @@ class MineController extends Zend_Controller_Action
             
             $data = $smine->getValues();
             
-            $mMineSave = new Model_MineSave();
+            $mMineSave = new Model_MineDetail();
             
             if($post['idmine'] == 0){
                 $idmine = $mMineSave->insert($data);
+                $data['idmine'] = $idmine;
                 $action = 'create';
             }else{
-                $idmine = (!is_nan($mMineSave->update($data, "idmine = ".$post['idmine'])))?$post['idmine']:NULL;
-                $action = 'update';                
-            }                                 
+                $update = $mMineSave->update($data, "idmine = ".$post['idmine']);
+                $idmine = (!is_nan($update))?$post['idmine']:-1;
+                $action = 'update';
+            }                                
+            $success = true;
         }catch (Exception $e){
             $success = false;
             $msg = $e->getMessage();
@@ -98,31 +101,6 @@ class MineController extends Zend_Controller_Action
         
         $this->_helper->json->sendJson($response);
         
-    }
-
-    public function editmineAction()
-    {
-       $idmine = $this->getRequest()->getParam('idmineedit');
-       $msg = 1;
-       try{
-           $sql = sprintf("update mine set mine='Prueba mina 1', description='Mina 1'
-               where idmine=%d", $idmine);
-           $db = Zend_Registry::get('db');
-           
-           $db->query($sql);
-           
-           $success = true;
-    }catch(Exception $e){
-        $succes = false;
-        $msg = $e->getMessage();
-    }
-    
-    $response = array(
-        'success' => $success,
-        'msg' => $msg
-    );
-    
-    $this->_helper->json->sendJson($response);
     }
 
 

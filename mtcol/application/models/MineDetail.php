@@ -2,6 +2,9 @@
 
 class Model_MineDetail extends Zend_Db_Table_Abstract
 {
+    protected $_name = 'mine';
+    protected $_primary = 'idmine';
+    
     public function getMine($start = 0, $limit = 0){
         $data= array();
         $limit = ($limit != 0)?'LIMIT '.$start.', '.$limit:'';
