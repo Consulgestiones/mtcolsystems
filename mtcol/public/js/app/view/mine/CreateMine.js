@@ -67,7 +67,8 @@ Ext.define('Mtc.view.mine.CreateMine',{
                     });
                 }
             }
-        }
+        },
+       
     ]
     
 });

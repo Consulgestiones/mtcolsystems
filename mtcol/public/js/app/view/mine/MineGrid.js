@@ -35,7 +35,14 @@ Ext.define('Mtc.view.mine.MineGrid',{
         },
         {
             text: 'Editar',
-            iconCls: 'edit'
+            iconCls: 'edit',
+            handler: function(){
+                var w = Ext.create('Mtc.view.mine.WindowEditMine');
+                    w.setTitle('Editar Mina');
+                var form = w.down('form').getForm();
+                form.reset();
+                w.show();
+            } 
         },
         {
             text: 'Secciones',
