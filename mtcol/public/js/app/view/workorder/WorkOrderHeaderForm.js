@@ -1,6 +1,6 @@
 Ext.define('Mtc.view.workorder.WorkOrderHeaderForm', {
     extend: 'Ext.form.Panel',
-    requires: ['Mtc.view.mine.MineCombo', 'Mtc.view.section.SectionCombo'],    
+    requires: ['Mtc.view.mine.MineCombo', 'Mtc.view.section.SectionCombo'],          
     defaults: {
         labelWidth: 100,
         anchor: '100%'
