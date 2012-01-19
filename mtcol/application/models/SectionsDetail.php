@@ -1,6 +1,6 @@
 <?php
 
-class Model_SectionsDetail extends Zend_Db_Adapter_Abstract
+class Model_SectionsDetail extends Zend_Db_Table_Abstract
 {
     protected $_name = 'section';
     protected $_primary =  'idsection';
@@ -11,8 +11,8 @@ class Model_SectionsDetail extends Zend_Db_Adapter_Abstract
         
       //  $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS * FROM SECTION %s",$limit);
         
-      //  $db = $this->getDefaultAdapter();
-      //  $stmt = $db->query($sql);
+        $db = $this->getDefaultAdapter();
+        $stmt = $db->query($sql);
         $data = $stmt->fetchAll();
         
       //  $sql = 'SELECT FOUND_ROWS()';

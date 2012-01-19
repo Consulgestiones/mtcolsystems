@@ -18,7 +18,7 @@ class SectionsController extends Zend_Controller_Action
         $start = $this->getRequest()->getParam('start');
         $limit = $this->getRequest()->getParam('limit');
         
-        $model = new Model_SectionsDetail();
+        $model = new Model_Section();
         $data = $model->getSection($start, $limit);
         
         if(is_array($data['data'])){
