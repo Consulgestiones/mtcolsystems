@@ -1,9 +1,9 @@
-Mtc.sections = {
+ Mtc.sections = {
     init: function() {
-        Ext.create('Mtc.view.mine.SectionsGrids',{
-           strore: Ext.create('Mtc.store,Sections',{
-               storeId: 'sections',
-               autoload:true,
+        Ext.create('Mtc.view.mine.SectionsGrid',{
+           strore: Ext.create('Mtc.store.SectionsGrid',{
+               storeId: 'sectionsGrid',
+               autoLoad: true,
                pageSize: AppConfig.gridPageSize
            }),
            renderTo: Ext.get('slot1')

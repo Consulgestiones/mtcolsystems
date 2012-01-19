@@ -5,15 +5,23 @@ Ext.define('Mtc.view.mine.SectionsGrid',{
     columns: [
         {
             header: 'Nombre Seccion',
-            dataIndex: '',
+            dataIndex: 'section',
             width: 150
         },
         {
             header: 'Descripción',
-            dataIndex: '',
+            dataIndex: 'description',
             width: 150
         }
     ],
+    stripeRows: true,
+    height: AppConfig.gridHeight,
+    bbar: new Ext.PagingToolbar({  
+        pageSize: AppConfig.gridPageSize,        
+        store: Ext.data.StoreManager.lookup('sectionsGrid'),  
+        displayInfo: true  
+    }),
+    
     tbar: [
         {
             text: 'Agregar',
@@ -25,5 +33,6 @@ Ext.define('Mtc.view.mine.SectionsGrid',{
         }
         
     ]
+
     
 });
