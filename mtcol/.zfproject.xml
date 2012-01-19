@@ -42,7 +42,10 @@
         </controllerFile>
         <controllerFile controllerName="Sections">
           <actionMethod actionName="index"/>
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="getsections"/>
         </controllerFile>
+        <controllerFile controllerName="Sections"/>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
@@ -471,6 +474,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Sections">
             <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Sections">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Sections">
+            <viewScriptFile forActionName="getsections"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

@@ -1,4 +1,4 @@
-Ext.define('Mtc.view.mine.SectionsGrid',{
+Ext.define('Mtc.view.section.SectionsGrid',{
     extend: 'Ext.grid.Panel',
     title: 'Secciones Minas',
     
