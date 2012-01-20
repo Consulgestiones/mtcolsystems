@@ -9,8 +9,8 @@ class Model_Section extends Zend_Db_Table_Abstract
         $data = array();
         $limit = ($limit != 0)?'LIMIT '.$start.', '.$limit:'';
         
-        $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS * FROM SECTION %s",$limit);
-        
+        $sql = sprintf("SELECT SQL_CALC_FOUND_ROWS * FROM SECTION WHERE idmine=%d", $limit);
+ 
         $db = $this->getDefaultAdapter();
         $stmt = $db->query($sql);
         $data = $stmt->fetchAll();
